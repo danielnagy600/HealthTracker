@@ -1,0 +1,43 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build-api",
+      "detail": "A backend (ASP.NET Core API) fordítása",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/src/HealthTracker.Api/HealthTracker.Api.csproj"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": "build"
+    },
+    {
+      "label": "frontend-serve",
+      "detail": "Az Angular fejlesztői szerver indítása (http://localhost:4200)",
+      "type": "shell",
+      "command": "npm start",
+      "options": { "cwd": "${workspaceFolder}/frontend" },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "angular",
+        "pattern": { "regexp": "^$" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Building\\.\\.\\.|Changes detected",
+          "endsPattern": "Application bundle generation complete|Compiled successfully|Local:"
+        }
+      }
+    },
+    {
+      "label": "test",
+      "detail": "A .NET tesztek futtatása",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["test", "${workspaceFolder}/HealthTracker.slnx"],
+      "problemMatcher": "$msCompile",
+      "group": "test"
+    }
+  ]
+}

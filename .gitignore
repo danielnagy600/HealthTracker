@@ -1,0 +1,32 @@
+# ---------- .NET ----------
+bin/
+obj/
+*.user
+*.suo
+.vs/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+*.nupkg
+
+# EF Core (a migrációkat NEM zárjuk ki – azok a forrás részei!)
+
+# ---------- Node / Angular ----------
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+npm-debug.log*
+yarn-error.log*
+
+# ---------- IDE / OS ----------
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# ---------- Titkok / helyi beállítások ----------
+# A fejlesztői appsettings.json bent maradhat (nincs benne éles titok),
+# de a felhasználói titkokat és a helyi override-okat kizárjuk:
+appsettings.*.local.json
+*.pfx
+.env

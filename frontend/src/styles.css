@@ -1,0 +1,120 @@
+/* Globális stílusok – egyszerű, letisztult megjelenés. */
+:root {
+  --blue: #2f6df6;
+  --blue-dark: #1b4fd0;
+  --bg: #f3f6fb;
+  --card: #ffffff;
+  --text: #1c2430;
+  --muted: #6b7684;
+  --green: #17a673;
+  --amber: #e08a00;
+  --red: #d64545;
+  --border: #e2e8f0;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ---- Auth kártyák (login/register) ---- */
+.card {
+  max-width: 380px;
+  margin: 8vh auto;
+  background: var(--card);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(20, 40, 80, 0.08);
+}
+.card h1 { margin: 0 0 0.25rem; font-size: 1.5rem; }
+.card h2 { margin: 0 0 1.25rem; font-weight: 500; color: var(--muted); font-size: 1.05rem; }
+.card form { display: flex; flex-direction: column; gap: 0.9rem; }
+.card label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.85rem; color: var(--muted); }
+.card input {
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  font-size: 1rem;
+}
+.card input:focus { outline: 2px solid var(--blue); border-color: var(--blue); }
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 9px;
+  background: var(--blue);
+  color: #fff;
+  padding: 0.65rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+button:hover { background: var(--blue-dark); }
+button:disabled { opacity: 0.6; cursor: default; }
+button.link { background: none; color: var(--blue); padding: 0.3rem 0.5rem; font-weight: 500; }
+button.link:hover { text-decoration: underline; background: none; }
+
+.muted { color: var(--muted); }
+.hint { font-size: 0.78rem; color: var(--muted); margin: -0.3rem 0 0; }
+.error { color: var(--red); font-size: 0.85rem; margin: 0; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ---- Fejléc ---- */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.5rem;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+.topbar .brand { font-weight: 700; }
+.topbar .spacer { flex: 1; }
+
+/* ---- Dashboard ---- */
+.dashboard {
+  max-width: 640px;
+  margin: 1.5rem auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.banner {
+  padding: 1rem 1.25rem;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: #fff;
+}
+.banner .next { font-size: 0.85rem; opacity: 0.9; }
+.banner.ontrack { background: var(--blue); }
+.banner.behind { background: var(--amber); }
+.banner.done { background: var(--green); }
+
+.progress-card, .actions, .log {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
+}
+.progress-card .numbers { display: flex; align-items: baseline; gap: 0.5rem; }
+.progress-card .big { font-size: 1.7rem; font-weight: 700; }
+.bar { height: 12px; background: #eef2f8; border-radius: 999px; overflow: hidden; margin: 0.7rem 0 0.4rem; }
+.fill { height: 100%; background: linear-gradient(90deg, #4a90ff, #2f6df6); border-radius: 999px; transition: width 0.3s ease; }
+
+.actions { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+.actions .custom { display: flex; gap: 0.4rem; margin-left: auto; }
+.actions input { width: 90px; padding: 0.55rem; border: 1px solid var(--border); border-radius: 9px; }
+
+.log h3 { margin: 0 0 0.6rem; }
+.log ul { list-style: none; margin: 0; padding: 0; }
+.log li { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+.log li:last-child { border-bottom: none; }

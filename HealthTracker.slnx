@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/HealthTracker.Api/HealthTracker.Api.csproj" />
+    <Project Path="src/HealthTracker.Modules.Identity/HealthTracker.Modules.Identity.csproj" />
+    <Project Path="src/HealthTracker.Modules.Water/HealthTracker.Modules.Water.csproj" />
+    <Project Path="src/HealthTracker.SharedKernel/HealthTracker.SharedKernel.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/HealthTracker.Modules.Water.Tests/HealthTracker.Modules.Water.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,14 @@
+# .NET build kimenetek
+**/bin/
+**/obj/
+
+# Frontend függőségek és build
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# Egyéb
+**/.vs/
+**/.vscode/
+**/*.user
+.git/
