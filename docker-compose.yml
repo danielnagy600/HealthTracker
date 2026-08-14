@@ -30,7 +30,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__Postgres: "Host=db;Port=5432;Database=healthtracker;Username=postgres;Password=postgres"
-      # Ha az Angulart is konténerbe teszed, ide kerül majd annak a címe.
+      # Ha a React frontendet is konténerbe teszed, ide kerül majd annak a címe.
       Cors__AllowedOrigin: "http://localhost:4200"
     ports:
       - "8080:8080"

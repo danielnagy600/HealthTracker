@@ -1,0 +1,12 @@
+import { useContext } from 'react';
+import { AuthContext } from './auth-context';
+import type { AuthContextValue } from './auth-context';
+
+/** A bejelentkezési állapot elérése komponensekből. */
+export function useAuth(): AuthContextValue {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('A useAuth csak AuthProvideren belül használható.');
+  }
+  return context;
+}

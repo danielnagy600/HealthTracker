@@ -4,12 +4,19 @@
 /dist
 /tmp
 /out-tsc
-/bazel-out
 
 # Node
 /node_modules
 npm-debug.log
 yarn-error.log
+
+# Vite
+/.vite
+*.tsbuildinfo
+
+# Helyi env-override-ok (a .env.development szándékosan verziózott – nincs benne titok)
+.env.local
+.env.*.local
 
 # IDEs and editors
 .idea/
@@ -30,7 +37,6 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
-/.angular/cache
 .sass-cache/
 /connect.lock
 /coverage

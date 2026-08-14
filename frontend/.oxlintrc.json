@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "typescript", "oxc"],
+  "rules": {
+    // A hook-szabályokat csak a linter fogja meg – a TypeScript nem lát rájuk.
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "error",
+    // Fast Refresh: egy fájl vagy komponenst exportál, vagy egyebet.
+    "react/only-export-components": ["warn", { "allowConstantExport": true }]
+  }
+}

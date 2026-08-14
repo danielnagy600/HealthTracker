@@ -11,10 +11,10 @@ artifacts/
 
 # EF Core (a migrációkat NEM zárjuk ki – azok a forrás részei!)
 
-# ---------- Node / Angular ----------
+# ---------- Node / React (Vite) ----------
 frontend/node_modules/
 frontend/dist/
-frontend/.angular/
+frontend/.vite/
 npm-debug.log*
 yarn-error.log*
 

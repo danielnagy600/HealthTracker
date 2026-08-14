@@ -19,7 +19,7 @@
       }
     },
     {
-      "name": "Frontend (Angular)",
+      "name": "Frontend (React)",
       "type": "chrome",
       "request": "launch",
       "preLaunchTask": "frontend-serve",
@@ -30,7 +30,7 @@
   "compounds": [
     {
       "name": "Full stack (API + Frontend)",
-      "configurations": ["API (.NET)", "Frontend (Angular)"],
+      "configurations": ["API (.NET)", "Frontend (React)"],
       "stopAll": true
     }
   ]

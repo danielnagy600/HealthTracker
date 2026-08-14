@@ -11,7 +11,7 @@ ittál a mai napon, és jelzi, **mikor mennyi vizet igyál**, hogy elérd a napi
 | Backend      | .NET 10, ASP.NET Core (minimal API) |
 | Adatbázis    | PostgreSQL + Entity Framework Core (Npgsql) |
 | Auth         | ASP.NET Core Identity, bearer token (`MapIdentityApi`) |
-| Frontend     | Angular 22 (standalone, signalok) |
+| Frontend     | React 19 + Vite (TypeScript, React Router) |
 | Tesztek      | xUnit + Moq + FluentAssertions |
 | Konténer     | Docker / docker-compose (PostgreSQL + API) |
 
@@ -34,7 +34,7 @@ HealthTracker/
 │   └── HealthTracker.Api                  # host: összerakja a modulokat, CORS, auth pipeline
 ├── tests/
 │   └── HealthTracker.Modules.Water.Tests  # xUnit tesztek
-├── frontend/                              # Angular alkalmazás
+├── frontend/                              # React alkalmazás (Vite)
 ├── docker-compose.yml                     # PostgreSQL + API
 └── HealthTracker.slnx
 ```
@@ -58,7 +58,7 @@ ismeri, nem az EF Core-os megvalósítást — ezért lehet a teszteket adatbáz
 ## Előfeltételek
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
-- [Node.js 20+](https://nodejs.org) (az Angularhoz)
+- [Node.js 22+](https://nodejs.org) (a React frontendhez)
 - PostgreSQL — a legegyszerűbb Dockerrel (lásd lent), vagy helyi telepítés
 
 ## Futtatás
@@ -102,8 +102,9 @@ npm install
 npm start
 ```
 
-Az Angular a **http://localhost:4200** címen fut, és a 8080-as API-t hívja
-(a CORS ehhez be van állítva).
+A Vite dev-szerver a **http://localhost:4200** címen fut, és a 8080-as API-t hívja
+(a CORS ehhez be van állítva). A port a `frontend/vite.config.ts`-ben van rögzítve —
+ha megváltoztatod, a backend `Cors:AllowedOrigin` beállítását is írd át.
 
 ## Tesztek
 
@@ -120,8 +121,8 @@ dotnet test
 docker compose up --build
 ```
 
-Ez felhúzza a PostgreSQL-t és az API-t is. (Az Angular konténerizálása a következő
-bővítés — a `docker-compose.yml` már fel van készítve rá.)
+Ez felhúzza a PostgreSQL-t és az API-t is. (A React frontend konténerizálása a
+következő bővítés — a `docker-compose.yml` már fel van készítve rá.)
 
 ## Hogyan adj hozzá egy új modult? (pl. Alvás)
 

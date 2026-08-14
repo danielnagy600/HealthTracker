@@ -13,7 +13,7 @@ namespace HealthTracker.Modules.Identity;
 /// <summary>
 /// Az Identity modul belépési pontja: regisztrálja az ASP.NET Core Identity-t
 /// bearer tokenes (API) bejelentkezéssel, és közzéteszi a /api/auth végpontokat
-/// (register, login, refresh, stb.), plusz egy /api/auth/me profil-lekérdezést.
+/// (register, login, refresh, stb.), plusz egy /api/auth/me profil-lekérdezést. 
 /// </summary>
 public static class IdentityModule
 {

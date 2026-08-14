@@ -15,18 +15,18 @@
     },
     {
       "label": "frontend-serve",
-      "detail": "Az Angular fejlesztői szerver indítása (http://localhost:4200)",
+      "detail": "A React (Vite) fejlesztői szerver indítása (http://localhost:4200)",
       "type": "shell",
       "command": "npm start",
       "options": { "cwd": "${workspaceFolder}/frontend" },
       "isBackground": true,
       "problemMatcher": {
-        "owner": "angular",
+        "owner": "vite",
         "pattern": { "regexp": "^$" },
         "background": {
           "activeOnStart": true,
-          "beginsPattern": "Building\\.\\.\\.|Changes detected",
-          "endsPattern": "Application bundle generation complete|Compiled successfully|Local:"
+          "beginsPattern": "vite v|hmr update|page reload",
+          "endsPattern": "ready in|Local:"
         }
       }
     },

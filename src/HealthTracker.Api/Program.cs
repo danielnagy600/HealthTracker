@@ -17,7 +17,7 @@ builder.Services.AddWaterModule(connectionString);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, HttpContextCurrentUser>();
 
-// CORS: engedjük az Angular fejlesztői szervert.
+// CORS: engedjük a React (Vite) fejlesztői szervert.
 var allowedOrigin = builder.Configuration["Cors:AllowedOrigin"] ?? "http://localhost:4200";
 const string DevCors = "dev-cors";
 builder.Services.AddCors(options => options.AddPolicy(DevCors, policy =>
