@@ -1,6 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../core/use-auth';
 import { formatTime } from '../../core/format';
 import { water } from '../../core/water';
 import type { DailySummary, Reminder } from '../../core/water';
@@ -10,9 +8,6 @@ function statusClass(status: Reminder['status']): string {
 }
 
 export function Dashboard() {
-  const auth = useAuth();
-  const navigate = useNavigate();
-
   const [summary, setSummary] = useState<DailySummary | null>(null);
   const [reminder, setReminder] = useState<Reminder | null>(null);
   // Stringként tároljuk, hogy az input üresre törlése is kezelhető legyen.
@@ -39,23 +34,8 @@ export function Dashboard() {
     }
   }
 
-  function logout(): void {
-    auth.logout();
-    navigate('/login');
-  }
-
   return (
-    <>
-      <header className="topbar">
-        <span className="brand">💧 HealthTracker</span>
-        <span className="spacer"></span>
-        <span className="muted">{auth.email}</span>
-        <button className="link" onClick={logout}>
-          Log out
-        </button>
-      </header>
-
-      <main className="dashboard">
+    <main className="dashboard">
         {reminder && (
           <section className={`banner ${statusClass(reminder.status)}`}>
             <strong>{reminder.message}</strong>
@@ -118,7 +98,6 @@ export function Dashboard() {
         ) : (
           <p className="muted">Loading…</p>
         )}
-      </main>
-    </>
+    </main>
   );
 }

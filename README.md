@@ -1,8 +1,13 @@
 # HealthTracker — moduláris monolit tanuló projekt
 
 Egészség-követő alkalmazás, amely a **modularizáció és réteges architektúra** tanulására
-készült. Jelenleg egy modult tartalmaz: **vízfogyasztás-emlékeztető** — figyeli, mennyit
-ittál a mai napon, és jelzi, **mikor mennyi vizet igyál**, hogy elérd a napi célt.
+készült. Jelenleg két funkciómodult tartalmaz:
+
+- **Vízfogyasztás-emlékeztető** — figyeli, mennyit ittál a mai napon, és jelzi,
+  **mikor mennyi vizet igyál**, hogy elérd a napi célt.
+- **Napirend** — a napi elfoglaltságaid kezelése: felvitel kezdés/befejezés
+  időponttal, **vizuális idővonal**, választható szín és megjegyzés. Jelzi az
+  **ütközéseket** és a szabad idősávokat.
 
 ## Technológiák
 
@@ -30,10 +35,16 @@ HealthTracker/
 │   │   ├── Application/     # DTO-k, interfészek, szolgáltatás
 │   │   ├── Infrastructure/  # EF Core + PostgreSQL (DbContext, repository, migrációk)
 │   │   └── WaterModule.cs   # a modul önregisztrációja (DI + HTTP-végpontok)
-│   ├── HealthTracker.Modules.Identity     # 2. modul: felhasználók, regisztráció/login
+│   ├── HealthTracker.Modules.Schedule     # 2. modul: napi elfoglaltságok
+│   │   ├── Domain/          # entitás + tiszta üzleti logika (nap-terv számítás)
+│   │   ├── Application/     # DTO-k, interfészek, szolgáltatás
+│   │   ├── Infrastructure/  # EF Core + PostgreSQL (saját "schedule" séma)
+│   │   └── ScheduleModule.cs
+│   ├── HealthTracker.Modules.Identity     # 3. modul: felhasználók, regisztráció/login
 │   └── HealthTracker.Api                  # host: összerakja a modulokat, CORS, auth pipeline
 ├── tests/
-│   └── HealthTracker.Modules.Water.Tests  # xUnit tesztek
+│   ├── HealthTracker.Modules.Water.Tests     # xUnit tesztek
+│   └── HealthTracker.Modules.Schedule.Tests  # xUnit tesztek
 ├── frontend/                              # React alkalmazás (Vite)
 ├── docker-compose.yml                     # PostgreSQL + API
 └── HealthTracker.slnx
@@ -42,8 +53,9 @@ HealthTracker/
 ### A függőségek iránya (a lényeg!)
 
 ```
-Api ──► Modules.Water ──► SharedKernel
-    └─► Modules.Identity ─┘
+Api ──► Modules.Water ────► SharedKernel
+    ├─► Modules.Schedule ──┤
+    └─► Modules.Identity ──┘
         (a modulok NEM látják egymást)
 ```
 
@@ -90,6 +102,11 @@ Induláskor automatikusan lefutnak az adatbázis-migrációk. Az API a
 - `GET  /api/water/reminder`   – emlékeztető: mikor mennyit igyál (token kell)
 - `POST /api/water/intake`     – vízbejegyzés (`{ "amountMl": 250 }`)
 - `GET/PUT /api/water/settings`– napi cél és ébrenléti időablak
+- `GET  /api/schedule/day?date=` – egy nap elfoglaltságai + összesítés (a dátum elhagyható)
+- `POST /api/schedule/activities` – új elfoglaltság
+- `PUT  /api/schedule/activities/{id}` – módosítás
+- `DELETE /api/schedule/activities/{id}` – törlés
+- `GET  /api/schedule/colors`  – a választható színek
 
 > **Jelszó-szabályok** (Identity alapértelmezés): min. 6 karakter, kis- és nagybetű,
 > szám és szimbólum — pl. `Passw0rd!`.
@@ -114,6 +131,10 @@ dotnet test
 
 - `WaterReminderCalculatorTests` – a tiszta domain-logika (adatbázis és mock nélkül).
 - `WaterServiceTests` – a szolgáltatás Moq-kal mockolt függőségekkel, FluentAssertionsszel.
+- `DayPlanCalculatorTests` – a Napirend tiszta domain-logikája: ütközések, szabad
+  sávok, az átfedés nem duplán számoló foglaltság.
+- `ScheduleServiceTests` – a Napirend szolgáltatása mockolt tárolóval; azt is
+  ellenőrzi, hogy más felhasználó bejegyzését nem lehet elérni.
 
 ## Teljes stack Dockerben (opcionális, későbbi lépés)
 
@@ -138,4 +159,15 @@ következő bővítés — a `docker-compose.yml` már fel van készítve rá.)
    app.MapSleepModule();
    ```
 
+5. Migráció a modul saját sémájába:
+   ```bash
+   dotnet ef migrations add InitialCreate \
+     --project src/HealthTracker.Modules.Sleep \
+     --startup-project src/HealthTracker.Api \
+     --context SleepDbContext \
+     --output-dir Infrastructure/Migrations
+   ```
+   (A `--startup-project` azért kell, mert az EF Design csomag csak a hostban van.)
+
 A meglévő modulokat **nem kell módosítani** — pontosan ez a moduláris felépítés haszna.
+A `Modules.Schedule` végig ezt a receptet követi, így kidolgozott mintaként is olvasható.

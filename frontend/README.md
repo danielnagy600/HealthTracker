@@ -45,9 +45,16 @@ src/
 │   ├── use-auth.ts           # useAuth() hook
 │   ├── RequireAuth.tsx       # védett útvonal: bejelentkezés nélkül /login-ra irányít
 │   ├── water.ts              # a Water modul DTO-i és REST-hívásai
+│   ├── schedule.ts           # a Schedule modul DTO-i, REST-hívásai és idő-segédei
 │   └── format.ts             # időformázás (HH:mm)
 └── features/
+    ├── layout/AppLayout.tsx  # közös fejléc + navigáció a védett oldalakhoz
     ├── dashboard/Dashboard.tsx
+    ├── schedule/
+    │   ├── Schedule.tsx      # a Napirend oldal: dátumváltó, összesítés, űrlap
+    │   ├── DayTimeline.tsx   # a vizuális idővonal
+    │   ├── ActivityForm.tsx  # felvitel/szerkesztés színválasztóval és megjegyzéssel
+    │   └── lanes.ts          # az átfedő elemek oszlopokba rendezése (tiszta függvény)
     ├── login/Login.tsx
     └── register/Register.tsx
 ```

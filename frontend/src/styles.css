@@ -10,6 +10,14 @@
   --amber: #e08a00;
   --red: #d64545;
   --border: #e2e8f0;
+
+  /* Az elfoglaltságok palettája (Schedule modul). */
+  --act-blue: #2f6df6;
+  --act-green: #17a673;
+  --act-amber: #e08a00;
+  --act-red: #d64545;
+  --act-purple: #7c5cf0;
+  --act-teal: #0d9aa2;
 }
 
 * { box-sizing: border-box; }
@@ -118,3 +126,156 @@ a:hover { text-decoration: underline; }
 .log ul { list-style: none; margin: 0; padding: 0; }
 .log li { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
 .log li:last-child { border-bottom: none; }
+
+/* ---- Fő navigáció a fejlécben ---- */
+.mainnav { display: flex; gap: 0.3rem; margin-left: 0.75rem; }
+.mainnav a {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.mainnav a:hover { background: #eef2f8; text-decoration: none; }
+.mainnav a.active { background: var(--blue); color: #fff; }
+
+/* ---- Napirend: dátumváltó és összesítés ---- */
+.date-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.6rem 1rem;
+}
+.date-nav .link { font-size: 1.4rem; line-height: 1; padding: 0.1rem 0.6rem; }
+.date-current { flex: 1; text-align: center; display: flex; flex-direction: column; gap: 0.15rem; }
+.date-current .link { font-size: 0.8rem; }
+
+.day-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1.25rem;
+  font-size: 0.9rem;
+}
+.day-summary strong { font-size: 1.25rem; }
+
+/* ---- Napirend: idővonal ---- */
+.timeline-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1rem 0.9rem 3.6rem;
+}
+.timeline { position: relative; }
+.hour-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border);
+}
+.hour-label {
+  position: absolute;
+  left: -3.3rem;
+  top: -0.55rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.timeline-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  text-align: center;
+}
+
+.activity {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  overflow: hidden;
+  padding: 0.3rem 0.5rem;
+  border-radius: 8px;
+  border: none;
+  color: #fff;
+  text-align: left;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: filter 0.15s ease, box-shadow 0.15s ease;
+}
+.activity:hover { filter: brightness(1.07); }
+.activity.is-selected { box-shadow: 0 0 0 3px rgba(28, 36, 48, 0.35); }
+.activity-title { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.activity-time { font-size: 0.72rem; opacity: 0.9; font-variant-numeric: tabular-nums; }
+.activity-note { font-size: 0.72rem; opacity: 0.85; overflow: hidden; }
+
+.act-blue { background: var(--act-blue); }
+.act-green { background: var(--act-green); }
+.act-amber { background: var(--act-amber); }
+.act-red { background: var(--act-red); }
+.act-purple { background: var(--act-purple); }
+.act-teal { background: var(--act-teal); }
+
+/* ---- Napirend: űrlap ---- */
+.activity-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
+}
+.activity-form h3 { margin: 0; }
+.activity-form label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.85rem; color: var(--muted); }
+.activity-form input[type='text'],
+.activity-form input[type='time'],
+.activity-form textarea {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--text);
+}
+.activity-form input:focus,
+.activity-form textarea:focus { outline: 2px solid var(--blue); border-color: var(--blue); }
+.activity-form textarea { resize: vertical; }
+.time-row { display: flex; gap: 0.8rem; }
+.time-row label { flex: 1; }
+
+.color-picker { display: flex; align-items: center; gap: 0.5rem; border: none; padding: 0; margin: 0; }
+.color-picker legend { font-size: 0.85rem; color: var(--muted); padding: 0; margin-bottom: 0.35rem; }
+.swatch {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 1px var(--border);
+}
+.swatch.is-selected { border-color: var(--card); box-shadow: 0 0 0 3px var(--text); }
+.swatch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.form-actions { display: flex; align-items: center; gap: 0.6rem; }
+button.danger { background: var(--red); margin-left: auto; }
+button.danger:hover { background: #b83a3a; }
