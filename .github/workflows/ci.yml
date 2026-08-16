@@ -1,0 +1,59 @@
+# Minden pushnál és pull requestnél lefut: így törött kód nem marad észrevétlen
+# a repóban, függetlenül attól, ki és honnan tölti fel.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    name: Backend (.NET)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Függőségek visszaállítása
+        run: dotnet restore HealthTracker.slnx
+
+      - name: Fordítás
+        run: dotnet build HealthTracker.slnx --no-restore --configuration Release
+
+      # A tesztek mockolt függőségekkel futnak, ezért nem kell hozzájuk adatbázis.
+      - name: Tesztek
+        run: dotnet test HealthTracker.slnx --no-build --configuration Release
+
+  frontend:
+    name: Frontend (React)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      # npm ci (nem install): pontosan a lockfile szerint telepít, és hibát dob,
+      # ha a package.json és a lockfile eltért egymástól.
+      - name: Függőségek telepítése
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      # A build első lépése a tsc -b, tehát ez a típusellenőrzést is elvégzi.
+      - name: Típusellenőrzés és build
+        run: npm run build
