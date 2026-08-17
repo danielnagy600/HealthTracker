@@ -44,11 +44,11 @@ export function ActivityForm({ editing, date, onSave, onDelete, onCancel }: Prop
     event.preventDefault();
 
     if (!title.trim()) {
-      setError('A cím nem lehet üres.');
+      setError('Title cannot be empty.');
       return;
     }
     if (endTime <= startTime) {
-      setError('A befejezésnek a kezdés után kell lennie.');
+      setError('The end must be after the start.');
       return;
     }
 
@@ -64,7 +64,7 @@ export function ActivityForm({ editing, date, onSave, onDelete, onCancel }: Prop
         note: note.trim() === '' ? null : note.trim()
       });
     } catch {
-      setError('A mentés nem sikerült. Ellenőrizd az adatokat, és próbáld újra.');
+      setError('Saving failed. Check the values and try again.');
     } finally {
       setSaving(false);
     }
@@ -76,22 +76,22 @@ export function ActivityForm({ editing, date, onSave, onDelete, onCancel }: Prop
     try {
       await onDelete(editing.id);
     } catch {
-      setError('A törlés nem sikerült.');
+      setError('Deleting failed.');
       setSaving(false);
     }
   }
 
   return (
     <form className="activity-form" onSubmit={submit}>
-      <h3>{editing ? 'Elfoglaltság szerkesztése' : 'Új elfoglaltság'}</h3>
+      <h3>{editing ? 'Edit activity' : 'New activity'}</h3>
 
       <label>
-        Cím
+        Title
         <input
           type="text"
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          placeholder="Pl. Csapatmegbeszélés"
+          placeholder="e.g. Team meeting"
           maxLength={120}
           required
           autoFocus
@@ -100,17 +100,17 @@ export function ActivityForm({ editing, date, onSave, onDelete, onCancel }: Prop
 
       <div className="time-row">
         <label>
-          Kezdés
+          Start
           <input type="time" value={startTime} onChange={(event) => setStartTime(event.target.value)} required />
         </label>
         <label>
-          Befejezés
+          End
           <input type="time" value={endTime} onChange={(event) => setEndTime(event.target.value)} required />
         </label>
       </div>
 
       <fieldset className="color-picker">
-        <legend>Szín</legend>
+        <legend>Color</legend>
         {ACTIVITY_COLORS.map((option) => (
           <label key={option} className={`swatch act-${option.toLowerCase()}${color === option ? ' is-selected' : ''}`}>
             <input
@@ -126,11 +126,11 @@ export function ActivityForm({ editing, date, onSave, onDelete, onCancel }: Prop
       </fieldset>
 
       <label>
-        Megjegyzés
+        Note
         <textarea
           value={note}
           onChange={(event) => setNote(event.target.value)}
-          placeholder="Bármilyen részlet, ami segít emlékezni…"
+          placeholder="Any detail that helps you remember…"
           maxLength={500}
           rows={3}
         />
@@ -140,14 +140,14 @@ export function ActivityForm({ editing, date, onSave, onDelete, onCancel }: Prop
 
       <div className="form-actions">
         <button type="submit" disabled={saving}>
-          {saving ? 'Mentés…' : editing ? 'Mentés' : 'Hozzáadás'}
+          {saving ? 'Saving…' : editing ? 'Save' : 'Add'}
         </button>
         <button type="button" className="link" onClick={onCancel} disabled={saving}>
-          Mégse
+          Cancel
         </button>
         {editing && (
           <button type="button" className="danger" onClick={() => void remove()} disabled={saving}>
-            Törlés
+            Delete
           </button>
         )}
       </div>

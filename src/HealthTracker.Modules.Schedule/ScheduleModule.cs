@@ -89,7 +89,7 @@ public static class ScheduleModule
     private static string? Validate(SaveActivityRequest req)
     {
         if (!ScheduleService.IsKnownColor(req.Color))
-            return $"Ismeretlen szín: '{req.Color}'. Elérhető: {string.Join(", ", Enum.GetNames<ActivityColor>())}.";
+            return $"Unknown color: '{req.Color}'. Available: {string.Join(", ", Enum.GetNames<ActivityColor>())}.";
 
         return Activity.Validate(req.StartTime, req.EndTime, req.Title, req.Note);
     }

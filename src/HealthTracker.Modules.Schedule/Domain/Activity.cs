@@ -91,16 +91,16 @@ public class Activity
     public static string? Validate(TimeOnly startTime, TimeOnly endTime, string title, string? note)
     {
         if (string.IsNullOrWhiteSpace(title))
-            return "A cím nem lehet üres.";
+            return "Title cannot be empty.";
 
         if (title.Trim().Length > MaxTitleLength)
-            return $"A cím legfeljebb {MaxTitleLength} karakter lehet.";
+            return $"Title can be at most {MaxTitleLength} characters.";
 
         if (endTime <= startTime)
-            return "A befejezésnek a kezdés után kell lennie.";
+            return "The end must be after the start.";
 
         if (note is not null && note.Trim().Length > MaxNoteLength)
-            return $"A megjegyzés legfeljebb {MaxNoteLength} karakter lehet.";
+            return $"The note can be at most {MaxNoteLength} characters.";
 
         return null;
     }

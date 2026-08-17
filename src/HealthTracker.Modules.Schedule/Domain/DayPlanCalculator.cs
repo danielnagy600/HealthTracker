@@ -45,7 +45,7 @@ public static class DayPlanCalculator
     public static DayPlan Calculate(IReadOnlyList<Activity> activities, TimeOnly windowStart, TimeOnly windowEnd)
     {
         if (windowEnd <= windowStart)
-            throw new ArgumentException("Az ablak végének a kezdete után kell lennie.", nameof(windowEnd));
+            throw new ArgumentException("The window end must be after its start.", nameof(windowEnd));
 
         var conflicts = FindConflicts(activities);
         var merged = MergeIntoWindow(activities, windowStart, windowEnd);

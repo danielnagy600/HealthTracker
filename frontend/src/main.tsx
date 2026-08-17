@@ -7,7 +7,7 @@ import './styles.css';
 
 const container = document.getElementById('root');
 if (!container) {
-  throw new Error('Hiányzik a #root elem az index.html-ből.');
+  throw new Error('The #root element is missing from index.html.');
 }
 
 createRoot(container).render(

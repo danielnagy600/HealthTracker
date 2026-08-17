@@ -56,18 +56,18 @@ export function Schedule() {
   return (
     <main className="dashboard">
       <section className="date-nav">
-        <button className="link" onClick={() => setDate(addDays(date, -1))} aria-label="Előző nap">
+        <button className="link" onClick={() => setDate(addDays(date, -1))} aria-label="Previous day">
           ‹
         </button>
         <div className="date-current">
           <strong>{formatLongDate(date)}</strong>
           {date !== todayIso() && (
             <button className="link" onClick={() => setDate(todayIso())}>
-              Ugrás a mai napra
+              Jump to today
             </button>
           )}
         </div>
-        <button className="link" onClick={() => setDate(addDays(date, 1))} aria-label="Következő nap">
+        <button className="link" onClick={() => setDate(addDays(date, 1))} aria-label="Next day">
           ›
         </button>
       </section>
@@ -76,25 +76,25 @@ export function Schedule() {
         <>
           <section className="day-summary">
             <span>
-              <strong>{formatDuration(day.busyMinutes)}</strong> foglalt
+              <strong>{formatDuration(day.busyMinutes)}</strong> busy
             </span>
             <span className="muted">
-              {formatDuration(day.freeMinutes)} szabad · {day.activities.length} elfoglaltság
+              {formatDuration(day.freeMinutes)} free · {day.activities.length} activities
             </span>
             {longestFreeSlot && longestFreeSlot.durationMinutes > 0 && (
               <span className="muted">
-                Leghosszabb szabad sáv: {toHm(longestFreeSlot.start)}–{toHm(longestFreeSlot.end)}
+                Longest free slot: {toHm(longestFreeSlot.start)}–{toHm(longestFreeSlot.end)}
               </span>
             )}
           </section>
 
           {day.conflicts.length > 0 && (
             <section className="banner behind">
-              <strong>Ütközés a naptáradban</strong>
+              <strong>Conflict in your day</strong>
               {day.conflicts.map((conflict) => (
                 <span key={`${conflict.firstId}-${conflict.secondId}`} className="next">
-                  „{conflict.firstTitle}" és „{conflict.secondTitle}" átfed{' '}
-                  {toHm(conflict.overlapStart)}–{toHm(conflict.overlapEnd)} között (
+                  “{conflict.firstTitle}” and “{conflict.secondTitle}” overlap{' '}
+                  {toHm(conflict.overlapStart)}–{toHm(conflict.overlapEnd)} (
                   {formatDuration(conflict.overlapMinutes)})
                 </span>
               ))}
@@ -115,13 +115,13 @@ export function Schedule() {
             />
           ) : (
             <section className="actions">
-              <button onClick={() => setFormOpen(true)}>+ Új elfoglaltság</button>
-              <span className="muted">Kattints egy blokkra a szerkesztéshez.</span>
+              <button onClick={() => setFormOpen(true)}>+ New activity</button>
+              <span className="muted">Click a block to edit it.</span>
             </section>
           )}
         </>
       ) : (
-        <p className="muted">Betöltés…</p>
+        <p className="muted">Loading…</p>
       )}
     </main>
   );

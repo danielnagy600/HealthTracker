@@ -7,14 +7,14 @@ export const ACTIVITY_COLORS = ['Blue', 'Green', 'Amber', 'Red', 'Purple', 'Teal
 
 export type ActivityColor = (typeof ACTIVITY_COLORS)[number];
 
-/** Magyar címkék a palettához. */
+/** Címkék a palettához (képernyőolvasónak). */
 export const COLOR_LABELS: Record<ActivityColor, string> = {
-  Blue: 'Kék',
-  Green: 'Zöld',
-  Amber: 'Borostyán',
-  Red: 'Piros',
-  Purple: 'Lila',
-  Teal: 'Türkiz'
+  Blue: 'Blue',
+  Green: 'Green',
+  Amber: 'Amber',
+  Red: 'Red',
+  Purple: 'Purple',
+  Teal: 'Teal'
 };
 
 export interface Activity {
@@ -98,13 +98,13 @@ export function toHm(time: string): string {
   return time.slice(0, 5);
 }
 
-/** 90 → "1 ó 30 p" */
+/** 90 → "1h 30m" */
 export function formatDuration(minutes: number): string {
   const hours = Math.floor(minutes / 60);
   const rest = minutes % 60;
-  if (hours === 0) return `${rest} p`;
-  if (rest === 0) return `${hours} ó`;
-  return `${hours} ó ${rest} p`;
+  if (hours === 0) return `${rest}m`;
+  if (rest === 0) return `${hours}h`;
+  return `${hours}h ${rest}m`;
 }
 
 /** Date → "2026-08-16" (helyi idő szerint, nem UTC-ben). */
@@ -120,9 +120,9 @@ export function fromIsoDate(iso: string): Date {
   return new Date(year ?? 1970, (month ?? 1) - 1, day ?? 1, 12);
 }
 
-/** "2026-08-16" → "2026. augusztus 16., vasárnap" */
+/** "2026-08-16" → "Sunday, 16 August 2026" */
 export function formatLongDate(iso: string): string {
-  return fromIsoDate(iso).toLocaleDateString('hu-HU', {
+  return fromIsoDate(iso).toLocaleDateString('en-GB', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',

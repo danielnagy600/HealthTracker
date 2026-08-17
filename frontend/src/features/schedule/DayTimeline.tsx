@@ -43,7 +43,7 @@ export function DayTimeline({ day, onSelect, selectedId }: Props) {
 
       {day.activities.length === 0 && (
         <p className="timeline-empty muted">
-          Ez a nap még üres. Vedd fel az első elfoglaltságot! 🗓️
+          This day is empty. Add your first activity! 🗓️
         </p>
       )}
 
