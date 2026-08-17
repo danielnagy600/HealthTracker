@@ -279,3 +279,63 @@ a:hover { text-decoration: underline; }
 .form-actions { display: flex; align-items: center; gap: 0.6rem; }
 button.danger { background: var(--red); margin-left: auto; }
 button.danger:hover { background: #b83a3a; }
+
+/* ---- Kalória: napi keret és étkezés-szekciók ---- */
+.fill.is-over { background: linear-gradient(90deg, #e2705f, var(--red)); }
+
+.goal-row { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
+
+.meal-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.9rem 1.25rem;
+}
+.meal-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
+.meal-head h3 { margin: 0; font-size: 1.02rem; }
+.meal-kcal { font-weight: 700; font-variant-numeric: tabular-nums; }
+.meal-empty { margin: 0.5rem 0 0; font-size: 0.88rem; }
+
+.meal-card ul { list-style: none; margin: 0.5rem 0 0; padding: 0; }
+.meal-card li + li { border-top: 1px solid var(--border); }
+
+.entry {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.5rem 0;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.94rem;
+  font-weight: 400;
+  text-align: left;
+  cursor: pointer;
+}
+.entry:hover { background: #f6f9fe; }
+.entry-name { flex: 1; }
+.entry-time { font-size: 0.78rem; font-variant-numeric: tabular-nums; }
+.entry-kcal { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.meal-add { margin-top: 0.4rem; padding-left: 0; font-size: 0.85rem; }
+
+/* ---- Kalória: étkezésválasztó az űrlapon ---- */
+.meal-picker { border: none; padding: 0; margin: 0; }
+.meal-picker legend { font-size: 0.85rem; color: var(--muted); padding: 0; margin-bottom: 0.35rem; }
+.meal-options { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.meal-option {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--text);
+  cursor: pointer;
+}
+.meal-option:hover { background: #f6f9fe; }
+.meal-option.is-selected { background: var(--blue); border-color: var(--blue); color: #fff; }
+.meal-option input { position: absolute; opacity: 0; width: 0; height: 0; }

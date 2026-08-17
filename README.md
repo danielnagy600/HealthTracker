@@ -1,13 +1,16 @@
 # HealthTracker — moduláris monolit tanuló projekt
 
 Egészség-követő alkalmazás, amely a **modularizáció és réteges architektúra** tanulására
-készült. Jelenleg két funkciómodult tartalmaz:
+készült. Jelenleg három funkciómodult tartalmaz:
 
 - **Vízfogyasztás-emlékeztető** — figyeli, mennyit ittál a mai napon, és jelzi,
   **mikor mennyi vizet igyál**, hogy elérd a napi célt.
 - **Napirend** — a napi elfoglaltságaid kezelése: felvitel kezdés/befejezés
   időponttal, **vizuális idővonal**, választható szín és megjegyzés. Jelzi az
   **ütközéseket** és a szabad idősávokat.
+- **Kalória** — napi kalóriabevitel **étkezésenkénti** bontásban (reggeli, ebéd,
+  vacsora, nasi), állítható napi kerettel. Jelzi, mennyi fér még bele, és mikor
+  lépted túl a keretet.
 
 ## Technológiák
 
@@ -40,11 +43,17 @@ HealthTracker/
 │   │   ├── Application/     # DTO-k, interfészek, szolgáltatás
 │   │   ├── Infrastructure/  # EF Core + PostgreSQL (saját "schedule" séma)
 │   │   └── ScheduleModule.cs
-│   ├── HealthTracker.Modules.Identity     # 3. modul: felhasználók, regisztráció/login
+│   ├── HealthTracker.Modules.Calories     # 3. modul: kalóriabevitel
+│   │   ├── Domain/          # entitások + tiszta üzleti logika (napi egyenleg)
+│   │   ├── Application/     # DTO-k, interfészek, szolgáltatás
+│   │   ├── Infrastructure/  # EF Core + PostgreSQL (saját "calories" séma)
+│   │   └── CaloriesModule.cs
+│   ├── HealthTracker.Modules.Identity     # 4. modul: felhasználók, regisztráció/login
 │   └── HealthTracker.Api                  # host: összerakja a modulokat, CORS, auth pipeline
 ├── tests/
 │   ├── HealthTracker.Modules.Water.Tests     # xUnit tesztek
-│   └── HealthTracker.Modules.Schedule.Tests  # xUnit tesztek
+│   ├── HealthTracker.Modules.Schedule.Tests  # xUnit tesztek
+│   └── HealthTracker.Modules.Calories.Tests  # xUnit tesztek
 ├── frontend/                              # React alkalmazás (Vite)
 ├── docker-compose.yml                     # PostgreSQL + API
 └── HealthTracker.slnx
@@ -55,6 +64,7 @@ HealthTracker/
 ```
 Api ──► Modules.Water ────► SharedKernel
     ├─► Modules.Schedule ──┤
+    ├─► Modules.Calories ──┤
     └─► Modules.Identity ──┘
         (a modulok NEM látják egymást)
 ```
@@ -107,6 +117,12 @@ Induláskor automatikusan lefutnak az adatbázis-migrációk. Az API a
 - `PUT  /api/schedule/activities/{id}` – módosítás
 - `DELETE /api/schedule/activities/{id}` – törlés
 - `GET  /api/schedule/colors`  – a választható színek
+- `GET  /api/calories/day?date=` – egy nap étkezésenkénti bontásban (a dátum elhagyható)
+- `POST /api/calories/entries` – új bejegyzés
+- `PUT  /api/calories/entries/{id}` – módosítás
+- `DELETE /api/calories/entries/{id}` – törlés
+- `GET/PUT /api/calories/goal` – napi kalóriakeret
+- `GET  /api/calories/meals`   – a választható étkezések
 
 > **Jelszó-szabályok** (Identity alapértelmezés): min. 6 karakter, kis- és nagybetű,
 > szám és szimbólum — pl. `Passw0rd!`.
@@ -135,6 +151,10 @@ dotnet test
   sávok, az átfedés nem duplán számoló foglaltság.
 - `ScheduleServiceTests` – a Napirend szolgáltatása mockolt tárolóval; azt is
   ellenőrzi, hogy más felhasználó bejegyzését nem lehet elérni.
+- `CalorieCalculatorTests` – a Kalória tiszta domain-logikája: egyenleg,
+  étkezésenkénti bontás, túllépés, a nullával osztás elkerülése.
+- `CalorieServiceTests` – a Kalória szolgáltatása mockolt tárolóval: étkezésenkénti
+  csoportosítás, a napi keret módosítása, más felhasználó adatainak elzárása.
 
 ## Teljes stack Dockerben (opcionális, későbbi lépés)
 

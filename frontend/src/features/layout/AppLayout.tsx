@@ -20,9 +20,10 @@ export function AppLayout() {
         <span className="brand">💧 HealthTracker</span>
         <nav className="mainnav">
           <NavLink to="/" end>
-            Víz
+            Water
           </NavLink>
-          <NavLink to="/schedule">Napirend</NavLink>
+          <NavLink to="/schedule">Schedule</NavLink>
+          <NavLink to="/calories">Calories</NavLink>
         </nav>
         <span className="spacer"></span>
         <span className="muted">{auth.email}</span>

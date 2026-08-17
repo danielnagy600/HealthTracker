@@ -1,4 +1,5 @@
 using HealthTracker.Api;
+using HealthTracker.Modules.Calories;
 using HealthTracker.Modules.Identity;
 using HealthTracker.Modules.Schedule;
 using HealthTracker.Modules.Water;
@@ -14,6 +15,7 @@ var connectionString = builder.Configuration.GetConnectionString("Postgres")
 builder.Services.AddIdentityModule(connectionString);
 builder.Services.AddWaterModule(connectionString);
 builder.Services.AddScheduleModule(connectionString);
+builder.Services.AddCaloriesModule(connectionString);
 
 
 builder.Services.AddHttpContextAccessor();
@@ -32,6 +34,7 @@ try
     await app.Services.MigrateIdentityModuleAsync();
     await app.Services.MigrateWaterModuleAsync();
     await app.Services.MigrateScheduleModuleAsync();
+    await app.Services.MigrateCaloriesModuleAsync();
 }
 catch (Exception ex)
 {
@@ -48,5 +51,6 @@ app.MapGet("/", () => "HealthTracker API fut. Auth: /api/auth/login, Water: /api
 app.MapIdentityModule();
 app.MapWaterModule();
 app.MapScheduleModule();
+app.MapCaloriesModule();
 
 app.Run();

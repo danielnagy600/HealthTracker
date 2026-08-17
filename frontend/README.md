@@ -46,6 +46,7 @@ src/
 │   ├── RequireAuth.tsx       # védett útvonal: bejelentkezés nélkül /login-ra irányít
 │   ├── water.ts              # a Water modul DTO-i és REST-hívásai
 │   ├── schedule.ts           # a Schedule modul DTO-i, REST-hívásai és idő-segédei
+│   ├── calories.ts           # a Calories modul DTO-i és REST-hívásai
 │   └── format.ts             # időformázás (HH:mm)
 └── features/
     ├── layout/AppLayout.tsx  # közös fejléc + navigáció a védett oldalakhoz
@@ -55,6 +56,10 @@ src/
     │   ├── DayTimeline.tsx   # a vizuális idővonal
     │   ├── ActivityForm.tsx  # felvitel/szerkesztés színválasztóval és megjegyzéssel
     │   └── lanes.ts          # az átfedő elemek oszlopokba rendezése (tiszta függvény)
+    ├── calories/
+    │   ├── Calories.tsx      # a Kalória oldal: napi keret, étkezés-szekciók
+    │   ├── FoodEntryForm.tsx # bejegyzés felvitele/szerkesztése
+    │   └── GoalEditor.tsx    # a napi kalóriakeret módosítása
     ├── login/Login.tsx
     └── register/Register.tsx
 ```

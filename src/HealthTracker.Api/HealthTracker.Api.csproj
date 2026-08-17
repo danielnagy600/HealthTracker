@@ -5,6 +5,7 @@
     <ProjectReference Include="..\HealthTracker.SharedKernel\HealthTracker.SharedKernel.csproj" />
     <ProjectReference Include="..\HealthTracker.Modules.Identity\HealthTracker.Modules.Identity.csproj" />
     <ProjectReference Include="..\HealthTracker.Modules.Schedule\HealthTracker.Modules.Schedule.csproj" />
+    <ProjectReference Include="..\HealthTracker.Modules.Calories\HealthTracker.Modules.Calories.csproj" />
   </ItemGroup>
 
   <ItemGroup>
