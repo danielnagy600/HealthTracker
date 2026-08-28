@@ -1,9 +1,10 @@
 # Fejlesztői / futtató környezet konténerekben.
 #
-#  - Csak az adatbázis (fejlesztéshez):   docker compose up -d db
-#  - Teljes stack (API + adatbázis):      docker compose up --build
+#  - Csak az adatbázis (fejlesztéshez):        docker compose up -d db
+#  - Teljes stack (frontend + API + adatbázis): docker compose up --build
 #
-# Az API a "db" hoston éri el a PostgreSQL-t (a compose belső hálózatán).
+# Az API a "db" hoston éri el a PostgreSQL-t, a böngésző pedig a hoston publikált
+# portokon (localhost:4200 / localhost:8080) éri el a frontendet és az API-t.
 services:
   db:
     image: postgres:17
@@ -30,13 +31,26 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__Postgres: "Host=db;Port=5432;Database=healthtracker;Username=postgres;Password=postgres"
-      # Ha a React frontendet is konténerbe teszed, ide kerül majd annak a címe.
+      # A frontend konténer publikált (host) címe - ide fut be a böngészőből a CORS preflight.
       Cors__AllowedOrigin: "http://localhost:4200"
     ports:
       - "8080:8080"
     depends_on:
       db:
         condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # A böngészőből, a hostról hívjuk az API-t, ezért a host oldali (nem a
+        # compose-belső) API-cím kell ide - ez egyezik az api service publikált portjával.
+        VITE_API_BASE: http://localhost:8080
+    container_name: healthtracker-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
 
 volumes:
   pgdata:

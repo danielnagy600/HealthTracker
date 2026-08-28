@@ -6,6 +6,8 @@ WORKDIR /src
 COPY src/HealthTracker.SharedKernel/*.csproj        src/HealthTracker.SharedKernel/
 COPY src/HealthTracker.Modules.Water/*.csproj       src/HealthTracker.Modules.Water/
 COPY src/HealthTracker.Modules.Identity/*.csproj    src/HealthTracker.Modules.Identity/
+COPY src/HealthTracker.Modules.Schedule/*.csproj    src/HealthTracker.Modules.Schedule/
+COPY src/HealthTracker.Modules.Calories/*.csproj    src/HealthTracker.Modules.Calories/
 COPY src/HealthTracker.Api/*.csproj                 src/HealthTracker.Api/
 RUN dotnet restore src/HealthTracker.Api/HealthTracker.Api.csproj
 

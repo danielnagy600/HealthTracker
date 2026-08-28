@@ -7,11 +7,9 @@ import { Login } from './features/login/Login';
 import { Register } from './features/register/Register';
 import { Schedule } from './features/schedule/Schedule';
 
-/** Az alkalmazás útvonalai (az Angular `app.routes.ts` megfelelője). */
 export function App() {
   return (
     <Routes>
-      {/* A védett oldalak közös kereten (fejléc + navigáció) belül élnek. */}
       <Route
         element={
           <RequireAuth>

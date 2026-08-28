@@ -1,6 +1,6 @@
 import { apiFetch } from './api';
 
-// A backend Water moduljának DTO-i TypeScript-oldalon.
+
 export interface IntakeItem {
   id: string;
   recordedAt: string;

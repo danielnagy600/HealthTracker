@@ -12,20 +12,12 @@ interface LoginResponse {
   tokenType: string;
 }
 
-/**
- * Bejelentkezés-kezelés. A tokent a localStorage-ban tároljuk (lásd `session`),
- * és React-állapotban is tartjuk, hogy a UI újrarendelődjön be-/kijelentkezéskor.
- * A HTTP-kérésekre az `apiFetch` teszi rá a tokent.
- *
- * Ez az Angular `AuthService` (signalos, `providedIn: 'root'`) megfelelője:
- * egyetlen példány az egész alkalmazásra, itt Context formájában.
- */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(() => session.getToken());
   const [email, setEmail] = useState<string | null>(() => session.getEmail());
 
   const register = useCallback(async (email: string, password: string): Promise<void> => {
-    // Az ASP.NET Core Identity /register végpontja.
+
     await apiFetch<void>('/api/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, password })
