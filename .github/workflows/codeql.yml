@@ -1,0 +1,62 @@
+# CodeQL: statikus biztonsági elemzés (nem tévesztendő össze a build-idejű Roslyn
+# analyzerekkel vagy az oxlinttal – ez kifejezetten sebezhetőségi mintákat keres,
+# pl. SQL/NoSQL injection, XSS, path traversal, hardcodolt titkok stb.).
+#
+# Megjegyzés: privát repónál a "security-events: write" jogosultsághoz és az
+# eredmények Security fülön való megjelenítéséhez GitHub Advanced Security kell
+# (nyilvános repónál ez ingyenes). Ha a repo privát és nincs GHAS, az "analyze"
+# lépés hibát fog jelezni feltöltéskor.
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Heti egyszer önmagában is fusson – így az azóta megismert, új sebezhetőségi
+    # mintákat a már meglévő (nem módosított) kódon is elkapja.
+    - cron: '0 3 * * 1'
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: csharp
+            build-mode: manual
+          - language: javascript-typescript
+            build-mode: none
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # A C# elemzéshez a CodeQL-nek ténylegesen le kell tudnia fordítani a kódot
+      # (build-mode: manual) – ehhez kell a megfelelő .NET SDK.
+      - name: .NET SDK
+        if: matrix.language == 'csharp'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+      - name: Build (.NET)
+        if: matrix.language == 'csharp'
+        run: dotnet build HealthTracker.slnx --configuration Release
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
