@@ -1,0 +1,17 @@
+# Ez a fájl teszi a sortörés-kezelést repó-szintű, mindenkinél (és minden
+# eszköznél: SmartGit, VS Code, Claude, parancssori git) egyformán érvényes
+# szabállyá – nem az egyéni `core.autocrlf` beállításon múlik többé.
+#
+# Alapértelmezés: CRLF (\r\n) – ez a repóban már kialakult, tényleges gyakorlat
+# (Windows-os fejlesztés, SmartGit) minden meglévő szöveges fájlon, a .cs-től
+# a .yml-ig és a frontend .tsx-ekig – ezt rögzítjük, nem cseréljük le.
+* text=auto eol=crlf
+
+# Bináris fájlok: a Git ne is próbáljon sortörést konvertálni bennük.
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.ico     binary
+*.woff    binary
+*.woff2   binary
