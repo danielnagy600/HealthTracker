@@ -8,7 +8,7 @@ namespace HealthTracker.Modules.Schedule.Application;
 public interface IScheduleService
 {
     /// <summary>Egy nap teljes képe. Ha nincs dátum megadva, a mai napot adja.</summary>
-    Task<DayScheduleResponse> GetDayAsync(DateOnly? date = null, CancellationToken ct = default);
+    Task<DayScheduleResponse> GetDayAsync(DateOnly? onDate = null, CancellationToken ct = default);
 
     Task<ActivityItem> AddAsync(SaveActivityRequest request, CancellationToken ct = default);
 

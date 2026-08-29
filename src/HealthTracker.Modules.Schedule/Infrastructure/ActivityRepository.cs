@@ -15,10 +15,10 @@ public sealed class ActivityRepository : IActivityRepository
     public ActivityRepository(ScheduleDbContext db) => _db = db;
 
     public async Task<IReadOnlyList<Activity>> GetForDateAsync(
-        Guid userId, DateOnly date, CancellationToken ct = default)
+        Guid userId, DateOnly onDate, CancellationToken ct = default)
     {
         return await _db.Activities
-            .Where(a => a.UserId == userId && a.Date == date)
+            .Where(a => a.UserId == userId && a.Date == onDate)
             .OrderBy(a => a.StartTime)
             .ToListAsync(ct);
     }

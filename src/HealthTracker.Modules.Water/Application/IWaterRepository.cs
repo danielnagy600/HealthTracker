@@ -13,7 +13,7 @@ public interface IWaterRepository
 {
     Task AddIntakeAsync(WaterIntake intake, CancellationToken ct = default);
 
-    Task<IReadOnlyList<WaterIntake>> GetIntakesForDateAsync(Guid userId, DateOnly date, CancellationToken ct = default);
+    Task<IReadOnlyList<WaterIntake>> GetIntakesForDateAsync(Guid userId, DateOnly onDate, CancellationToken ct = default);
 
     /// <summary>A felhasználó beállításai; ha még nincs, alapértelmezettet hoz létre és ment.</summary>
     Task<WaterSettings> GetOrCreateSettingsAsync(Guid userId, CancellationToken ct = default);

@@ -11,7 +11,7 @@ namespace HealthTracker.Modules.Calories.Application;
 /// </summary>
 public interface IFoodEntryRepository
 {
-    Task<IReadOnlyList<FoodEntry>> GetForDateAsync(Guid userId, DateOnly date, CancellationToken ct = default);
+    Task<IReadOnlyList<FoodEntry>> GetForDateAsync(Guid userId, DateOnly onDate, CancellationToken ct = default);
 
     /// <summary>Egy bejegyzés azonosító alapján, a felhasználóra szűrve (null, ha nem az övé).</summary>
     Task<FoodEntry?> FindAsync(Guid userId, Guid entryId, CancellationToken ct = default);

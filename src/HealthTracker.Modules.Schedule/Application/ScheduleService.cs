@@ -21,10 +21,10 @@ public sealed class ScheduleService : IScheduleService
         _currentUser = currentUser;
     }
 
-    public async Task<DayScheduleResponse> GetDayAsync(DateOnly? date = null, CancellationToken ct = default)
+    public async Task<DayScheduleResponse> GetDayAsync(DateOnly? onDate = null, CancellationToken ct = default)
     {
         var userId = _currentUser.RequireUserId();
-        var day = date ?? DateOnly.FromDateTime(_clock.Now.DateTime);
+        var day = onDate ?? DateOnly.FromDateTime(_clock.Now.DateTime);
 
         var activities = await _repository.GetForDateAsync(userId, day, ct);
 

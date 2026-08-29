@@ -11,7 +11,7 @@ namespace HealthTracker.Modules.Schedule.Application;
 /// </summary>
 public interface IActivityRepository
 {
-    Task<IReadOnlyList<Activity>> GetForDateAsync(Guid userId, DateOnly date, CancellationToken ct = default);
+    Task<IReadOnlyList<Activity>> GetForDateAsync(Guid userId, DateOnly onDate, CancellationToken ct = default);
 
     /// <summary>Egy elfoglaltság azonosító alapján, a felhasználóra szűrve (null, ha nem az övé).</summary>
     Task<Activity?> FindAsync(Guid userId, Guid activityId, CancellationToken ct = default);

@@ -1,0 +1,49 @@
+root = true
+
+# Ez a fájl adja a stílusszabályokat, amiket a Directory.Build.props
+# EnforceCodeStyleInBuild=true beállítása miatt a `dotnet build` is
+# kikényszerít, nem csak az IDE jelez rájuk.
+
+[*.cs]
+indent_style = space
+indent_size = 4
+end_of_line = crlf
+charset = utf-8-bom
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# A meglévő kód mindenhol ezt a két mintát követi, ezért figyelmeztetésként
+# kényszerítjük ki – ha valahol eltérnél tőle, a build jelezni fogja (ez a
+# visszacsúszás ellen véd, nem az meglévő kódot minősíti hibásnak).
+csharp_style_namespace_declarations = file_scoped:warning
+# "for_non_interface_members": interface-tagoknál a modifier nélküli forma az
+# idiomatikus C# (senki nem ír ki "public"-ot egy interface metódus elé) –
+# csak osztály-/rekordtagoknál kérjük számon az explicit modifiert.
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning
+
+# Ízlés kérdése, nem hibalehetőség – maradjon csak IDE-javaslat, a buildet ne
+# buktassa el (66+ meglévő, biztonságos "if (x) return;" mintát nem akarunk
+# most tömegesen átírni csak egy stílusszabály miatt).
+csharp_prefer_braces = true:suggestion
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+
+# Az EF Core migrációkat a `dotnet ef migrations add` generálja, nem kézzel
+# írjuk/formázzuk őket – ne kapjanak stílus-figyelmeztetést build közben.
+[**/Migrations/**.cs]
+dotnet_diagnostic.IDE0161.severity = none
+dotnet_diagnostic.IDE0040.severity = none
+
+[*.{json,yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# A tesztek szándékosan az xUnit-nál bevett, leíró, aláhúzásos elnevezést
+# használják (pl. Meal_names_are_parsed_case_insensitively) – ez olvashatóbb,
+# mint a PascalCase tesztnév, de a CA1707 (nyilvános API-elnevezésre kitalált
+# szabály) ezt hibásan jelezné mind az 59 tesztnél. Csak itt kapcsoljuk ki.
+[tests/**/*.cs]
+dotnet_diagnostic.CA1707.severity = none

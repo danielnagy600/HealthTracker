@@ -1,0 +1,21 @@
+<Project>
+
+  <!--
+    Ez a fájl minden `src/*/*.csproj`-ra automatikusan érvényes (az MSBuild
+    felfelé haladva megkeresi a legközelebbi Directory.Build.props-ot) – nem kell
+    minden projektbe külön bemásolni ugyanezt a két beállítást.
+
+    - AnalysisLevel: bekapcsolja a .NET SDK-ba épített Roslyn-analyzereket
+      (Microsoft.CodeAnalysis.NetAnalyzers) "recommended" szigorúsággal – ezek
+      valódi hibamintákat (rossz async/await, felesleges allokáció stb.) fognak
+      meg build közben, nem csak formázást.
+    - EnforceCodeStyleInBuild: az .editorconfig-ban megadott stílusszabályokat
+      (pl. file-scoped namespace, "var" használat) is figyelembe veszi `dotnet
+      build` közben, nem csak az IDE-ben.
+  -->
+  <PropertyGroup>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+</Project>

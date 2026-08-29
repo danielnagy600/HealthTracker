@@ -8,6 +8,11 @@ namespace HealthTracker.Modules.Water.Infrastructure.Migrations
     /// <inheritdoc />
     public partial class InitialCreate : Migration
     {
+        // CA1861: a CreateIndex minden meghívásnál új tömböt allokálna a helyben írt
+        // literálból – ez a migráció ugyan csak egyszer fut le, de a statikus mező
+        // olcsóbb és ugyanígy olvasható.
+        private static readonly string[] IntakesUserIdDateColumns = { "UserId", "Date" };
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,7 +54,7 @@ namespace HealthTracker.Modules.Water.Infrastructure.Migrations
                 name: "IX_intakes_UserId_Date",
                 schema: "water",
                 table: "intakes",
-                columns: new[] { "UserId", "Date" });
+                columns: IntakesUserIdDateColumns);
         }
 
         /// <inheritdoc />

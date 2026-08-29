@@ -21,10 +21,10 @@ public sealed class CalorieService : ICalorieService
         _currentUser = currentUser;
     }
 
-    public async Task<DayCaloriesResponse> GetDayAsync(DateOnly? date = null, CancellationToken ct = default)
+    public async Task<DayCaloriesResponse> GetDayAsync(DateOnly? onDate = null, CancellationToken ct = default)
     {
         var userId = _currentUser.RequireUserId();
-        var day = date ?? DateOnly.FromDateTime(_clock.Now.DateTime);
+        var day = onDate ?? DateOnly.FromDateTime(_clock.Now.DateTime);
 
         var goal = await _repository.GetOrCreateGoalAsync(userId, ct);
         var entries = await _repository.GetForDateAsync(userId, day, ct);

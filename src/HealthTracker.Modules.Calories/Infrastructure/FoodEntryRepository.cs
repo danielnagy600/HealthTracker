@@ -15,10 +15,10 @@ public sealed class FoodEntryRepository : IFoodEntryRepository
     public FoodEntryRepository(CalorieDbContext db) => _db = db;
 
     public async Task<IReadOnlyList<FoodEntry>> GetForDateAsync(
-        Guid userId, DateOnly date, CancellationToken ct = default)
+        Guid userId, DateOnly onDate, CancellationToken ct = default)
     {
         return await _db.Entries
-            .Where(e => e.UserId == userId && e.Date == date)
+            .Where(e => e.UserId == userId && e.Date == onDate)
             .OrderBy(e => e.RecordedAt)
             .ToListAsync(ct);
     }

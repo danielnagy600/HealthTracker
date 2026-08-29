@@ -4,6 +4,7 @@ using HealthTracker.Modules.Identity;
 using HealthTracker.Modules.Schedule;
 using HealthTracker.Modules.Water;
 using HealthTracker.SharedKernel.Abstractions;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,8 +39,7 @@ try
 }
 catch (Exception ex)
 {
-    app.Logger.LogError(ex,
-        "Az adatbázis-migráció nem sikerült. Fut a PostgreSQL? Indítsd: docker compose up -d db");
+    Log.MigrationFailed(app.Logger, ex);
 }
 
 app.UseCors(DevCors);
@@ -54,3 +54,13 @@ app.MapScheduleModule();
 app.MapCaloriesModule();
 
 app.Run();
+
+// CA1848: a sima LogError-hívás minden meghívásnál dobozol (boxol) és formáz, még ha
+// a log szint ki is van kapcsolva – a forráskód-generált LoggerMessage ezt elkerüli.
+// Csak egyszer, hiba esetén fut le, de a beállított AnalysisLevel ezt szigorúan kéri.
+internal static partial class Log
+{
+    [LoggerMessage(Level = LogLevel.Error,
+        Message = "Az adatbázis-migráció nem sikerült. Fut a PostgreSQL? Indítsd: docker compose up -d db")]
+    public static partial void MigrationFailed(ILogger logger, Exception exception);
+}

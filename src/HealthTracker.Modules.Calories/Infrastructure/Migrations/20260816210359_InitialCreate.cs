@@ -8,6 +8,11 @@ namespace HealthTracker.Modules.Calories.Infrastructure.Migrations
     /// <inheritdoc />
     public partial class InitialCreate : Migration
     {
+        // CA1861: a CreateIndex minden meghívásnál új tömböt allokálna a helyben írt
+        // literálból – ez a migráció ugyan csak egyszer fut le, de a statikus mező
+        // olcsóbb és ugyanígy olvasható.
+        private static readonly string[] EntriesUserIdDateColumns = { "UserId", "Date" };
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,7 +54,7 @@ namespace HealthTracker.Modules.Calories.Infrastructure.Migrations
                 name: "IX_entries_UserId_Date",
                 schema: "calories",
                 table: "entries",
-                columns: new[] { "UserId", "Date" });
+                columns: EntriesUserIdDateColumns);
         }
 
         /// <inheritdoc />

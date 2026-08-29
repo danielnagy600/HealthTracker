@@ -8,6 +8,11 @@ namespace HealthTracker.Modules.Schedule.Infrastructure.Migrations
     /// <inheritdoc />
     public partial class InitialCreate : Migration
     {
+        // CA1861: a CreateIndex minden meghívásnál új tömböt allokálna a helyben írt
+        // literálból – ez a migráció ugyan csak egyszer fut le, de a statikus mező
+        // olcsóbb és ugyanígy olvasható.
+        private static readonly string[] ActivitiesUserIdDateColumns = { "UserId", "Date" };
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -37,7 +42,7 @@ namespace HealthTracker.Modules.Schedule.Infrastructure.Migrations
                 name: "IX_activities_UserId_Date",
                 schema: "schedule",
                 table: "activities",
-                columns: new[] { "UserId", "Date" });
+                columns: ActivitiesUserIdDateColumns);
         }
 
         /// <inheritdoc />

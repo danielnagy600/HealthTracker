@@ -21,10 +21,10 @@ public sealed class WaterRepository : IWaterRepository
     }
 
     public async Task<IReadOnlyList<WaterIntake>> GetIntakesForDateAsync(
-        Guid userId, DateOnly date, CancellationToken ct = default)
+        Guid userId, DateOnly onDate, CancellationToken ct = default)
     {
         return await _db.Intakes
-            .Where(i => i.UserId == userId && i.Date == date)
+            .Where(i => i.UserId == userId && i.Date == onDate)
             .ToListAsync(ct);
     }
 

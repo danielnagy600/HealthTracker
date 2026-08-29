@@ -8,7 +8,7 @@ namespace HealthTracker.Modules.Calories.Application;
 public interface ICalorieService
 {
     /// <summary>Egy nap teljes képe étkezésenkénti bontásban. Dátum nélkül a mai nap.</summary>
-    Task<DayCaloriesResponse> GetDayAsync(DateOnly? date = null, CancellationToken ct = default);
+    Task<DayCaloriesResponse> GetDayAsync(DateOnly? onDate = null, CancellationToken ct = default);
 
     Task<FoodEntryItem> AddAsync(SaveFoodEntryRequest request, CancellationToken ct = default);
 
