@@ -1,5 +1,3 @@
-# Minden pushnál és pull requestnél lefut: így törött kód nem marad észrevétlen
-# a repóban, függetlenül attól, ki és honnan tölti fel.
 name: CI
 
 on:
@@ -20,14 +18,13 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Függőségek visszaállítása
+      - name: Restore dependencies
         run: dotnet restore HealthTracker.slnx
 
-      - name: Fordítás
+      - name: Build
         run: dotnet build HealthTracker.slnx --no-restore --configuration Release
 
-      # A tesztek mockolt függőségekkel futnak, ezért nem kell hozzájuk adatbázis.
-      - name: Tesztek
+      - name: Test
         run: dotnet test HealthTracker.slnx --no-build --configuration Release
 
   frontend:
@@ -46,14 +43,12 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
-      # npm ci (nem install): pontosan a lockfile szerint telepít, és hibát dob,
-      # ha a package.json és a lockfile eltért egymástól.
-      - name: Függőségek telepítése
+      - name: Dependency installation
         run: npm ci
 
       - name: Lint
         run: npm run lint
 
-      # A build első lépése a tsc -b, tehát ez a típusellenőrzést is elvégzi.
-      - name: Típusellenőrzés és build
+
+      - name: Type checking and build
         run: npm run build
