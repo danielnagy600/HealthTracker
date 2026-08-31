@@ -3,11 +3,6 @@ using HealthTracker.SharedKernel.Abstractions;
 
 namespace HealthTracker.Modules.Calories.Application;
 
-/// <summary>
-/// A Calories modul üzleti logikája. Összeköti a tárolót (IFoodEntryRepository),
-/// az órát (IClock) és a bejelentkezett felhasználót (ICurrentUser) a tiszta
-/// domain-számítással (CalorieCalculator).
-/// </summary>
 public sealed class CalorieService : ICalorieService
 {
     private readonly IFoodEntryRepository _repository;
@@ -29,7 +24,6 @@ public sealed class CalorieService : ICalorieService
         var goal = await _repository.GetOrCreateGoalAsync(userId, ct);
         var entries = await _repository.GetForDateAsync(userId, day, ct);
 
-        // A tiszta domain-számítás – ezt a tesztek külön is ellenőrzik.
         var daily = CalorieCalculator.Calculate(entries, goal.DailyTargetKcal);
 
         var groups = daily.Meals
@@ -118,11 +112,9 @@ public sealed class CalorieService : ICalorieService
         return new GoalResponse(goal.DailyTargetKcal);
     }
 
-    /// <summary>Az étkezés nevének feloldása; ismeretlen név esetén a nasi.</summary>
     public static MealType ParseMeal(string? meal) =>
         Enum.TryParse<MealType>(meal, ignoreCase: true, out var parsed) ? parsed : MealType.Snack;
 
-    /// <summary>Igaz, ha a megadott étkezés szerepel a felsorolásban.</summary>
     public static bool IsKnownMeal(string? meal) =>
         Enum.TryParse<MealType>(meal, ignoreCase: true, out _);
 

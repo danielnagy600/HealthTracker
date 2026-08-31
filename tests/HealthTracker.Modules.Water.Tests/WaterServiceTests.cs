@@ -7,10 +7,6 @@ using Xunit;
 
 namespace HealthTracker.Modules.Water.Tests;
 
-/// <summary>
-/// A WaterService tesztjei Moq-kal: a függőségeket (tároló, óra, felhasználó)
-/// mockoljuk, így a szolgáltatás logikáját elszigetelten vizsgáljuk.
-/// </summary>
 public class WaterServiceTests
 {
     private static readonly Guid UserId = Guid.Parse("11111111-1111-1111-1111-111111111111");
@@ -25,8 +21,7 @@ public class WaterServiceTests
     {
         _clock.SetupGet(c => c.Now).Returns(Now);
         _currentUser.SetupGet(c => c.UserId).Returns(UserId);
-        // A RequireUserId() default interface metódus törzsét a Moq nem futtatja,
-        // ezért explicit beállítjuk, mit adjon vissza.
+
         _currentUser.Setup(c => c.RequireUserId()).Returns(UserId);
         _repository
             .Setup(r => r.GetOrCreateSettingsAsync(UserId, It.IsAny<CancellationToken>()))

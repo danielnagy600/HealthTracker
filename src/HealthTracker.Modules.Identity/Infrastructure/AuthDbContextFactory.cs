@@ -3,10 +3,6 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace HealthTracker.Modules.Identity.Infrastructure;
 
-/// <summary>
-/// Tervezési idejű gyár a "dotnet ef migrations" parancsnak (lásd a Water modul
-/// hasonló gyárát). Az adatbázisnak nem kell futnia a migráció létrehozásához.
-/// </summary>
 public sealed class AuthDbContextFactory : IDesignTimeDbContextFactory<AuthDbContext>
 {
     public AuthDbContext CreateDbContext(string[] args)

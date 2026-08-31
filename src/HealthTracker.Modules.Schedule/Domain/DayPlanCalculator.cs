@@ -1,23 +1,10 @@
 namespace HealthTracker.Modules.Schedule.Domain;
 
-/// <summary>
-/// A modul üzleti magja: a nap elfoglaltságaiból kiszámolja a lefoglalt és a
-/// szabad időt, a szabad réseket, valamint az egymással ütköző elfoglaltságokat.
-///
-/// Szándékosan <b>statikus, tiszta függvény</b>: nincs adatbázis, nincs óra-hívás,
-/// csak a bemenetből számol – ezért egységtesztben triviálisan ellenőrizhető.
-/// </summary>
 public static class DayPlanCalculator
 {
-    /// <summary>Az alapértelmezett napi ablak, ha nincs semmi a naptárban.</summary>
     public static readonly TimeOnly DefaultWindowStart = new(6, 0);
     public static readonly TimeOnly DefaultWindowEnd = new(22, 0);
 
-    /// <summary>
-    /// Az idővonal megjelenítendő ablaka: az alapértelmezett 06:00–22:00, de
-    /// kitágítva, hogy a korábbi vagy későbbi elfoglaltságok is beleférjenek
-    /// (egész órára kerekítve). Így a felületen soha nem lóg ki semmi.
-    /// </summary>
     public static (TimeOnly Start, TimeOnly End) WindowFor(IReadOnlyList<Activity> activities)
     {
         var start = DefaultWindowStart;
@@ -30,7 +17,6 @@ public static class DayPlanCalculator
 
             if (activity.EndTime > end)
             {
-                // Felfelé kerekítés egész órára, 23:59-nél megállva.
                 end = activity.EndTime.Minute == 0
                     ? activity.EndTime
                     : activity.EndTime.Hour >= 23
@@ -50,7 +36,6 @@ public static class DayPlanCalculator
         var conflicts = FindConflicts(activities);
         var merged = MergeIntoWindow(activities, windowStart, windowEnd);
 
-        // A lefoglalt idő az összevont sávokból jön, így az átfedés nem számít duplán.
         int busy = merged.Sum(r => r.DurationMinutes);
         var freeSlots = GapsBetween(merged, windowStart, windowEnd);
         int free = freeSlots.Sum(r => r.DurationMinutes);
@@ -58,7 +43,6 @@ public static class DayPlanCalculator
         return new DayPlan(windowStart, windowEnd, busy, free, freeSlots, conflicts);
     }
 
-    /// <summary>Minden olyan pár, amely időben átfed. Az érintkezés (10:00-ig / 10:00-tól) nem ütközés.</summary>
     private static List<ActivityConflict> FindConflicts(IReadOnlyList<Activity> activities)
     {
         var ordered = activities.OrderBy(a => a.StartTime).ThenBy(a => a.EndTime).ToList();
@@ -71,8 +55,6 @@ public static class DayPlanCalculator
                 var first = ordered[i];
                 var second = ordered[j];
 
-                // Rendezett lista: ha a következő a jelenlegi vége után kezdődik,
-                // akkor az összes utána következő is – mehetünk a következő i-re.
                 if (second.StartTime >= first.EndTime)
                     break;
 
@@ -86,7 +68,6 @@ public static class DayPlanCalculator
         return conflicts;
     }
 
-    /// <summary>Az elfoglaltságok ablakra vágva és átfedés mentén összevonva.</summary>
     private static List<TimeRange> MergeIntoWindow(
         IReadOnlyList<Activity> activities, TimeOnly windowStart, TimeOnly windowEnd)
     {
@@ -101,7 +82,6 @@ public static class DayPlanCalculator
         {
             if (merged.Count > 0 && range.Start <= merged[^1].End)
             {
-                // Átfed vagy érintkezik az előzővel – kiterjesztjük.
                 if (range.End > merged[^1].End)
                     merged[^1] = merged[^1] with { End = range.End };
             }
@@ -114,7 +94,6 @@ public static class DayPlanCalculator
         return merged;
     }
 
-    /// <summary>Az összevont sávok közötti (és a szélein maradó) szabad rések.</summary>
     private static List<TimeRange> GapsBetween(List<TimeRange> busy, TimeOnly windowStart, TimeOnly windowEnd)
     {
         var gaps = new List<TimeRange>();

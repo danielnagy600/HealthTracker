@@ -7,10 +7,6 @@ using Xunit;
 
 namespace HealthTracker.Modules.Calories.Tests;
 
-/// <summary>
-/// A CalorieService tesztjei Moq-kal: a függőségeket (tároló, óra, felhasználó)
-/// mockoljuk, így a szolgáltatás logikáját elszigetelten vizsgáljuk.
-/// </summary>
 public class CalorieServiceTests
 {
     private static readonly Guid UserId = Guid.Parse("11111111-1111-1111-1111-111111111111");
@@ -27,8 +23,7 @@ public class CalorieServiceTests
     {
         _clock.SetupGet(c => c.Now).Returns(Now);
         _currentUser.SetupGet(c => c.UserId).Returns(UserId);
-        // A RequireUserId() default interface metódus törzsét a Moq nem futtatja,
-        // ezért explicit beállítjuk, mit adjon vissza.
+
         _currentUser.Setup(c => c.RequireUserId()).Returns(UserId);
         _repository
             .Setup(r => r.GetOrCreateGoalAsync(UserId, It.IsAny<CancellationToken>()))
@@ -54,7 +49,7 @@ public class CalorieServiceTests
         var day = await _sut.GetDayAsync();
 
         day.Date.Should().Be(Today);
-        day.TargetKcal.Should().Be(2000); // az alapértelmezett keret
+        day.TargetKcal.Should().Be(2000);
         _repository.Verify(r => r.GetForDateAsync(UserId, Today, It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -156,7 +151,7 @@ public class CalorieServiceTests
     public async Task Update_returns_null_for_someone_elses_entry()
     {
         var foreignId = Guid.NewGuid();
-        // A tároló a felhasználóra szűr, ezért nem talál semmit.
+
         _repository
             .Setup(r => r.FindAsync(UserId, foreignId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((FoodEntry?)null);
@@ -226,7 +221,6 @@ public class CalorieServiceTests
 
         await _sut.GetDayAsync(Today);
 
-        // Soha nem kérdezünk le más felhasználó adatait.
         _repository.Verify(
             r => r.GetForDateAsync(OtherUserId, It.IsAny<DateOnly>(), It.IsAny<CancellationToken>()),
             Times.Never);
@@ -236,7 +230,7 @@ public class CalorieServiceTests
     [InlineData("Breakfast", "Breakfast")]
     [InlineData("lunch", "Lunch")]
     [InlineData("DINNER", "Dinner")]
-    [InlineData("nincs-ilyen", "Snack")] // ismeretlen étkezés → nasi
+    [InlineData("nincs-ilyen", "Snack")]
     public void Meal_names_are_parsed_case_insensitively(string input, string expected)
     {
         CalorieService.ParseMeal(input).ToString().Should().Be(expected);

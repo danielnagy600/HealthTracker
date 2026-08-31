@@ -4,10 +4,6 @@ using Xunit;
 
 namespace HealthTracker.Modules.Schedule.Tests;
 
-/// <summary>
-/// A tiszta domain-logika tesztjei. Nincs adatbázis, nincs mock – csak a
-/// bemenetből számolunk, ezért ezek a leggyorsabb és legstabilabb tesztek.
-/// </summary>
 public class DayPlanCalculatorTests
 {
     private static readonly DateOnly Today = new(2026, 8, 16);
@@ -69,7 +65,6 @@ public class DayPlanCalculatorTests
     [Fact]
     public void Overlapping_time_is_not_counted_twice_as_busy()
     {
-        // 09:00–11:00 és 10:00–12:00 együtt 09:00–12:00 = 180 perc, nem 240.
         var plan = DayPlanCalculator.Calculate(
             [Act(9, 11), Act(10, 12)], new TimeOnly(6, 0), new TimeOnly(22, 0));
 
@@ -79,13 +74,12 @@ public class DayPlanCalculatorTests
     [Fact]
     public void Touching_activities_do_not_conflict()
     {
-        // 09:00-ig és 09:00-tól: érintkeznek, de nem fedik át egymást.
         var plan = DayPlanCalculator.Calculate(
             [Act(8, 9), Act(9, 10)], new TimeOnly(6, 0), new TimeOnly(22, 0));
 
         plan.Conflicts.Should().BeEmpty();
         plan.BusyMinutes.Should().Be(120);
-        // Az érintkező sávok összevonódnak, ezért nincs köztük nulla hosszú rés.
+
         plan.FreeSlots.Should().HaveCount(2);
     }
 
@@ -107,13 +101,12 @@ public class DayPlanCalculatorTests
             [Act(9, 12), Act(10, 13), Act(11, 14)], new TimeOnly(6, 0), new TimeOnly(22, 0));
 
         plan.Conflicts.Should().HaveCount(3);
-        plan.BusyMinutes.Should().Be(5 * 60); // 09:00–14:00
+        plan.BusyMinutes.Should().Be(5 * 60);
     }
 
     [Fact]
     public void Activities_outside_the_window_are_clipped()
     {
-        // 05:00–07:00 az ablak (06:00-tól) miatt csak 1 órát foglal.
         var plan = DayPlanCalculator.Calculate(
             [Act(5, 7)], new TimeOnly(6, 0), new TimeOnly(22, 0));
 
@@ -126,7 +119,7 @@ public class DayPlanCalculatorTests
         var (start, end) = DayPlanCalculator.WindowFor([Act(5, 7), Act(20, 23, fromMinute: 0, toMinute: 30)]);
 
         start.Should().Be(new TimeOnly(5, 0));
-        end.Should().Be(new TimeOnly(23, 59)); // 23:30 felfelé kerekítve, napon belül maradva
+        end.Should().Be(new TimeOnly(23, 59));
     }
 
     [Fact]

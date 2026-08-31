@@ -3,11 +3,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HealthTracker.Modules.Calories.Infrastructure;
 
-/// <summary>
-/// A Calories modul EF Core adatbázis-kontextusa. Saját PostgreSQL sémában
-/// ("calories") él, elkülönítve a többi modultól – ez a moduláris monolit egyik
-/// jó gyakorlata: minden modulnak megvan a maga adat-területe.
-/// </summary>
 public sealed class CalorieDbContext : DbContext
 {
     public const string Schema = "calories";
@@ -31,21 +26,18 @@ public sealed class CalorieDbContext : DbContext
             e.Property(x => x.Calories).IsRequired();
             e.Property(x => x.RecordedAt).IsRequired();
 
-            // Az étkezést olvasható néven tároljuk (nem sorszámként), így az adatbázis
-            // önmagában is értelmezhető marad, és az enum bővítése nem tolja el a régi sorokat.
             e.Property(x => x.Meal)
                 .IsRequired()
                 .HasMaxLength(20)
                 .HasConversion<string>();
 
-            // A napi lekérdezés (felhasználó + nap) gyors legyen.
             e.HasIndex(x => new { x.UserId, x.Date });
         });
 
         modelBuilder.Entity<CalorieGoal>(e =>
         {
             e.ToTable("goals");
-            e.HasKey(x => x.UserId); // felhasználónként egy sor
+            e.HasKey(x => x.UserId);
             e.Property(x => x.DailyTargetKcal).IsRequired();
         });
     }

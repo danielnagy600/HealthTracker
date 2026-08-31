@@ -4,10 +4,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HealthTracker.Modules.Water.Infrastructure;
 
-/// <summary>
-/// Az IWaterRepository EF Core + PostgreSQL implementációja. Ez az egyetlen hely,
-/// ahol az adatbázis-technológia megjelenik – a modul többi része nem tud róla.
-/// </summary>
 public sealed class WaterRepository : IWaterRepository
 {
     private readonly WaterDbContext _db;

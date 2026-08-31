@@ -3,11 +3,6 @@ using HealthTracker.SharedKernel.Abstractions;
 
 namespace HealthTracker.Api;
 
-/// <summary>
-/// Az <see cref="ICurrentUser"/> megvalósítása: a bejelentkezett felhasználót a
-/// HTTP-kéréshez tartozó claim-ekből olvassa ki. Ez az egyetlen hely, ami tud az
-/// ASP.NET HttpContextről – a funkciómodulok csak az absztrakciót látják.
-/// </summary>
 public sealed class HttpContextCurrentUser : ICurrentUser
 {
     private readonly IHttpContextAccessor _accessor;

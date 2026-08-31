@@ -8,21 +8,17 @@ using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 var connectionString = builder.Configuration.GetConnectionString("Postgres")
     ?? "Host=localhost;Port=5432;Database=healthtracker;Username=postgres;Password=postgres";
-
 
 builder.Services.AddIdentityModule(connectionString);
 builder.Services.AddWaterModule(connectionString);
 builder.Services.AddScheduleModule(connectionString);
 builder.Services.AddCaloriesModule(connectionString);
 
-
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, HttpContextCurrentUser>();
 
-// CORS: engedjük a React (Vite) fejlesztői szervert.
 var allowedOrigin = builder.Configuration["Cors:AllowedOrigin"] ?? "http://localhost:4200";
 const string DevCors = "dev-cors";
 builder.Services.AddCors(options => options.AddPolicy(DevCors, policy =>
@@ -55,9 +51,6 @@ app.MapCaloriesModule();
 
 app.Run();
 
-// CA1848: a sima LogError-hívás minden meghívásnál dobozol (boxol) és formáz, még ha
-// a log szint ki is van kapcsolva – a forráskód-generált LoggerMessage ezt elkerüli.
-// Csak egyszer, hiba esetén fut le, de a beállított AnalysisLevel ezt szigorúan kéri.
 internal static partial class Log
 {
     [LoggerMessage(Level = LogLevel.Error,

@@ -3,11 +3,6 @@ using HealthTracker.SharedKernel.Abstractions;
 
 namespace HealthTracker.Modules.Water.Application;
 
-/// <summary>
-/// A Water modul üzleti logikája. Összeköti a tárolót (IWaterRepository),
-/// az órát (IClock) és a bejelentkezett felhasználót (ICurrentUser) a tiszta
-/// domain-számítással (WaterReminderCalculator).
-/// </summary>
 public sealed class WaterService : IWaterService
 {
     private readonly IWaterRepository _repository;
@@ -27,8 +22,6 @@ public sealed class WaterService : IWaterService
         var now = _clock.Now;
         var today = DateOnly.FromDateTime(now.DateTime);
 
-        // A "nap" a helyi dátum (a felhasználó napja), az időbélyeget viszont UTC-ben
-        // tároljuk – a PostgreSQL "timestamp with time zone" csak UTC offszetet fogad el.
         var intake = new WaterIntake(Guid.NewGuid(), userId, today, now.ToUniversalTime(), request.AmountMl);
         await _repository.AddIntakeAsync(intake, ct);
 
@@ -67,7 +60,6 @@ public sealed class WaterService : IWaterService
         var intakes = await _repository.GetIntakesForDateAsync(userId, today, ct);
         var consumed = intakes.Sum(i => i.AmountMl);
 
-        // A tiszta domain-számítás – ez az, amit a tesztek külön is ellenőriznek.
         var r = WaterReminderCalculator.Calculate(settings, consumed, now);
 
         return new ReminderResponse(

@@ -10,11 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HealthTracker.Modules.Identity;
 
-/// <summary>
-/// Az Identity modul belépési pontja: regisztrálja az ASP.NET Core Identity-t
-/// bearer tokenes (API) bejelentkezéssel, és közzéteszi a /api/auth végpontokat
-/// (register, login, refresh, stb.), plusz egy /api/auth/me profil-lekérdezést. 
-/// </summary>
 public static class IdentityModule
 {
     public static IServiceCollection AddIdentityModule(this IServiceCollection services, string connectionString)
@@ -25,7 +20,6 @@ public static class IdentityModule
 
         services.AddAuthorization();
 
-        // Kész register/login végpontok bearer tokennel (nincs kézi JWT-kódolás).
         services
             .AddIdentityApiEndpoints<AppUser>()
             .AddEntityFrameworkStores<AuthDbContext>();
@@ -44,10 +38,8 @@ public static class IdentityModule
     {
         var group = app.MapGroup("/api/auth").WithTags("Auth");
 
-        // /register, /login, /refresh, /manage/info, stb. – az Identity adja készen.
         group.MapIdentityApi<AppUser>();
 
-        // A bejelentkezett felhasználó alapadatai (profil).
         group.MapGet("/me", (ClaimsPrincipal user) => Results.Ok(new
         {
             id = user.FindFirstValue(ClaimTypes.NameIdentifier),

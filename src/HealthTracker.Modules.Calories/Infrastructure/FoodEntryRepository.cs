@@ -4,10 +4,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HealthTracker.Modules.Calories.Infrastructure;
 
-/// <summary>
-/// Az IFoodEntryRepository EF Core + PostgreSQL implementációja. Ez az egyetlen hely,
-/// ahol az adatbázis-technológia megjelenik – a modul többi része nem tud róla.
-/// </summary>
 public sealed class FoodEntryRepository : IFoodEntryRepository
 {
     private readonly CalorieDbContext _db;
@@ -25,8 +21,6 @@ public sealed class FoodEntryRepository : IFoodEntryRepository
 
     public async Task<FoodEntry?> FindAsync(Guid userId, Guid entryId, CancellationToken ct = default)
     {
-        // A userId-ra is szűrünk: így más felhasználó bejegyzését akkor sem lehet
-        // elérni, ha valaki kitalálja az azonosítóját.
         return await _db.Entries
             .FirstOrDefaultAsync(e => e.Id == entryId && e.UserId == userId, ct);
     }

@@ -4,10 +4,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HealthTracker.Modules.Schedule.Infrastructure;
 
-/// <summary>
-/// Az IActivityRepository EF Core + PostgreSQL implementációja. Ez az egyetlen hely,
-/// ahol az adatbázis-technológia megjelenik – a modul többi része nem tud róla.
-/// </summary>
 public sealed class ActivityRepository : IActivityRepository
 {
     private readonly ScheduleDbContext _db;
@@ -25,8 +21,6 @@ public sealed class ActivityRepository : IActivityRepository
 
     public async Task<Activity?> FindAsync(Guid userId, Guid activityId, CancellationToken ct = default)
     {
-        // A userId-ra is szűrünk: így más felhasználó bejegyzését akkor sem lehet
-        // elérni, ha valaki kitalálja az azonosítóját.
         return await _db.Activities
             .FirstOrDefaultAsync(a => a.Id == activityId && a.UserId == userId, ct);
     }

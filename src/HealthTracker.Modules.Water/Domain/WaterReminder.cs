@@ -1,9 +1,5 @@
 namespace HealthTracker.Modules.Water.Domain;
 
-/// <summary>
-/// Az emlékeztető-számítás eredménye (érték-objektum). Megmondja, hogy hol tartasz,
-/// mennyi van hátra, és mikor mennyit igyál legközelebb.
-/// </summary>
 public record WaterReminder(
     int ConsumedMl,
     int TargetMl,

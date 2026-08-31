@@ -1,15 +1,7 @@
 namespace HealthTracker.Modules.Calories.Domain;
 
-/// <summary>
-/// A modul üzleti magja: a nap bejegyzéseiből kiszámolja az egyenleget, az
-/// étkezésenkénti bontást és azt, hogy hol tartasz a napi kerethez képest.
-///
-/// Szándékosan <b>statikus, tiszta függvény</b>: nincs adatbázis, nincs óra-hívás,
-/// csak a bemenetből számol – ezért egységtesztben triviálisan ellenőrizhető.
-/// </summary>
 public static class CalorieCalculator
 {
-    /// <summary>Ennyivel a keret alatt már "épp jó"-nak számít a nap.</summary>
     public const int ToleranceKcal = 100;
 
     public static DailyCalories Calculate(IReadOnlyList<FoodEntry> entries, int targetKcal)
@@ -20,8 +12,6 @@ public static class CalorieCalculator
         int over = Math.Max(0, consumed - target);
         double percent = Math.Round(100.0 * consumed / target, 1);
 
-        // Minden étkezés szerepel a bontásban, akkor is, ha még üres – így a
-        // felületen nem ugrálnak a szekciók, ahogy bekerülnek a bejegyzések.
         var meals = Enum.GetValues<MealType>()
             .Select(meal =>
             {

@@ -4,13 +4,8 @@ using Xunit;
 
 namespace HealthTracker.Modules.Water.Tests;
 
-/// <summary>
-/// A tiszta domain-logika tesztjei. Nincs adatbázis, nincs mock – csak a
-/// bemenetből számolunk, ezért ezek a leggyorsabb és legstabilabb tesztek.
-/// </summary>
 public class WaterReminderCalculatorTests
 {
-    // Napi 2000 ml, ébrenlét 07:00–22:00 (15 óra).
     private static WaterSettings Settings() => new()
     {
         UserId = Guid.NewGuid(),
@@ -35,13 +30,12 @@ public class WaterReminderCalculatorTests
     [Fact]
     public void Falling_behind_schedule_warns_to_drink_now()
     {
-        // 15:00-kor időarányosan ~1067 ml-nél kellene tartani, de csak 200-at ivott.
         var r = WaterReminderCalculator.Calculate(Settings(), consumedMl: 200, now: At(15));
 
         r.Status.Should().Be(ReminderStatus.Behind);
         r.DeficitMl.Should().BeGreaterThan(0);
         r.NextDoseMl.Should().BeGreaterThan(0);
-        r.NextReminderAt.Should().Be(At(15)); // most kell inni
+        r.NextReminderAt.Should().Be(At(15));
     }
 
     [Fact]

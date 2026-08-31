@@ -3,11 +3,6 @@ using HealthTracker.SharedKernel.Abstractions;
 
 namespace HealthTracker.Modules.Schedule.Application;
 
-/// <summary>
-/// A Schedule modul üzleti logikája. Összeköti a tárolót (IActivityRepository),
-/// az órát (IClock) és a bejelentkezett felhasználót (ICurrentUser) a tiszta
-/// domain-számítással (DayPlanCalculator).
-/// </summary>
 public sealed class ScheduleService : IScheduleService
 {
     private readonly IActivityRepository _repository;
@@ -28,7 +23,6 @@ public sealed class ScheduleService : IScheduleService
 
         var activities = await _repository.GetForDateAsync(userId, day, ct);
 
-        // A tiszta domain-számítás – ezt a tesztek külön is ellenőrzik.
         var (windowStart, windowEnd) = DayPlanCalculator.WindowFor(activities);
         var plan = DayPlanCalculator.Calculate(activities, windowStart, windowEnd);
 
@@ -93,13 +87,11 @@ public sealed class ScheduleService : IScheduleService
         return true;
     }
 
-    /// <summary>A színnév feloldása; ismeretlen név esetén az alapértelmezett kék.</summary>
     public static ActivityColor ParseColor(string? color) =>
         Enum.TryParse<ActivityColor>(color, ignoreCase: true, out var parsed)
             ? parsed
             : ActivityColor.Blue;
 
-    /// <summary>Igaz, ha a megadott szín szerepel a palettán.</summary>
     public static bool IsKnownColor(string? color) =>
         Enum.TryParse<ActivityColor>(color, ignoreCase: true, out _);
 

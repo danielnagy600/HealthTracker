@@ -3,12 +3,6 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace HealthTracker.Modules.Calories.Infrastructure;
 
-/// <summary>
-/// Csak tervezési időben (design-time) használt gyár, amit a "dotnet ef migrations"
-/// parancs hív. Így a migrációk generálásához nem kell felhúzni a teljes API-hostot.
-/// A kapcsolati sztringnek itt csak érvényesnek kell lennie – az adatbázisnak nem
-/// kell futnia a migráció létrehozásához.
-/// </summary>
 public sealed class CalorieDbContextFactory : IDesignTimeDbContextFactory<CalorieDbContext>
 {
     public CalorieDbContext CreateDbContext(string[] args)

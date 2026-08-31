@@ -4,10 +4,6 @@ using Xunit;
 
 namespace HealthTracker.Modules.Calories.Tests;
 
-/// <summary>
-/// A tiszta domain-logika tesztjei. Nincs adatbázis, nincs mock – csak a
-/// bemenetből számolunk, ezért ezek a leggyorsabb és legstabilabb tesztek.
-/// </summary>
 public class CalorieCalculatorTests
 {
     private static readonly DateOnly Today = new(2026, 8, 16);
@@ -53,7 +49,6 @@ public class CalorieCalculatorTests
     [Fact]
     public void Landing_just_below_the_target_reports_on_target()
     {
-        // 1950 / 2000: a 100 kcal-os tűréshatáron belül van.
         var day = CalorieCalculator.Calculate([Entry(1950)], 2000);
 
         day.Status.Should().Be(CalorieStatus.OnTarget);
@@ -78,7 +73,7 @@ public class CalorieCalculatorTests
 
         day.Status.Should().Be(CalorieStatus.Over);
         day.OverKcal.Should().Be(400);
-        day.RemainingKcal.Should().Be(0); // nem megy negatívba
+        day.RemainingKcal.Should().Be(0);
         day.Message.Should().Contain("400");
     }
 

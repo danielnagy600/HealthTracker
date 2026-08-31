@@ -10,17 +10,10 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace HealthTracker.Modules.Water;
 
-/// <summary>
-/// A Water modul "belépési pontja". Egy helyen írja le, mit ad hozzá a modul a
-/// DI-konténerhez, és milyen HTTP-végpontokat tesz közzé. A host (Api) csak ezt a
-/// két metódust hívja – a modul belső felépítését nem kell ismernie.
-/// </summary>
 public static class WaterModule
 {
-    /// <summary>A modul szolgáltatásainak regisztrálása.</summary>
     public static IServiceCollection AddWaterModule(this IServiceCollection services, string connectionString)
     {
-        // Több modul is kérheti; a TryAdd biztosítja, hogy csak egyszer regisztrálódjon.
         services.TryAddSingleton<IClock, SystemClock>();
 
         services.AddDbContext<WaterDbContext>(options =>
@@ -33,7 +26,6 @@ public static class WaterModule
         return services;
     }
 
-    /// <summary>A modul adatbázis-migrációinak alkalmazása induláskor.</summary>
     public static async Task MigrateWaterModuleAsync(this IServiceProvider services)
     {
         using var scope = services.CreateScope();
@@ -41,12 +33,11 @@ public static class WaterModule
         await db.Database.MigrateAsync();
     }
 
-    /// <summary>A modul HTTP-végpontjai. Mind bejelentkezést igényel.</summary>
     public static IEndpointRouteBuilder MapWaterModule(this IEndpointRouteBuilder app)
     {
         var group = app
             .MapGroup("/api/water")
-            .RequireAuthorization(); // csak bejelentkezett felhasználó érheti el
+            .RequireAuthorization();
 
         group.MapGet("/summary", async (IWaterService svc, CancellationToken ct) =>
             Results.Ok(await svc.GetTodaySummaryAsync(ct)));
