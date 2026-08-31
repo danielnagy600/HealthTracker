@@ -68,52 +68,64 @@ export function Calories() {
   }
 
   return (
-    <main className="dashboard">
-      <section className="date-nav">
-        <button className="link" onClick={() => setDate(addDays(date, -1))} aria-label="Previous day">
+    <main className="mx-auto my-6 flex max-w-[640px] flex-col gap-[1.1rem] px-4">
+      <section className="surface flex items-center gap-2 p-[0.6rem_1rem]">
+        <button
+          className="btn-link px-[0.6rem] py-[0.1rem] text-[1.4rem] leading-none"
+          onClick={() => setDate(addDays(date, -1))}
+          aria-label="Previous day"
+        >
           ‹
         </button>
-        <div className="date-current">
+        <div className="flex flex-1 flex-col gap-[0.15rem] text-center">
           <strong>{formatLongDate(date)}</strong>
           {date !== todayIso() && (
-            <button className="link" onClick={() => setDate(todayIso())}>
+            <button className="btn-link text-[0.8rem]" onClick={() => setDate(todayIso())}>
               Jump to today
             </button>
           )}
         </div>
-        <button className="link" onClick={() => setDate(addDays(date, 1))} aria-label="Next day">
+        <button
+          className="btn-link px-[0.6rem] py-[0.1rem] text-[1.4rem] leading-none"
+          onClick={() => setDate(addDays(date, 1))}
+          aria-label="Next day"
+        >
           ›
         </button>
       </section>
 
       {day ? (
         <>
-          <section className={`banner ${statusClass(day.status)}`}>
+          <section className={`flex flex-col gap-1 rounded-[14px] p-[1rem_1.25rem] text-white ${statusClass(day.status)}`}>
             <strong>{day.message}</strong>
             {day.largestMeal && (
-              <span className="next">
+              <span className="text-[0.85rem] opacity-90">
                 Biggest meal: {MEAL_LABELS[day.largestMeal]}
               </span>
             )}
           </section>
 
-          <section className="progress-card">
-            <div className="numbers">
-              <span className="big">{day.consumedKcal} kcal</span>
-              <span className="muted">
+          <section className="surface p-[1.1rem_1.25rem]">
+            <div className="flex items-baseline gap-2">
+              <span className="text-[1.7rem] font-bold">{day.consumedKcal} kcal</span>
+              <span className="text-muted">
                 / {day.targetKcal} kcal ·{' '}
                 {day.overKcal > 0 ? `${day.overKcal} kcal over` : `${day.remainingKcal} kcal left`}
               </span>
             </div>
-            <div className="bar">
+            <div className="mt-[0.7rem] mb-[0.4rem] h-3 overflow-hidden rounded-full bg-track">
               <div
-                className={`fill${day.overKcal > 0 ? ' is-over' : ''}`}
+                className={`h-full rounded-full transition-[width] duration-300 ease-in-out ${
+                  day.overKcal > 0
+                    ? 'bg-[linear-gradient(90deg,#ef7a68,var(--color-red))]'
+                    : 'bg-[linear-gradient(90deg,var(--color-blue),var(--color-blue-dark))]'
+                }`}
                 style={{ width: `${Math.min(100, day.percentOfTarget)}%` }}
               ></div>
             </div>
-            <div className="goal-row">
-              <span className="muted">{day.percentOfTarget}% of daily target</span>
-              <button className="link" onClick={() => { closeForm(); setGoalOpen(true); }}>
+            <div className="flex items-baseline justify-between gap-2">
+              <span className="text-muted">{day.percentOfTarget}% of daily target</span>
+              <button className="btn-link" onClick={() => { closeForm(); setGoalOpen(true); }}>
                 Change target
               </button>
             </div>
@@ -124,31 +136,34 @@ export function Calories() {
           )}
 
           {day.meals.map((group) => (
-            <section className="meal-card" key={group.meal}>
-              <header className="meal-head">
-                <h3>
+            <section className="surface p-[0.9rem_1.25rem]" key={group.meal}>
+              <header className="flex items-baseline justify-between gap-2">
+                <h3 className="m-0 text-[1.02rem]">
                   <span aria-hidden="true">{MEAL_ICONS[group.meal]}</span> {MEAL_LABELS[group.meal]}
                 </h3>
-                <span className="meal-kcal">{group.kcal} kcal</span>
+                <span className="font-bold tabular-nums">{group.kcal} kcal</span>
               </header>
 
               {group.entries.length === 0 ? (
-                <p className="muted meal-empty">No entries yet.</p>
+                <p className="mt-2 mb-0 text-[0.88rem] text-muted">No entries yet.</p>
               ) : (
-                <ul>
+                <ul className="mt-2 mb-0 list-none p-0 [&>li+li]:border-t [&>li+li]:border-border">
                   {group.entries.map((entry) => (
                     <li key={entry.id}>
-                      <button className="entry" onClick={() => select(entry)}>
-                        <span className="entry-name">{entry.name}</span>
-                        <span className="muted entry-time">{formatTime(entry.recordedAt)}</span>
-                        <span className="entry-kcal">{entry.calories} kcal</span>
+                      <button
+                        className="flex w-full cursor-pointer items-baseline gap-[0.6rem] rounded-lg border-none bg-transparent py-2 text-left text-[0.94rem] font-normal text-ink hover:bg-white/5"
+                        onClick={() => select(entry)}
+                      >
+                        <span className="flex-1">{entry.name}</span>
+                        <span className="text-[0.78rem] text-muted tabular-nums">{formatTime(entry.recordedAt)}</span>
+                        <span className="font-semibold tabular-nums">{entry.calories} kcal</span>
                       </button>
                     </li>
                   ))}
                 </ul>
               )}
 
-              <button className="link meal-add" onClick={() => addTo(group.meal)}>
+              <button className="btn-link mt-[0.4rem] pl-0 text-[0.85rem]" onClick={() => addTo(group.meal)}>
                 + Add
               </button>
             </section>
@@ -166,7 +181,7 @@ export function Calories() {
           )}
         </>
       ) : (
-        <p className="muted">Loading…</p>
+        <p className="text-muted">Loading…</p>
       )}
     </main>
   );

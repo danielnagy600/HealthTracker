@@ -1,5 +1,5 @@
 import type { Activity, DaySchedule } from '../../core/schedule';
-import { formatDuration, toHm, toMinutes } from '../../core/schedule';
+import { ACTIVITY_COLOR_BG, formatDuration, toHm, toMinutes } from '../../core/schedule';
 import { placeActivities } from './lanes';
 
 /** Egy óra magassága képpontban – ebből számoljuk a blokkok helyét és méretét. */
@@ -30,19 +30,21 @@ export function DayTimeline({ day, onSelect, selectedId }: Props) {
   const height = (totalMinutes / 60) * HOUR_HEIGHT;
 
   return (
-    <div className="timeline" style={{ height: `${height}px` }}>
+    <div className="relative" style={{ height: `${height}px` }}>
       {hourMarks.map((minute) => (
         <div
           key={minute}
-          className="hour-line"
+          className="absolute inset-x-0 h-px bg-border"
           style={{ top: `${((minute - windowStart) / 60) * HOUR_HEIGHT}px` }}
         >
-          <span className="hour-label">{String(Math.floor(minute / 60)).padStart(2, '0')}:00</span>
+          <span className="absolute -top-[0.55rem] -left-[3.3rem] text-[0.72rem] text-muted tabular-nums">
+            {String(Math.floor(minute / 60)).padStart(2, '0')}:00
+          </span>
         </div>
       ))}
 
       {day.activities.length === 0 && (
-        <p className="timeline-empty muted">
+        <p className="absolute inset-0 m-0 flex items-center justify-center text-center text-muted">
           This day is empty. Add your first activity! 🗓️
         </p>
       )}
@@ -57,8 +59,8 @@ export function DayTimeline({ day, onSelect, selectedId }: Props) {
           <button
             key={activity.id}
             type="button"
-            className={`activity act-${activity.color.toLowerCase()}${
-              activity.id === selectedId ? ' is-selected' : ''
+            className={`absolute flex cursor-pointer flex-col gap-[0.1rem] overflow-hidden rounded-lg border-none p-[0.3rem_0.5rem] text-left text-[0.8rem] text-white transition-[filter,box-shadow] duration-150 ease-in-out hover:brightness-[1.07] ${ACTIVITY_COLOR_BG[activity.color]}${
+              activity.id === selectedId ? ' shadow-[0_0_0_3px_rgba(28,36,48,0.35)]' : ''
             }`}
             style={{
               top: `${top}px`,
@@ -71,11 +73,13 @@ export function DayTimeline({ day, onSelect, selectedId }: Props) {
               activity.note ? `\n${activity.note}` : ''
             }`}
           >
-            <span className="activity-title">{activity.title}</span>
-            <span className="activity-time">
+            <span className="overflow-hidden text-ellipsis whitespace-nowrap font-bold">{activity.title}</span>
+            <span className="text-[0.72rem] opacity-90 tabular-nums">
               {toHm(activity.startTime)}–{toHm(activity.endTime)} · {formatDuration(activity.durationMinutes)}
             </span>
-            {activity.note && blockHeight >= 64 && <span className="activity-note">{activity.note}</span>}
+            {activity.note && blockHeight >= 64 && (
+              <span className="overflow-hidden text-[0.72rem] opacity-85">{activity.note}</span>
+            )}
           </button>
         );
       })}

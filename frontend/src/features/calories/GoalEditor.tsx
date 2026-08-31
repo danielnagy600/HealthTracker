@@ -33,12 +33,13 @@ export function GoalEditor({ current, onSave, onCancel }: Props) {
   }
 
   return (
-    <form className="activity-form" onSubmit={submit}>
-      <h3>Daily calorie target</h3>
+    <form className="surface flex flex-col gap-[0.8rem] p-[1.1rem_1.25rem]" onSubmit={submit}>
+      <h3 className="m-0">Daily calorie target</h3>
 
-      <label>
+      <label className="flex flex-col gap-[0.3rem] text-[0.85rem] text-muted">
         Target (kcal)
         <input
+          className="field"
           type="number"
           min="500"
           max="10000"
@@ -50,13 +51,13 @@ export function GoalEditor({ current, onSave, onCancel }: Props) {
         />
       </label>
 
-      {error && <p className="error">{error}</p>}
+      {error && <p className="m-0 text-[0.85rem] text-red">{error}</p>}
 
-      <div className="form-actions">
-        <button type="submit" disabled={saving}>
+      <div className="flex items-center gap-[0.6rem]">
+        <button className="btn" type="submit" disabled={saving}>
           {saving ? 'Saving…' : 'Save'}
         </button>
-        <button type="button" className="link" onClick={onCancel} disabled={saving}>
+        <button className="btn-link" type="button" onClick={onCancel} disabled={saving}>
           Cancel
         </button>
       </div>

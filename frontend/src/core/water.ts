@@ -1,6 +1,5 @@
 import { apiFetch } from './api';
 
-
 export interface IntakeItem {
   id: string;
   recordedAt: string;
@@ -36,7 +35,6 @@ export interface Settings {
 
 const base = '/api/water';
 
-/** A Water modul REST-végpontjait hívó kliens. */
 export const water = {
   getSummary: (): Promise<DailySummary> => apiFetch<DailySummary>(`${base}/summary`),
 

@@ -17,6 +17,18 @@ export const COLOR_LABELS: Record<ActivityColor, string> = {
   Teal: 'Teal'
 };
 
+// A Tailwind osztályneveket a build-idejű JIT-scanner csak akkor veszi észre,
+// ha szó szerint (nem összefűzve, futásidőben) szerepelnek a forráskódban –
+// ezért kell egy explicit lookup egy `bg-act-${color}`-szerű string helyett.
+export const ACTIVITY_COLOR_BG: Record<ActivityColor, string> = {
+  Blue: 'bg-act-blue',
+  Green: 'bg-act-green',
+  Amber: 'bg-act-amber',
+  Red: 'bg-act-red',
+  Purple: 'bg-act-purple',
+  Teal: 'bg-act-teal'
+};
+
 export interface Activity {
   id: string;
   /** "2026-08-16" */

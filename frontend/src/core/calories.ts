@@ -91,7 +91,7 @@ export const calories = {
     })
 };
 
-/** A státuszhoz tartozó CSS-osztály (a meglévő banner-stílusokat használja). */
+/** A státuszhoz tartozó Tailwind háttérszín-osztály a banner-hez. */
 export function statusClass(status: CalorieStatus): string {
-  return status === 'Over' ? 'behind' : status === 'OnTarget' ? 'done' : 'ontrack';
+  return status === 'Over' ? 'bg-amber' : status === 'OnTarget' ? 'bg-green' : 'bg-blue';
 }

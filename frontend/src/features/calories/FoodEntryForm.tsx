@@ -71,12 +71,13 @@ export function FoodEntryForm({ editing, defaultMeal, date, onSave, onDelete, on
   }
 
   return (
-    <form className="activity-form" onSubmit={submit}>
-      <h3>{editing ? 'Edit entry' : 'New entry'}</h3>
+    <form className="surface flex flex-col gap-[0.8rem] p-[1.1rem_1.25rem]" onSubmit={submit}>
+      <h3 className="m-0">{editing ? 'Edit entry' : 'New entry'}</h3>
 
-      <label>
+      <label className="flex flex-col gap-[0.3rem] text-[0.85rem] text-muted">
         What did you eat?
         <input
+          className="field"
           type="text"
           value={name}
           onChange={(event) => setName(event.target.value)}
@@ -87,9 +88,10 @@ export function FoodEntryForm({ editing, defaultMeal, date, onSave, onDelete, on
         />
       </label>
 
-      <label>
+      <label className="flex flex-col gap-[0.3rem] text-[0.85rem] text-muted">
         Calories (kcal)
         <input
+          className="field"
           type="number"
           min="1"
           max="10000"
@@ -100,17 +102,23 @@ export function FoodEntryForm({ editing, defaultMeal, date, onSave, onDelete, on
         />
       </label>
 
-      <fieldset className="meal-picker">
-        <legend>Meal</legend>
-        <div className="meal-options">
+      <fieldset className="m-0 border-none p-0">
+        <legend className="mb-[0.35rem] p-0 text-[0.85rem] text-muted">Meal</legend>
+        <div className="flex flex-wrap gap-[0.4rem]">
           {MEALS.map((option) => (
-            <label key={option} className={`meal-option${meal === option ? ' is-selected' : ''}`}>
+            <label
+              key={option}
+              className={`flex cursor-pointer items-center gap-[0.3rem] rounded-full border border-border px-[0.7rem] py-[0.4rem] text-[0.85rem] text-ink hover:bg-white/5 ${
+                meal === option ? 'border-blue bg-blue text-white' : ''
+              }`}
+            >
               <input
                 type="radio"
                 name="meal"
                 value={option}
                 checked={meal === option}
                 onChange={() => setMeal(option)}
+                className="sr-only"
               />
               <span aria-hidden="true">{MEAL_ICONS[option]}</span>
               {MEAL_LABELS[option]}
@@ -119,17 +127,17 @@ export function FoodEntryForm({ editing, defaultMeal, date, onSave, onDelete, on
         </div>
       </fieldset>
 
-      {error && <p className="error">{error}</p>}
+      {error && <p className="m-0 text-[0.85rem] text-red">{error}</p>}
 
-      <div className="form-actions">
-        <button type="submit" disabled={saving}>
+      <div className="flex items-center gap-[0.6rem]">
+        <button className="btn" type="submit" disabled={saving}>
           {saving ? 'Saving…' : editing ? 'Save' : 'Add'}
         </button>
-        <button type="button" className="link" onClick={onCancel} disabled={saving}>
+        <button className="btn-link" type="button" onClick={onCancel} disabled={saving}>
           Cancel
         </button>
         {editing && (
-          <button type="button" className="danger" onClick={() => void remove()} disabled={saving}>
+          <button className="btn btn-danger" type="button" onClick={() => void remove()} disabled={saving}>
             Delete
           </button>
         )}

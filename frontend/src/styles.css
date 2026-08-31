@@ -1,341 +1,87 @@
-/* Globális stílusok – egyszerű, letisztult megjelenés. */
-:root {
-  --blue: #2f6df6;
-  --blue-dark: #1b4fd0;
-  --bg: #f3f6fb;
-  --card: #ffffff;
-  --text: #1c2430;
-  --muted: #6b7684;
-  --green: #17a673;
-  --amber: #e08a00;
-  --red: #d64545;
-  --border: #e2e8f0;
+@import 'tailwindcss';
 
-  /* Az elfoglaltságok palettája (Schedule modul). */
-  --act-blue: #2f6df6;
-  --act-green: #17a673;
-  --act-amber: #e08a00;
-  --act-red: #d64545;
-  --act-purple: #7c5cf0;
-  --act-teal: #0d9aa2;
+/* A meglévő design tokenek Tailwind theme-változóként – ezek automatikusan
+   utility-osztályokat is generálnak (pl. --color-blue -> bg-blue, text-blue).
+   Sötét, "éjszakai égbolt" témára állítva – a lila-ibolya lett a fő kiemelő
+   szín (a korábbi kék helyett), a --color-blue* tokennevek maradtak, hogy a
+   meglévő bg-blue/text-blue/border-blue osztályok mindenhol automatikusan
+   frissüljenek, fájlonkénti módosítás nélkül. */
+@theme {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+
+  --color-blue: #8b5cf6;
+  --color-blue-dark: #5b3df0;
+  --color-page: #05060c;
+  --color-card: #0c0f1c;
+  --color-field: #12162a;
+  --color-track: #171b30;
+  --color-ink: #eef0f6;
+  --color-muted: #8b93ab;
+  --color-green: #22c58a;
+  --color-amber: #a8630f;
+  --color-red: #e15252;
+  --color-red-dark: #b83a3a;
+  --color-border: rgb(255 255 255 / 10%);
+  --color-border-strong: rgb(255 255 255 / 16%);
+
+  /* Az elfoglaltságok palettája (Schedule modul) – a sötét felületen kicsit
+     élénkebb árnyalatok, hogy a kis színes blokkok ne mosódjanak bele. */
+  --color-act-blue: #5b8dff;
+  --color-act-green: #22c58a;
+  --color-act-amber: #f0a020;
+  --color-act-red: #ef5757;
+  --color-act-purple: #8b5cf6;
+  --color-act-teal: #22b8c4;
 }
 
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+@layer base {
+  body {
+    @apply m-0 bg-page font-sans text-ink;
+    /* Halvány csillagmező + két lila ködfolt – ugyanaz a hangulat, mint a
+       jóváhagyott látványterven, csak visszafogottabb, hogy a sűrű
+       adatnézeteken (Dashboard, Schedule, Calories) is olvasható maradjon. */
+    background-image:
+      radial-gradient(1.3px 1.3px at 4% 6%, rgb(255 255 255 / 55%), transparent 100%),
+      radial-gradient(1.1px 1.1px at 13% 14%, rgb(255 255 255 / 40%), transparent 100%),
+      radial-gradient(1.4px 1.4px at 24% 4%, rgb(255 255 255 / 60%), transparent 100%),
+      radial-gradient(1.1px 1.1px at 35% 22%, rgb(255 255 255 / 35%), transparent 100%),
+      radial-gradient(1.3px 1.3px at 46% 8%, rgb(255 255 255 / 50%), transparent 100%),
+      radial-gradient(1.1px 1.1px at 58% 16%, rgb(255 255 255 / 40%), transparent 100%),
+      radial-gradient(1.4px 1.4px at 69% 5%, rgb(255 255 255 / 60%), transparent 100%),
+      radial-gradient(1.1px 1.1px at 80% 20%, rgb(255 255 255 / 40%), transparent 100%),
+      radial-gradient(1.3px 1.3px at 91% 10%, rgb(255 255 255 / 50%), transparent 100%),
+      radial-gradient(1.1px 1.1px at 96% 24%, rgb(255 255 255 / 35%), transparent 100%),
+      radial-gradient(ellipse 900px 500px at 15% -8%, rgb(139 92 246 / 12%), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 90% 6%, rgb(91 61 240 / 10%), transparent 60%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  a {
+    @apply text-blue no-underline hover:underline;
+  }
 }
 
-/* ---- Auth kártyák (login/register) ---- */
-.card {
-  max-width: 380px;
-  margin: 8vh auto;
-  background: var(--card);
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(20, 40, 80, 0.08);
+/* Néhány sokszor ismétlődő minta (gombváltozatok, a kártya-szerű felületek
+   közös kerete) – ezek Tailwind utility-kból összeállított, újrahasznált
+   osztályok, nem "sima CSS" visszacsempészése. */
+@layer components {
+  .btn {
+    @apply cursor-pointer rounded-[9px] border-none bg-[linear-gradient(135deg,var(--color-blue),var(--color-blue-dark))] px-4 py-[0.65rem] text-base font-semibold text-white shadow-[0_8px_20px_-8px_rgb(91_61_240_/_65%)] transition-[filter] duration-150 ease-in-out hover:brightness-110 disabled:cursor-default disabled:opacity-60 disabled:shadow-none disabled:hover:brightness-100;
+  }
+  .btn-link {
+    @apply bg-transparent px-2 py-[0.3rem] font-medium text-blue hover:bg-transparent hover:underline;
+  }
+  .btn-danger {
+    @apply ml-auto bg-red bg-none shadow-none hover:bg-red-dark hover:brightness-100;
+  }
+
+  .surface {
+    @apply rounded-[14px] border border-border bg-card;
+  }
+
+  .field {
+    @apply rounded-[9px] border border-border bg-field px-[0.7rem] py-[0.6rem] font-sans text-base text-ink focus:border-blue focus:outline-2 focus:outline-blue;
+  }
 }
-.card h1 { margin: 0 0 0.25rem; font-size: 1.5rem; }
-.card h2 { margin: 0 0 1.25rem; font-weight: 500; color: var(--muted); font-size: 1.05rem; }
-.card form { display: flex; flex-direction: column; gap: 0.9rem; }
-.card label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.85rem; color: var(--muted); }
-.card input {
-  padding: 0.6rem 0.7rem;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  font-size: 1rem;
-}
-.card input:focus { outline: 2px solid var(--blue); border-color: var(--blue); }
-
-button {
-  cursor: pointer;
-  border: none;
-  border-radius: 9px;
-  background: var(--blue);
-  color: #fff;
-  padding: 0.65rem 1rem;
-  font-size: 1rem;
-  font-weight: 600;
-  transition: background 0.15s ease;
-}
-button:hover { background: var(--blue-dark); }
-button:disabled { opacity: 0.6; cursor: default; }
-button.link { background: none; color: var(--blue); padding: 0.3rem 0.5rem; font-weight: 500; }
-button.link:hover { text-decoration: underline; background: none; }
-
-.muted { color: var(--muted); }
-.hint { font-size: 0.78rem; color: var(--muted); margin: -0.3rem 0 0; }
-.error { color: var(--red); font-size: 0.85rem; margin: 0; }
-a { color: var(--blue); text-decoration: none; }
-a:hover { text-decoration: underline; }
-
-/* ---- Fejléc ---- */
-.topbar {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.9rem 1.5rem;
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-}
-.topbar .brand { font-weight: 700; }
-.topbar .spacer { flex: 1; }
-
-/* ---- Dashboard ---- */
-.dashboard {
-  max-width: 640px;
-  margin: 1.5rem auto;
-  padding: 0 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-}
-
-.banner {
-  padding: 1rem 1.25rem;
-  border-radius: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  color: #fff;
-}
-.banner .next { font-size: 0.85rem; opacity: 0.9; }
-.banner.ontrack { background: var(--blue); }
-.banner.behind { background: var(--amber); }
-.banner.done { background: var(--green); }
-
-.progress-card, .actions, .log {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1.1rem 1.25rem;
-}
-.progress-card .numbers { display: flex; align-items: baseline; gap: 0.5rem; }
-.progress-card .big { font-size: 1.7rem; font-weight: 700; }
-.bar { height: 12px; background: #eef2f8; border-radius: 999px; overflow: hidden; margin: 0.7rem 0 0.4rem; }
-.fill { height: 100%; background: linear-gradient(90deg, #4a90ff, #2f6df6); border-radius: 999px; transition: width 0.3s ease; }
-
-.actions { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
-.actions .custom { display: flex; gap: 0.4rem; margin-left: auto; }
-.actions input { width: 90px; padding: 0.55rem; border: 1px solid var(--border); border-radius: 9px; }
-
-.log h3 { margin: 0 0 0.6rem; }
-.log ul { list-style: none; margin: 0; padding: 0; }
-.log li { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
-.log li:last-child { border-bottom: none; }
-
-/* ---- Fő navigáció a fejlécben ---- */
-.mainnav { display: flex; gap: 0.3rem; margin-left: 0.75rem; }
-.mainnav a {
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  color: var(--muted);
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-.mainnav a:hover { background: #eef2f8; text-decoration: none; }
-.mainnav a.active { background: var(--blue); color: #fff; }
-
-/* ---- Napirend: dátumváltó és összesítés ---- */
-.date-nav {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 0.6rem 1rem;
-}
-.date-nav .link { font-size: 1.4rem; line-height: 1; padding: 0.1rem 0.6rem; }
-.date-current { flex: 1; text-align: center; display: flex; flex-direction: column; gap: 0.15rem; }
-.date-current .link { font-size: 0.8rem; }
-
-.day-summary {
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 0.9rem 1.25rem;
-  font-size: 0.9rem;
-}
-.day-summary strong { font-size: 1.25rem; }
-
-/* ---- Napirend: idővonal ---- */
-.timeline-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 0.9rem 1rem 0.9rem 3.6rem;
-}
-.timeline { position: relative; }
-.hour-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--border);
-}
-.hour-label {
-  position: absolute;
-  left: -3.3rem;
-  top: -0.55rem;
-  font-size: 0.72rem;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
-.timeline-empty {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  text-align: center;
-}
-
-.activity {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-  overflow: hidden;
-  padding: 0.3rem 0.5rem;
-  border-radius: 8px;
-  border: none;
-  color: #fff;
-  text-align: left;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: filter 0.15s ease, box-shadow 0.15s ease;
-}
-.activity:hover { filter: brightness(1.07); }
-.activity.is-selected { box-shadow: 0 0 0 3px rgba(28, 36, 48, 0.35); }
-.activity-title { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.activity-time { font-size: 0.72rem; opacity: 0.9; font-variant-numeric: tabular-nums; }
-.activity-note { font-size: 0.72rem; opacity: 0.85; overflow: hidden; }
-
-.act-blue { background: var(--act-blue); }
-.act-green { background: var(--act-green); }
-.act-amber { background: var(--act-amber); }
-.act-red { background: var(--act-red); }
-.act-purple { background: var(--act-purple); }
-.act-teal { background: var(--act-teal); }
-
-/* ---- Napirend: űrlap ---- */
-.activity-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1.1rem 1.25rem;
-}
-.activity-form h3 { margin: 0; }
-.activity-form label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.85rem; color: var(--muted); }
-.activity-form input[type='text'],
-.activity-form input[type='time'],
-.activity-form textarea {
-  padding: 0.55rem 0.7rem;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  font-size: 1rem;
-  font-family: inherit;
-  color: var(--text);
-}
-.activity-form input:focus,
-.activity-form textarea:focus { outline: 2px solid var(--blue); border-color: var(--blue); }
-.activity-form textarea { resize: vertical; }
-.time-row { display: flex; gap: 0.8rem; }
-.time-row label { flex: 1; }
-
-.color-picker { display: flex; align-items: center; gap: 0.5rem; border: none; padding: 0; margin: 0; }
-.color-picker legend { font-size: 0.85rem; color: var(--muted); padding: 0; margin-bottom: 0.35rem; }
-.swatch {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid transparent;
-  box-shadow: 0 0 0 1px var(--border);
-}
-.swatch.is-selected { border-color: var(--card); box-shadow: 0 0 0 3px var(--text); }
-.swatch input { position: absolute; opacity: 0; width: 0; height: 0; }
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-.form-actions { display: flex; align-items: center; gap: 0.6rem; }
-button.danger { background: var(--red); margin-left: auto; }
-button.danger:hover { background: #b83a3a; }
-
-/* ---- Kalória: napi keret és étkezés-szekciók ---- */
-.fill.is-over { background: linear-gradient(90deg, #e2705f, var(--red)); }
-
-.goal-row { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
-
-.meal-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 0.9rem 1.25rem;
-}
-.meal-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
-.meal-head h3 { margin: 0; font-size: 1.02rem; }
-.meal-kcal { font-weight: 700; font-variant-numeric: tabular-nums; }
-.meal-empty { margin: 0.5rem 0 0; font-size: 0.88rem; }
-
-.meal-card ul { list-style: none; margin: 0.5rem 0 0; padding: 0; }
-.meal-card li + li { border-top: 1px solid var(--border); }
-
-.entry {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  width: 100%;
-  padding: 0.5rem 0;
-  background: none;
-  border: none;
-  border-radius: 8px;
-  color: var(--text);
-  font-size: 0.94rem;
-  font-weight: 400;
-  text-align: left;
-  cursor: pointer;
-}
-.entry:hover { background: #f6f9fe; }
-.entry-name { flex: 1; }
-.entry-time { font-size: 0.78rem; font-variant-numeric: tabular-nums; }
-.entry-kcal { font-weight: 600; font-variant-numeric: tabular-nums; }
-
-.meal-add { margin-top: 0.4rem; padding-left: 0; font-size: 0.85rem; }
-
-/* ---- Kalória: étkezésválasztó az űrlapon ---- */
-.meal-picker { border: none; padding: 0; margin: 0; }
-.meal-picker legend { font-size: 0.85rem; color: var(--muted); padding: 0; margin-bottom: 0.35rem; }
-.meal-options { display: flex; gap: 0.4rem; flex-wrap: wrap; }
-.meal-option {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.4rem 0.7rem;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  font-size: 0.85rem;
-  color: var(--text);
-  cursor: pointer;
-}
-.meal-option:hover { background: #f6f9fe; }
-.meal-option.is-selected { background: var(--blue); border-color: var(--blue); color: #fff; }
-.meal-option input { position: absolute; opacity: 0; width: 0; height: 0; }

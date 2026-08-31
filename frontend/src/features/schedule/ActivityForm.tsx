@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { SubmitEvent } from 'react';
 import type { Activity, ActivityColor, SaveActivityRequest } from '../../core/schedule';
-import { ACTIVITY_COLORS, COLOR_LABELS, toHm } from '../../core/schedule';
+import { ACTIVITY_COLOR_BG, ACTIVITY_COLORS, COLOR_LABELS, toHm } from '../../core/schedule';
 
 interface Props {
   /** A szerkesztett elfoglaltság, vagy null, ha újat viszünk fel. */
@@ -82,12 +82,13 @@ export function ActivityForm({ editing, date, onSave, onDelete, onCancel }: Prop
   }
 
   return (
-    <form className="activity-form" onSubmit={submit}>
-      <h3>{editing ? 'Edit activity' : 'New activity'}</h3>
+    <form className="surface flex flex-col gap-[0.8rem] p-[1.1rem_1.25rem]" onSubmit={submit}>
+      <h3 className="m-0">{editing ? 'Edit activity' : 'New activity'}</h3>
 
-      <label>
+      <label className="flex flex-col gap-[0.3rem] text-[0.85rem] text-muted">
         Title
         <input
+          className="field"
           type="text"
           value={title}
           onChange={(event) => setTitle(event.target.value)}
@@ -98,36 +99,55 @@ export function ActivityForm({ editing, date, onSave, onDelete, onCancel }: Prop
         />
       </label>
 
-      <div className="time-row">
-        <label>
+      <div className="flex gap-[0.8rem]">
+        <label className="flex flex-1 flex-col gap-[0.3rem] text-[0.85rem] text-muted">
           Start
-          <input type="time" value={startTime} onChange={(event) => setStartTime(event.target.value)} required />
+          <input
+            className="field"
+            type="time"
+            value={startTime}
+            onChange={(event) => setStartTime(event.target.value)}
+            required
+          />
         </label>
-        <label>
+        <label className="flex flex-1 flex-col gap-[0.3rem] text-[0.85rem] text-muted">
           End
-          <input type="time" value={endTime} onChange={(event) => setEndTime(event.target.value)} required />
+          <input
+            className="field"
+            type="time"
+            value={endTime}
+            onChange={(event) => setEndTime(event.target.value)}
+            required
+          />
         </label>
       </div>
 
-      <fieldset className="color-picker">
-        <legend>Color</legend>
+      <fieldset className="m-0 flex items-center gap-2 border-none p-0">
+        <legend className="mb-[0.35rem] p-0 text-[0.85rem] text-muted">Color</legend>
         {ACTIVITY_COLORS.map((option) => (
-          <label key={option} className={`swatch act-${option.toLowerCase()}${color === option ? ' is-selected' : ''}`}>
+          <label
+            key={option}
+            className={`h-[30px] w-[30px] cursor-pointer rounded-full border-2 border-transparent [box-shadow:0_0_0_1px_var(--color-border)] ${ACTIVITY_COLOR_BG[option]}${
+              color === option ? ' border-card [box-shadow:0_0_0_3px_var(--color-ink)]' : ''
+            }`}
+          >
             <input
               type="radio"
               name="color"
               value={option}
               checked={color === option}
               onChange={() => setColor(option)}
+              className="sr-only"
             />
             <span className="sr-only">{COLOR_LABELS[option]}</span>
           </label>
         ))}
       </fieldset>
 
-      <label>
+      <label className="flex flex-col gap-[0.3rem] text-[0.85rem] text-muted">
         Note
         <textarea
+          className="field resize-y"
           value={note}
           onChange={(event) => setNote(event.target.value)}
           placeholder="Any detail that helps you remember…"
@@ -136,17 +156,17 @@ export function ActivityForm({ editing, date, onSave, onDelete, onCancel }: Prop
         />
       </label>
 
-      {error && <p className="error">{error}</p>}
+      {error && <p className="m-0 text-[0.85rem] text-red">{error}</p>}
 
-      <div className="form-actions">
-        <button type="submit" disabled={saving}>
+      <div className="flex items-center gap-[0.6rem]">
+        <button className="btn" type="submit" disabled={saving}>
           {saving ? 'Saving…' : editing ? 'Save' : 'Add'}
         </button>
-        <button type="button" className="link" onClick={onCancel} disabled={saving}>
+        <button className="btn-link" type="button" onClick={onCancel} disabled={saving}>
           Cancel
         </button>
         {editing && (
-          <button type="button" className="danger" onClick={() => void remove()} disabled={saving}>
+          <button className="btn btn-danger" type="button" onClick={() => void remove()} disabled={saving}>
             Delete
           </button>
         )}
