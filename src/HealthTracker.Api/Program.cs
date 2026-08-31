@@ -9,7 +9,9 @@ using Microsoft.Extensions.Logging;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("Postgres")
-    ?? "Host=localhost;Port=5432;Database=healthtracker;Username=postgres;Password=postgres";
+    ?? throw new InvalidOperationException(
+        "Missing 'ConnectionStrings:Postgres'. Set it in appsettings.json, appsettings.Development.json, " +
+        "or the ConnectionStrings__Postgres environment variable (see docker-compose.yml).");
 
 builder.Services.AddIdentityModule(connectionString);
 builder.Services.AddWaterModule(connectionString);
