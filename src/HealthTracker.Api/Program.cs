@@ -5,6 +5,7 @@ using HealthTracker.Modules.Schedule;
 using HealthTracker.Modules.Water;
 using HealthTracker.SharedKernel.Abstractions;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,27 @@ const string DevCors = "dev-cors";
 builder.Services.AddCors(options => options.AddPolicy(DevCors, policy =>
     policy.WithOrigins(allowedOrigin).AllowAnyHeader().AllowAnyMethod()));
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "HealthTracker API", Version = "v1" });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        Description = "Illeszd be a /api/auth/login válaszából kapott accessToken-t (a \"Bearer \" előtagot a mező maga teszi hozzá)."
+    });
+
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        { new OpenApiSecuritySchemeReference("Bearer", document, null), [] }
+    });
+});
+
 var app = builder.Build();
 
 try
@@ -43,6 +65,12 @@ catch (Exception ex)
 app.UseCors(DevCors);
 app.UseAuthentication();
 app.UseAuthorization();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.MapGet("/", () => "HealthTracker API fut. Auth: /api/auth/login, Water: /api/water/summary");
 
