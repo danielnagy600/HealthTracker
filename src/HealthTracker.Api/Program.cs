@@ -4,7 +4,6 @@ using HealthTracker.Modules.Identity;
 using HealthTracker.Modules.Schedule;
 using HealthTracker.Modules.Water;
 using HealthTracker.SharedKernel.Abstractions;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -80,10 +79,3 @@ app.MapScheduleModule();
 app.MapCaloriesModule();
 
 app.Run();
-
-internal static partial class Log
-{
-    [LoggerMessage(Level = LogLevel.Error,
-        Message = "Az adatbázis-migráció nem sikerült. Fut a PostgreSQL? Indítsd: docker compose up -d db")]
-    public static partial void MigrationFailed(ILogger logger, Exception exception);
-}
