@@ -7,6 +7,14 @@ using HealthTracker.SharedKernel.Abstractions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi;
 
+// A három CRUD-modul (Water, Schedule, Calories) controller-alapú végpontjainak
+// felfedezéséhez kellenek a típusai – az assembly-jüket adjuk hozzá application
+// part-ként lentebb (a controllerek nem ebben, hanem a saját modul-projektjükben
+// laknak, ott nem fedezné fel őket a keretrendszer automatikusan).
+using HealthTracker.Modules.Calories.Controllers;
+using HealthTracker.Modules.Schedule.Controllers;
+using HealthTracker.Modules.Water.Controllers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("Postgres")
@@ -21,6 +29,14 @@ builder.Services.AddCaloriesModule(connectionString);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, HttpContextCurrentUser>();
+
+// A Water/Schedule/Calories modulok controllerei külön projektben (assembly-ben)
+// élnek, ezért explicit application part-ként kell hozzáadni őket – enélkül az
+// AddControllers() csak a jelen (Api) assembly-t vizsgálná, a modulokét nem.
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(WaterController).Assembly)
+    .AddApplicationPart(typeof(ScheduleController).Assembly)
+    .AddApplicationPart(typeof(CaloriesController).Assembly);
 
 var allowedOrigin = builder.Configuration["Cors:AllowedOrigin"] ?? "http://localhost:4200";
 const string DevCors = "dev-cors";
@@ -74,10 +90,11 @@ if (app.Environment.IsDevelopment())
 
 app.MapGet("/", () => "HealthTracker API fut. Auth: /api/auth/login, Water: /api/water/summary");
 
+// Identity marad minimal API (MapIdentityApi beépített végpontjai); a Water,
+// Schedule és Calories modulok controllerei egyetlen MapControllers()-szel
+// kerülnek be – az útvonalaikat az [ApiController]/[Route] attribútumok adják.
 app.MapIdentityModule();
-app.MapWaterModule();
-app.MapScheduleModule();
-app.MapCaloriesModule();
+app.MapControllers();
 
 app.Run();
 
