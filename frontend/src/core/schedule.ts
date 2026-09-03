@@ -1,13 +1,9 @@
 import { apiFetch } from './api';
 
-// A backend Schedule moduljának DTO-i TypeScript-oldalon.
-
-/** A választható színek – a backend ActivityColor enumjával egyezik. */
 export const ACTIVITY_COLORS = ['Blue', 'Green', 'Amber', 'Red', 'Purple', 'Teal'] as const;
 
 export type ActivityColor = (typeof ACTIVITY_COLORS)[number];
 
-/** Címkék a palettához (képernyőolvasónak). */
 export const COLOR_LABELS: Record<ActivityColor, string> = {
   Blue: 'Blue',
   Green: 'Green',
@@ -17,9 +13,6 @@ export const COLOR_LABELS: Record<ActivityColor, string> = {
   Teal: 'Teal'
 };
 
-// A Tailwind osztályneveket a build-idejű JIT-scanner csak akkor veszi észre,
-// ha szó szerint (nem összefűzve, futásidőben) szerepelnek a forráskódban –
-// ezért kell egy explicit lookup egy `bg-act-${color}`-szerű string helyett.
 export const ACTIVITY_COLOR_BG: Record<ActivityColor, string> = {
   Blue: 'bg-act-blue',
   Green: 'bg-act-green',
@@ -31,9 +24,7 @@ export const ACTIVITY_COLOR_BG: Record<ActivityColor, string> = {
 
 export interface Activity {
   id: string;
-  /** "2026-08-16" */
   date: string;
-  /** "09:00:00" */
   startTime: string;
   endTime: string;
   title: string;
@@ -78,7 +69,6 @@ export interface SaveActivityRequest {
   note: string | null;
 }
 
-/** A Schedule modul REST-végpontjait hívó kliens. */
 export const schedule = {
   getDay: (date: string) => apiFetch<DaySchedule>(`/api/schedule/day?date=${date}`),
 
@@ -97,20 +87,15 @@ export const schedule = {
   remove: (id: string) => apiFetch<void>(`/api/schedule/activities/${id}`, { method: 'DELETE' })
 };
 
-// ---- Idő- és dátumsegédek ----
-
-/** "09:30:00" → 570 (éjfél óta eltelt percek). */
 export function toMinutes(time: string): number {
   const [hours = '0', minutes = '0'] = time.split(':');
   return Number(hours) * 60 + Number(minutes);
 }
 
-/** "09:30:00" → "09:30" (az input[type=time] is ezt várja). */
 export function toHm(time: string): string {
   return time.slice(0, 5);
 }
 
-/** 90 → "1h 30m" */
 export function formatDuration(minutes: number): string {
   const hours = Math.floor(minutes / 60);
   const rest = minutes % 60;
@@ -119,20 +104,17 @@ export function formatDuration(minutes: number): string {
   return `${hours}h ${rest}m`;
 }
 
-/** Date → "2026-08-16" (helyi idő szerint, nem UTC-ben). */
 export function toIsoDate(date: Date): string {
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${date.getFullYear()}-${month}-${day}`;
 }
 
-/** "2026-08-16" → helyi Date (dél, hogy a nyári időszámítás se tolja el a napot). */
 export function fromIsoDate(iso: string): Date {
   const [year, month, day] = iso.split('-').map(Number);
   return new Date(year ?? 1970, (month ?? 1) - 1, day ?? 1, 12);
 }
 
-/** "2026-08-16" → "Sunday, 16 August 2026" */
 export function formatLongDate(iso: string): string {
   return fromIsoDate(iso).toLocaleDateString('en-GB', {
     year: 'numeric',
@@ -142,7 +124,6 @@ export function formatLongDate(iso: string): string {
   });
 }
 
-/** Napok hozzáadása egy ISO dátumhoz. */
 export function addDays(iso: string, days: number): string {
   const date = fromIsoDate(iso);
   date.setDate(date.getDate() + days);

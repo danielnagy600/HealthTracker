@@ -6,7 +6,6 @@ import { formatTime } from '../../core/format';
 import { FoodEntryForm } from './FoodEntryForm';
 import { GoalEditor } from './GoalEditor';
 
-/** A napi kalóriák kezelése: étkezésenkénti bontás, napi keret, dátumváltó. */
 export function Calories() {
   const [date, setDate] = useState(todayIso());
   const [day, setDay] = useState<DayCalories | null>(null);

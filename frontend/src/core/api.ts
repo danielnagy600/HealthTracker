@@ -1,10 +1,7 @@
 import { session } from './session';
 
-// A backend API alapcíme. Build-időben cserélhető: VITE_API_BASE env-változó
-// (lásd .env.development). Ha nincs megadva, a helyi fejlesztői cím az alapértelmezés.
 export const API_BASE = import.meta.env.VITE_API_BASE ?? 'http://localhost:8080';
 
-/** Sikertelen HTTP-válasz. A `status`-ból tudják a komponensek, mi történt. */
 export class ApiError extends Error {
   readonly status: number;
 
@@ -15,11 +12,6 @@ export class ApiError extends Error {
   }
 }
 
-/**
- * Az egyetlen hely, ahol HTTP-t hívunk. Minden kimenő kérésre ráteszi a bearer
- * tokent, ha be vagyunk jelentkezve – ez az Angular auth-interceptor megfelelője –,
- * így a komponenseknek nem kell a tokennel foglalkozniuk.
- */
 export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   const headers = new Headers(init.headers);
   if (init.body !== undefined) {
@@ -33,11 +25,29 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
 
   const response = await fetch(`${API_BASE}${path}`, { ...init, headers });
   if (!response.ok) {
-    throw new ApiError(response.status, `${init.method ?? 'GET'} ${path} → ${response.status}`);
+    throw new ApiError(response.status, await describeError(response, init.method, path));
   }
 
-  // Van végpont, ami üres törzzsel válaszol (pl. /api/auth/register), ezért nem
-  // hívhatunk vakon response.json()-t.
   const text = await response.text();
   return (text ? JSON.parse(text) : undefined) as T;
+}
+
+async function describeError(response: Response, method: string | undefined, path: string): Promise<string> {
+  const fallback = `${method ?? 'GET'} ${path} → ${response.status}`;
+  const text = await response.text().catch(() => '');
+  if (!text) {
+    return fallback;
+  }
+
+  try {
+    const parsed: unknown = JSON.parse(text);
+    if (typeof parsed === 'string') {
+      return parsed;
+    }
+    if (parsed && typeof parsed === 'object' && 'title' in parsed && typeof parsed.title === 'string') {
+      return parsed.title;
+    }
+  } catch {}
+
+  return text;
 }

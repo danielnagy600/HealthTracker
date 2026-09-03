@@ -17,7 +17,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [email, setEmail] = useState<string | null>(() => session.getEmail());
 
   const register = useCallback(async (email: string, password: string): Promise<void> => {
-
     await apiFetch<void>('/api/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, password })

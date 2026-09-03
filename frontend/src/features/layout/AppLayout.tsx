@@ -10,10 +10,6 @@ function navLinkClass({ isActive }: NavLinkRenderProps): string {
     : `${base} text-muted hover:bg-white/10 hover:no-underline`;
 }
 
-/**
- * A bejelentkezett oldalak közös kerete: fejléc, navigáció, kijelentkezés.
- * A védett útvonalak ezen belül renderelődnek (React Router `<Outlet />`).
- */
 export function AppLayout() {
   const auth = useAuth();
   const navigate = useNavigate();

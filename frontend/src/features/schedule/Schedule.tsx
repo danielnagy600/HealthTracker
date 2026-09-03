@@ -4,7 +4,6 @@ import { addDays, formatDuration, formatLongDate, schedule, toHm, todayIso } fro
 import { ActivityForm } from './ActivityForm';
 import { DayTimeline } from './DayTimeline';
 
-/** A napi elfoglaltságok kezelése: dátumváltó, összesítés és vizuális idővonal. */
 export function Schedule() {
   const [date, setDate] = useState(todayIso());
   const [day, setDay] = useState<DaySchedule | null>(null);

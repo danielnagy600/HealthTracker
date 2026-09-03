@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import type { SubmitEvent } from 'react';
+import { ApiError } from '../../core/api';
 import type { FoodEntry, Meal, SaveFoodEntryRequest } from '../../core/calories';
 import { MEAL_ICONS, MEAL_LABELS, MEALS } from '../../core/calories';
 
 interface Props {
-  /** A szerkesztett bejegyzés, vagy null, ha újat viszünk fel. */
   editing: FoodEntry | null;
-  /** Új bejegyzésnél ez az előre kiválasztott étkezés. */
   defaultMeal: Meal;
   date: string;
   onSave: (request: SaveFoodEntryRequest) => Promise<void>;
@@ -14,7 +13,6 @@ interface Props {
   onCancel: () => void;
 }
 
-/** Új bejegyzés felvitele és meglévő szerkesztése – ugyanaz az űrlap. */
 export function FoodEntryForm({ editing, defaultMeal, date, onSave, onDelete, onCancel }: Props) {
   const [name, setName] = useState('');
   const [kcal, setKcal] = useState('');
@@ -52,8 +50,9 @@ export function FoodEntryForm({ editing, defaultMeal, date, onSave, onDelete, on
     setError(null);
     try {
       await onSave({ date, meal, name: name.trim(), calories: Math.round(calories) });
-    } catch {
-      setError('Saving failed. Check the values and try again.');
+    } catch (error) {
+      console.error(error);
+      setError(error instanceof ApiError ? error.message : 'Saving failed. Check the values and try again.');
     } finally {
       setSaving(false);
     }
@@ -64,8 +63,9 @@ export function FoodEntryForm({ editing, defaultMeal, date, onSave, onDelete, on
     setSaving(true);
     try {
       await onDelete(editing.id);
-    } catch {
-      setError('Deleting failed.');
+    } catch (error) {
+      console.error(error);
+      setError(error instanceof ApiError ? error.message : 'Deleting failed.');
       setSaving(false);
     }
   }

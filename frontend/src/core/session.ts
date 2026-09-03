@@ -1,8 +1,3 @@
-// A bejelentkezési adatok tárolása localStorage-ban.
-//
-// Külön modulban van, hogy az `api.ts` (ami a tokent a kérésekre teszi) és az
-// `auth.tsx` (ami a React-állapotot kezeli) is használhassa körkörös import nélkül.
-
 const tokenKey = 'ht_token';
 const emailKey = 'ht_email';
 

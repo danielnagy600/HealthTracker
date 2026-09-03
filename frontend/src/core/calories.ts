@@ -1,13 +1,9 @@
 import { apiFetch } from './api';
 
-// A backend Calories moduljának DTO-i TypeScript-oldalon.
-
-/** Az étkezések – a backend MealType enumjával egyezik, időrendben. */
 export const MEALS = ['Breakfast', 'Lunch', 'Dinner', 'Snack'] as const;
 
 export type Meal = (typeof MEALS)[number];
 
-/** Címkék és ikonok az étkezésekhez. */
 export const MEAL_LABELS: Record<Meal, string> = {
   Breakfast: 'Breakfast',
   Lunch: 'Lunch',
@@ -64,7 +60,6 @@ export interface Goal {
   dailyTargetKcal: number;
 }
 
-/** A Calories modul REST-végpontjait hívó kliens. */
 export const calories = {
   getDay: (date: string) => apiFetch<DayCalories>(`/api/calories/day?date=${date}`),
 
@@ -91,7 +86,6 @@ export const calories = {
     })
 };
 
-/** A státuszhoz tartozó Tailwind háttérszín-osztály a banner-hez. */
 export function statusClass(status: CalorieStatus): string {
   return status === 'Over' ? 'bg-amber' : status === 'OnTarget' ? 'bg-green' : 'bg-blue';
 }

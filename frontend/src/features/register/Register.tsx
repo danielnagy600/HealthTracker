@@ -26,7 +26,6 @@ export function Register() {
       return;
     }
 
-    // Sikeres regisztráció után rögtön be is jelentkeztetjük.
     try {
       await auth.login(email, password);
       navigate('/');

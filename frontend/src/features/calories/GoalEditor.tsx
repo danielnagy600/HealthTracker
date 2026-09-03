@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { SubmitEvent } from 'react';
+import { ApiError } from '../../core/api';
 
 interface Props {
   current: number;
@@ -7,7 +8,6 @@ interface Props {
   onCancel: () => void;
 }
 
-/** A napi kalóriakeret módosítása. */
 export function GoalEditor({ current, onSave, onCancel }: Props) {
   const [target, setTarget] = useState(String(current));
   const [error, setError] = useState<string | null>(null);
@@ -26,8 +26,9 @@ export function GoalEditor({ current, onSave, onCancel }: Props) {
     setError(null);
     try {
       await onSave(Math.round(value));
-    } catch {
-      setError('Saving failed.');
+    } catch (error) {
+      console.error(error);
+      setError(error instanceof ApiError ? error.message : 'Saving failed.');
       setSaving(false);
     }
   }

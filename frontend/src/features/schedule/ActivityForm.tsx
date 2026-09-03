@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import type { SubmitEvent } from 'react';
+import { ApiError } from '../../core/api';
 import type { Activity, ActivityColor, SaveActivityRequest } from '../../core/schedule';
 import { ACTIVITY_COLOR_BG, ACTIVITY_COLORS, COLOR_LABELS, toHm } from '../../core/schedule';
 
 interface Props {
-  /** A szerkesztett elfoglaltság, vagy null, ha újat viszünk fel. */
   editing: Activity | null;
   date: string;
   onSave: (request: SaveActivityRequest) => Promise<void>;
@@ -12,7 +12,6 @@ interface Props {
   onCancel: () => void;
 }
 
-/** Új elfoglaltság felvitele és meglévő szerkesztése – ugyanaz az űrlap. */
 export function ActivityForm({ editing, date, onSave, onDelete, onCancel }: Props) {
   const [title, setTitle] = useState('');
   const [startTime, setStartTime] = useState('09:00');
@@ -22,7 +21,6 @@ export function ActivityForm({ editing, date, onSave, onDelete, onCancel }: Prop
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
-  // Szerkesztésre váltáskor (vagy vissza újra) töltsük fel az űrlapot.
   useEffect(() => {
     setError(null);
     if (editing) {
@@ -63,8 +61,9 @@ export function ActivityForm({ editing, date, onSave, onDelete, onCancel }: Prop
         color,
         note: note.trim() === '' ? null : note.trim()
       });
-    } catch {
-      setError('Saving failed. Check the values and try again.');
+    } catch (error) {
+      console.error(error);
+      setError(error instanceof ApiError ? error.message : 'Saving failed. Check the values and try again.');
     } finally {
       setSaving(false);
     }
@@ -75,8 +74,9 @@ export function ActivityForm({ editing, date, onSave, onDelete, onCancel }: Prop
     setSaving(true);
     try {
       await onDelete(editing.id);
-    } catch {
-      setError('Deleting failed.');
+    } catch (error) {
+      console.error(error);
+      setError(error instanceof ApiError ? error.message : 'Deleting failed.');
       setSaving(false);
     }
   }

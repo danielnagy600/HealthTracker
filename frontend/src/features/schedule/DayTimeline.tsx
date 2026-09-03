@@ -2,7 +2,6 @@ import type { Activity, DaySchedule } from '../../core/schedule';
 import { ACTIVITY_COLOR_BG, formatDuration, toHm, toMinutes } from '../../core/schedule';
 import { placeActivities } from './lanes';
 
-/** Egy óra magassága képpontban – ebből számoljuk a blokkok helyét és méretét. */
 const HOUR_HEIGHT = 56;
 
 interface Props {
@@ -11,16 +10,11 @@ interface Props {
   selectedId: string | null;
 }
 
-/**
- * A nap vizuális idővonala: a blokkok helye és magassága az időpontokból jön,
- * az egymást átfedő elfoglaltságok pedig egymás mellé kerülnek.
- */
 export function DayTimeline({ day, onSelect, selectedId }: Props) {
   const windowStart = toMinutes(day.windowStart);
   const windowEnd = toMinutes(day.windowEnd);
   const totalMinutes = Math.max(60, windowEnd - windowStart);
 
-  // Óravonalak minden egész órára az ablakon belül.
   const hourMarks: number[] = [];
   for (let minute = Math.ceil(windowStart / 60) * 60; minute <= windowEnd; minute += 60) {
     hourMarks.push(minute);
