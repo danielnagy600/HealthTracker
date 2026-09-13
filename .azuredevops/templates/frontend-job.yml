@@ -1,0 +1,59 @@
+# Frontend (React / Vite) lint + tipusellenorzes + build job.
+#
+# A GitHub Actions-os valtozattal egyezik (npm ci -> lint -> build), kiegeszitve a
+# vitest futtatasaval es a dist/ artifactkent valo publikalasaval.
+
+parameters:
+  - name: nodeVersion
+    type: string
+    default: '24.x'
+  - name: workingDirectory
+    type: string
+    default: 'frontend'
+
+jobs:
+  - job: Frontend
+    displayName: 'Frontend (React)'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - checkout: self
+
+      - task: NodeTool@0
+        displayName: 'Node.js ${{ parameters.nodeVersion }}'
+        inputs:
+          versionSpec: '${{ parameters.nodeVersion }}'
+
+      # Az npm cache-e a lockfile hashe alapjan ervenyes - igy az `npm ci` nem tolt
+      # le mindent ujra minden futasnal.
+      - task: Cache@2
+        displayName: 'Cache npm'
+        inputs:
+          key: 'npm | "$(Agent.OS)" | ${{ parameters.workingDirectory }}/package-lock.json'
+          restoreKeys: |
+            npm | "$(Agent.OS)"
+          path: '$(Pipeline.Workspace)/.npm'
+
+      - script: npm ci --cache $(Pipeline.Workspace)/.npm --prefer-offline
+        displayName: 'Dependency installation'
+        workingDirectory: '${{ parameters.workingDirectory }}'
+
+      - script: npm run lint
+        displayName: 'Lint'
+        workingDirectory: '${{ parameters.workingDirectory }}'
+
+      - script: npm run test
+        displayName: 'Unit tests'
+        workingDirectory: '${{ parameters.workingDirectory }}'
+
+      - script: npm run build
+        displayName: 'Type checking and build'
+        workingDirectory: '${{ parameters.workingDirectory }}'
+
+      # A statikus buildet artifactkent is eltesszuk: igy egy konkret futas
+      # kimenete utolag is letoltheto (hibakereseshez, kezi deployhoz).
+      - task: PublishPipelineArtifact@1
+        displayName: 'Publish frontend build'
+        inputs:
+          targetPath: '${{ parameters.workingDirectory }}/dist'
+          artifact: 'frontend-dist'

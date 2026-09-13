@@ -1,0 +1,46 @@
+# Egy Docker image megepitese es feltoltese az Azure Container Registry-be.
+#
+# Szandekosan ket lepes (build + push) a kenyelmesebb "buildAndPush" helyett: a
+# Docker@2 task az "arguments" mezot csak a sima "build" parancsnal veszi
+# figyelembe, a frontend image-hez viszont kell a --build-arg VITE_API_BASE.
+#
+# Minden image ket taget kap:
+#   - $(Build.BuildId): pontosan visszakovetheto, melyik futasbol szarmazik,
+#   - latest: kenyelmi tag kezi huzashoz / lokalis probahoz.
+
+parameters:
+  - name: displayName
+    type: string
+  - name: repository
+    type: string
+  - name: dockerfile
+    type: string
+  - name: buildContext
+    type: string
+  - name: buildArgs
+    type: string
+    default: ''
+
+steps:
+  - task: Docker@2
+    displayName: 'Build - ${{ parameters.displayName }}'
+    inputs:
+      command: 'build'
+      containerRegistry: '$(dockerRegistryServiceConnection)'
+      repository: '${{ parameters.repository }}'
+      dockerfile: '${{ parameters.dockerfile }}'
+      buildContext: '${{ parameters.buildContext }}'
+      arguments: '${{ parameters.buildArgs }}'
+      tags: |
+        $(Build.BuildId)
+        latest
+
+  - task: Docker@2
+    displayName: 'Push - ${{ parameters.displayName }}'
+    inputs:
+      command: 'push'
+      containerRegistry: '$(dockerRegistryServiceConnection)'
+      repository: '${{ parameters.repository }}'
+      tags: |
+        $(Build.BuildId)
+        latest

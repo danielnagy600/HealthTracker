@@ -1,0 +1,77 @@
+# Backend (.NET) build + teszt job.
+#
+# A GitHub Actions-os megfelelo lepesekkel egyezik: restore -> build (-warnaserror)
+# -> test. Annyi a plusz, hogy a teszteredmenyt TRX-be irjuk es feltoltjuk, igy az
+# Azure DevOps "Tests" fulen reszletesen latszik, melyik teszt bukott el.
+
+parameters:
+  - name: dotnetVersion
+    type: string
+    default: '10.0.x'
+  - name: solution
+    type: string
+    default: 'HealthTracker.slnx'
+  - name: buildConfiguration
+    type: string
+    default: 'Release'
+
+jobs:
+  - job: Backend
+    displayName: 'Backend (.NET)'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - checkout: self
+
+      - task: UseDotNet@2
+        displayName: '.NET SDK ${{ parameters.dotnetVersion }}'
+        inputs:
+          packageType: 'sdk'
+          version: '${{ parameters.dotnetVersion }}'
+
+      # A NuGet csomagok cache-elese lathatoan gyorsitja a restore-t. A kulcs a
+      # projektfajlok tartalmabol keszul, igy fuggoseg-valtozaskor magatol frissul.
+      - task: Cache@2
+        displayName: 'Cache NuGet packages'
+        inputs:
+          key: 'nuget | "$(Agent.OS)" | **/*.csproj'
+          restoreKeys: |
+            nuget | "$(Agent.OS)"
+          path: '$(Pipeline.Workspace)/.nuget/packages'
+        env:
+          NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+
+      - script: dotnet restore ${{ parameters.solution }}
+        displayName: 'Restore dependencies'
+        env:
+          NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+
+      - script: >-
+          dotnet build ${{ parameters.solution }}
+          --no-restore
+          --configuration ${{ parameters.buildConfiguration }}
+          -warnaserror
+        displayName: 'Build'
+        env:
+          NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+
+      - script: >-
+          dotnet test ${{ parameters.solution }}
+          --no-build
+          --configuration ${{ parameters.buildConfiguration }}
+          --logger "trx;LogFileName=test-results.trx"
+          --results-directory $(Agent.TempDirectory)/TestResults
+        displayName: 'Test'
+        env:
+          NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+
+      - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        # Bukott teszt eseten is fel akarjuk tolteni az eredmenyt, kulonben nem
+        # latszik a felületen, mi bukott el.
+        condition: succeededOrFailed()
+        inputs:
+          testResultsFormat: 'VSTest'
+          testResultsFiles: '**/*.trx'
+          searchFolder: '$(Agent.TempDirectory)/TestResults'
+          failTaskOnFailedTests: true

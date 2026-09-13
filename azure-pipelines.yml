@@ -1,0 +1,133 @@
+# HealthTracker - Azure DevOps CI/CD pipeline
+#
+# Szakaszok (stage-ek):
+#   1. Build   - .NET build+teszt es a React lint+build. PR-on es main-en is fut.
+#   2. Package - Docker image-ek epitese es feltoltese az Azure Container Registry-be.
+#                Csak main-en fut (PR-nal nincs ertelme image-et pusholni).
+#   3. Deploy  - a frissen pusholt image-ek kiteritese az Azure App Service-re
+#                (Web App for Containers). Csak main-en, sikeres Package utan.
+#
+# A beallitandó service connection / valtozo ertekeket lasd: .azuredevops/README.md
+
+name: $(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - main
+
+variables:
+  # Kozos, kornyezet-fuggetlen beallitasok. A telepiteshez kotodo ertekeket
+  # (registry neve, App Service nevek, service connection-ok) egy Azure DevOps
+  # variable group-ban erdemes tartani - lasd .azuredevops/README.md.
+  - group: healthtracker-cd
+  - name: dotnetVersion
+    value: '10.0.x'
+  - name: nodeVersion
+    value: '24.x'
+  - name: solution
+    value: 'HealthTracker.slnx'
+  - name: buildConfiguration
+    value: 'Release'
+  # A main-re valo push-nal kell csak image-et epiteni es deployolni.
+  - name: isMain
+    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+
+stages:
+  # ---------------------------------------------------------------------------
+  # 1. Build + teszt (a korabbi .github/workflows/ci.yml megfeleloje)
+  # ---------------------------------------------------------------------------
+  - stage: Build
+    displayName: Build & Test
+    jobs:
+      - template: .azuredevops/templates/backend-job.yml
+        parameters:
+          dotnetVersion: $(dotnetVersion)
+          solution: $(solution)
+          buildConfiguration: $(buildConfiguration)
+
+      - template: .azuredevops/templates/frontend-job.yml
+        parameters:
+          nodeVersion: $(nodeVersion)
+          workingDirectory: 'frontend'
+
+  # ---------------------------------------------------------------------------
+  # 2. Docker image-ek epitese es push az ACR-be
+  # ---------------------------------------------------------------------------
+  - stage: Package
+    displayName: Docker build & push (ACR)
+    dependsOn: Build
+    condition: and(succeeded(), eq(variables.isMain, true))
+    jobs:
+      - job: Images
+        displayName: Build & push images
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+
+          # Az API image a repo gyokerebol epul (a Dockerfile a src/-bol masol).
+          - template: .azuredevops/templates/docker-build-push.yml
+            parameters:
+              displayName: 'API image'
+              repository: '$(apiImageRepository)'
+              dockerfile: 'src/HealthTracker.Api/Dockerfile'
+              buildContext: '$(Build.SourcesDirectory)'
+
+          # A frontend image build-ideju valtozot var (VITE_API_BASE), mert a Vite
+          # build-korben egeti be az API cimet - ezert kell ide a produkcios URL.
+          - template: .azuredevops/templates/docker-build-push.yml
+            parameters:
+              displayName: 'Frontend image'
+              repository: '$(frontendImageRepository)'
+              dockerfile: 'frontend/Dockerfile'
+              buildContext: '$(Build.SourcesDirectory)/frontend'
+              buildArgs: '--build-arg VITE_API_BASE=$(apiBaseUrl)'
+
+  # ---------------------------------------------------------------------------
+  # 3. Deploy Azure App Service-re (Web App for Containers)
+  # ---------------------------------------------------------------------------
+  - stage: Deploy
+    displayName: Deploy to Azure App Service
+    dependsOn: Package
+    condition: and(succeeded(), eq(variables.isMain, true))
+    jobs:
+      - deployment: DeployApi
+        displayName: API
+        # Az "environment" adja az Azure DevOps Environments oldalon a deploy
+        # elozmenyeket, es ide lehet approval / check szabalyt kotni.
+        environment: 'healthtracker-production'
+        pool:
+          vmImage: 'ubuntu-latest'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureWebAppContainer@1
+                  displayName: 'Deploy API container'
+                  inputs:
+                    azureSubscription: '$(azureSubscription)'
+                    appName: '$(apiWebAppName)'
+                    containers: '$(containerRegistry)/$(apiImageRepository):$(Build.BuildId)'
+
+      - deployment: DeployFrontend
+        displayName: Frontend
+        dependsOn: DeployApi
+        environment: 'healthtracker-production'
+        pool:
+          vmImage: 'ubuntu-latest'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureWebAppContainer@1
+                  displayName: 'Deploy frontend container'
+                  inputs:
+                    azureSubscription: '$(azureSubscription)'
+                    appName: '$(frontendWebAppName)'
+                    containers: '$(containerRegistry)/$(frontendImageRepository):$(Build.BuildId)'

@@ -1,0 +1,71 @@
+# Biztonsagi elemzes - a GitHub Actions-os CodeQL workflow Azure DevOps-os parja.
+#
+# Az Azure DevOps-ban nincs beepitett CodeQL (az a GitHub Advanced Security resze).
+# Helyette a Microsoft Security DevOps (MSDO) extension futtat egy eszkozkeszletet:
+# titok-szivargas (Credential Scanner), fuggoseg- es IaC-ellenorzok, valamint
+# JS/TS-re ESLint-alapu security szabalyok.
+#
+# ELOFELTETEL: telepiteni kell a szervezetbe a "Microsoft Security DevOps"
+# extensiont a Marketplace-rol, kulonben a MicrosoftSecurityDevOps@1 task ismeretlen.
+#
+# Ha van GitHub Advanced Security for Azure DevOps elofizetes, akkor az
+# AdvancedSecurity-Codeql-Init/Analyze taskokkal valodi CodeQL is futtathato -
+# ezek a lepesek alul, kikommentezve szerepelnek.
+
+name: $(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - main
+
+schedules:
+  # Hetente onmagaban is fusson, hogy az azota megismert uj sebezhetosegi
+  # mintakat a nem modositott kodon is elkapja.
+  - cron: '0 3 * * 1'
+    displayName: 'Heti biztonsagi elemzes'
+    branches:
+      include:
+        - main
+    always: true
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - name: dotnetVersion
+    value: '10.0.x'
+
+steps:
+  - checkout: self
+
+  - task: UseDotNet@2
+    displayName: '.NET SDK $(dotnetVersion)'
+    inputs:
+      packageType: 'sdk'
+      version: '$(dotnetVersion)'
+
+  # Az elemzoknek le kell tudni forditani a kodot, hogy a build kimenetet is lassak.
+  - script: dotnet build HealthTracker.slnx --configuration Release
+    displayName: 'Build (.NET)'
+
+  - task: MicrosoftSecurityDevOps@1
+    displayName: 'Microsoft Security DevOps scan'
+    inputs:
+      categories: 'code,artifacts,IaC,containers'
+      break: false
+
+  # --- GitHub Advanced Security for Azure DevOps (opcionalis, kulon licenc) ------
+  # Ha elo van fizetve, ezek a lepesek adjak a valodi CodeQL elemzest:
+  #
+  # - task: AdvancedSecurity-Codeql-Init@1
+  #   inputs:
+  #     languages: 'csharp,javascript'
+  # - script: dotnet build HealthTracker.slnx --configuration Release
+  #   displayName: 'Build for CodeQL'
+  # - task: AdvancedSecurity-Codeql-Analyze@1
