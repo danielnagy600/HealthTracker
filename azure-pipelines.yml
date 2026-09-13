@@ -2,10 +2,17 @@
 #
 # Szakaszok (stage-ek):
 #   1. Build   - .NET build+teszt es a React lint+build. PR-on es main-en is fut.
-#   2. Package - Docker image-ek epitese es feltoltese az Azure Container Registry-be.
-#                Csak main-en fut (PR-nal nincs ertelme image-et pusholni).
-#   3. Deploy  - a frissen pusholt image-ek kiteritese az Azure App Service-re
-#                (Web App for Containers). Csak main-en, sikeres Package utan.
+#   2. Package - Docker image-ek epitese es feltoltese a GitHub Container Registry-be
+#                (ghcr.io). Csak main-en fut (PR-nal nincs ertelme image-et pusholni).
+#   3. Deploy  - a frissen pusholt image-ek kiteritese Azure Container Apps-ra.
+#                Csak main-en, sikeres Package utan.
+#
+# Miert GHCR + Container Apps es nem ACR + App Service?
+# Gyakorlashoz szant projekt, ezert kizarolag olyan szolgaltatasokat hasznalunk,
+# amik TARTOSAN (nem csak az elso 12 honapban) ingyenesek:
+#   - GHCR: publikus image-eknel nincs tarhely-/idokorlat.
+#   - Container Apps (Consumption plan): havi 180 000 vCPU-mp + 2 millio kubik
+#     ingyen, es 0-ra skalazodik, ha nincs forgalom - inaktiv allapotban $0.
 #
 # A beallitandó service connection / valtozo ertekeket lasd: .azuredevops/README.md
 
@@ -23,8 +30,8 @@ pr:
 
 variables:
   # Kozos, kornyezet-fuggetlen beallitasok. A telepiteshez kotodo ertekeket
-  # (registry neve, App Service nevek, service connection-ok) egy Azure DevOps
-  # variable group-ban erdemes tartani - lasd .azuredevops/README.md.
+  # (registry, resource group, container app nevek, service connection-ok) egy
+  # Azure DevOps variable group-ban erdemes tartani - lasd .azuredevops/README.md.
   - group: healthtracker-cd
   - name: dotnetVersion
     value: '10.0.x'
@@ -57,10 +64,10 @@ stages:
           workingDirectory: 'frontend'
 
   # ---------------------------------------------------------------------------
-  # 2. Docker image-ek epitese es push az ACR-be
+  # 2. Docker image-ek epitese es push a GHCR-be
   # ---------------------------------------------------------------------------
   - stage: Package
-    displayName: Docker build & push (ACR)
+    displayName: Docker build & push (GHCR)
     dependsOn: Build
     condition: and(succeeded(), eq(variables.isMain, true))
     jobs:
@@ -90,10 +97,17 @@ stages:
               buildArgs: '--build-arg VITE_API_BASE=$(apiBaseUrl)'
 
   # ---------------------------------------------------------------------------
-  # 3. Deploy Azure App Service-re (Web App for Containers)
+  # 3. Deploy Azure Container Apps-ra
   # ---------------------------------------------------------------------------
+  # ELOFELTETEL: a ket Container App (api + frontend) es a Container Apps
+  # Environment mar letezik Azure-ban (lasd .azuredevops/README.md) - a pipeline
+  # csak a futo kepet cvzereli le a legfrissebbre, ujat nem hoz letre.
+  #
+  # A GHCR image-eknek PUBLIKUSNAK kell lenniuk (vagy a Container App-on
+  # regisztralt registry-hitelesitonek), kulonben a Container App nem tudja
+  # lehuzni oket. Lasd README a package lathatosag beallitasahoz.
   - stage: Deploy
-    displayName: Deploy to Azure App Service
+    displayName: Deploy to Azure Container Apps
     dependsOn: Package
     condition: and(succeeded(), eq(variables.isMain, true))
     jobs:
@@ -108,12 +122,13 @@ stages:
           runOnce:
             deploy:
               steps:
-                - task: AzureWebAppContainer@1
-                  displayName: 'Deploy API container'
+                - task: AzureContainerApps@1
+                  displayName: 'Deploy API container app'
                   inputs:
                     azureSubscription: '$(azureSubscription)'
-                    appName: '$(apiWebAppName)'
-                    containers: '$(containerRegistry)/$(apiImageRepository):$(Build.BuildId)'
+                    resourceGroup: '$(containerAppsResourceGroup)'
+                    containerAppName: '$(apiContainerAppName)'
+                    imageToDeploy: '$(containerRegistry)/$(apiImageRepository):$(Build.BuildId)'
 
       - deployment: DeployFrontend
         displayName: Frontend
@@ -125,9 +140,10 @@ stages:
           runOnce:
             deploy:
               steps:
-                - task: AzureWebAppContainer@1
-                  displayName: 'Deploy frontend container'
+                - task: AzureContainerApps@1
+                  displayName: 'Deploy frontend container app'
                   inputs:
                     azureSubscription: '$(azureSubscription)'
-                    appName: '$(frontendWebAppName)'
-                    containers: '$(containerRegistry)/$(frontendImageRepository):$(Build.BuildId)'
+                    resourceGroup: '$(containerAppsResourceGroup)'
+                    containerAppName: '$(frontendContainerAppName)'
+                    imageToDeploy: '$(containerRegistry)/$(frontendImageRepository):$(Build.BuildId)'
