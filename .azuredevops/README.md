@@ -114,9 +114,9 @@ pipeline-futás lecseréli a saját image-edre.
 | --- | --- | --- |
 | `dockerRegistryServiceConnection` | `healthtracker-ghcr` | a 2. pontban létrehozott service connection neve |
 | `azureSubscription` | `healthtracker-azure` | a 3. pontban létrehozott ARM service connection neve |
-| `containerRegistry` | `ghcr.io/<github-felhasznalonev>` | pl. `ghcr.io/danielnagy600` |
-| `apiImageRepository` | `healthtracker-api` | image név a GHCR-ben |
-| `frontendImageRepository` | `healthtracker-frontend` | image név a GHCR-ben |
+| `containerRegistry` | `ghcr.io` | csak a registry host, a tulajdonos NEM ide kerül (lásd lent, miért) |
+| `apiImageRepository` | `<github-felhasznalonev>/healthtracker-api` | pl. `danielnagy600/healthtracker-api` |
+| `frontendImageRepository` | `<github-felhasznalonev>/healthtracker-frontend` | pl. `danielnagy600/healthtracker-frontend` |
 | `containerAppsResourceGroup` | `healthtracker-rg` | a 4. pontban létrehozott resource group |
 | `apiContainerAppName` | `healthtracker-api` | a 4. pontban létrehozott Container App neve |
 | `frontendContainerAppName` | `healthtracker-web` | a 4. pontban létrehozott Container App neve |
@@ -124,6 +124,16 @@ pipeline-futás lecseréli a saját image-edre.
 
 A variable groupnál a **Pipeline permissions** alatt engedélyezni kell a pipeline
 hozzáférését, különben a futás „variable group not found" hibával áll le.
+
+**Miért kell a tulajdonos nevét az `apiImageRepository`/`frontendImageRepository`
+változóba tenni, és nem a `containerRegistry`-be?** A `Docker@2` task a push/build
+lépésnél a service connectionből kiolvasott registry hosthoz (`ghcr.io`) egyszerűen
+hozzáfűzi a `repository` paramétert (`<host>/<repository>:<tag>`). A GHCR viszont
+minden image nevétől megköveteli, hogy tartalmazza a tulajdonos (user/org) nevét is
+– enélkül a push `name invalid` hibával elutasítja. Ha a tulajdonos nevét a
+`containerRegistry`-be tetted volna, az a Deploy stage image-nevében (amit szintén a
+`containerRegistry`+`apiImageRepository` összefűzéséből épít fel a pipeline)
+duplázódna.
 
 ### 6. Environment
 
