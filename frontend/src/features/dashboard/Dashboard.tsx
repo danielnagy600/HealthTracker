@@ -34,7 +34,7 @@ export function Dashboard() {
   }
 
   return (
-    <main className="mx-auto my-6 flex max-w-[640px] flex-col gap-[1.1rem] px-4">
+    <main className="mx-auto my-6 flex max-w-160 flex-col gap-[1.1rem] px-4">
         {reminder && (
           <section className={`flex flex-col gap-1 rounded-[14px] p-[1rem_1.25rem] text-white ${statusClass(reminder.status)}`}>
             <strong>{reminder.message}</strong>
@@ -69,7 +69,7 @@ export function Dashboard() {
               <button className="btn" onClick={() => void add(500)}>+500 ml</button>
               <span className="ml-auto flex gap-[0.4rem]">
                 <input
-                  className="field w-[90px] p-[0.55rem]"
+                  className="field w-22.5 p-2.2"
                   type="number"
                   min="1"
                   value={customAmount}
