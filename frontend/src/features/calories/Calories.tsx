@@ -67,7 +67,7 @@ export function Calories() {
   }
 
   return (
-    <main className="mx-auto my-6 flex max-w-[640px] flex-col gap-[1.1rem] px-4">
+    <main className="mx-auto my-6 flex max-w-160 flex-col gap-[1.1rem] px-4">
       <section className="surface flex items-center gap-2 p-[0.6rem_1rem]">
         <button
           className="btn-link px-[0.6rem] py-[0.1rem] text-[1.4rem] leading-none"

@@ -69,7 +69,7 @@ export function Dashboard() {
               <button className="btn" onClick={() => void add(500)}>+500 ml</button>
               <span className="ml-auto flex gap-[0.4rem]">
                 <input
-                  className="field w-22.5 p-2.2"
+                  className="field w-22.5 p-[0.55rem]"
                   type="number"
                   min="1"
                   value={customAmount}

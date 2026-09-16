@@ -68,7 +68,7 @@
    osztályok, nem "sima CSS" visszacsempészése. */
 @layer components {
   .btn {
-    @apply cursor-pointer rounded-[9px] border-none bg-[linear-gradient(135deg,var(--color-blue),var(--color-blue-dark))] px-4 py-[0.65rem] text-base font-semibold text-white shadow-[0_8px_20px_-8px_rgb(91_61_240_/_65%)] transition-[filter] duration-150 ease-in-out hover:brightness-110 disabled:cursor-default disabled:opacity-60 disabled:shadow-none disabled:hover:brightness-100;
+    @apply cursor-pointer rounded-[9px] border-none bg-[linear-gradient(135deg,var(--color-blue),var(--color-blue-dark))] px-4 py-[0.65rem] text-base font-semibold text-white shadow-[0_8px_20px_-8px_rgb(91_61_240/65%)] transition-[filter] duration-150 ease-in-out hover:brightness-110 disabled:cursor-default disabled:opacity-60 disabled:shadow-none disabled:hover:brightness-100;
   }
   .btn-link {
     @apply bg-transparent px-2 py-[0.3rem] font-medium text-blue hover:bg-transparent hover:underline;

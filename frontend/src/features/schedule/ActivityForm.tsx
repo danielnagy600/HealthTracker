@@ -127,7 +127,7 @@ export function ActivityForm({ editing, date, onSave, onDelete, onCancel }: Prop
         {ACTIVITY_COLORS.map((option) => (
           <label
             key={option}
-            className={`h-[30px] w-[30px] cursor-pointer rounded-full border-2 border-transparent [box-shadow:0_0_0_1px_var(--color-border)] ${ACTIVITY_COLOR_BG[option]}${
+            className={`h-7.5 w-7.5 cursor-pointer rounded-full border-2 border-transparent [box-shadow:0_0_0_1px_var(--color-border)] ${ACTIVITY_COLOR_BG[option]}${
               color === option ? ' border-card [box-shadow:0_0_0_3px_var(--color-ink)]' : ''
             }`}
           >

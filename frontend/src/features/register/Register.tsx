@@ -35,7 +35,7 @@ export function Register() {
   }
 
   return (
-    <div className="mx-auto my-[8vh] max-w-[380px] rounded-2xl border border-border-strong bg-card p-8 shadow-[0_30px_60px_-20px_rgb(0_0_0_/_65%)]">
+    <div className="mx-auto my-[8vh] max-w-95 rounded-2xl border border-border-strong bg-card p-8 shadow-[0_30px_60px_-20px_rgb(0_0_0/65%)]">
       <h1 className="mb-1 font-serif text-2xl font-semibold text-ink">
         <MdOutlineHealthAndSafety className="mr-[0.35rem] inline-block align-[-0.15em] text-blue" />
         HealthTracker
