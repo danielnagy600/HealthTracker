@@ -18,6 +18,14 @@ builder.Services.AddWaterModule(connectionString);
 builder.Services.AddScheduleModule(connectionString);
 builder.Services.AddCaloriesModule(connectionString);
 
+// A Water/Schedule/Calories Controllerek a saját modulprojektjükben élnek
+// (nem a HealthTracker.Api-ban), ezért az ASP.NET Core alapértelmezett
+// Controller-felfedezését ki kell terjeszteni ezekre az assembly-kre.
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(WaterModule).Assembly)
+    .AddApplicationPart(typeof(ScheduleModule).Assembly)
+    .AddApplicationPart(typeof(CaloriesModule).Assembly);
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, HttpContextCurrentUser>();
 
@@ -73,9 +81,11 @@ if (app.Environment.IsDevelopment())
 
 app.MapGet("/", () => "HealthTracker API fut. Auth: /api/auth/login, Water: /api/water/summary");
 
+// Az Identity modul marad minimal API (beépített AddIdentityApiEndpoints/MapIdentityApi,
+// a tokenkezelést kézi Controllerben újraírni biztonsági kockázat lenne).
 app.MapIdentityModule();
-app.MapWaterModule();
-app.MapScheduleModule();
-app.MapCaloriesModule();
+
+// Water/Schedule/Calories Controller-alapú végpontjai.
+app.MapControllers();
 
 app.Run();
