@@ -50,7 +50,7 @@ src/
 │   └── format.ts             # időformázás (HH:mm)
 └── features/
     ├── layout/AppLayout.tsx  # közös fejléc + navigáció a védett oldalakhoz
-    ├── dashboard/Dashboard.tsx
+    ├── water-tracker/WaterTracker.tsx
     ├── schedule/
     │   ├── Schedule.tsx      # a Napirend oldal: dátumváltó, összesítés, űrlap
     │   ├── DayTimeline.tsx   # a vizuális idővonal

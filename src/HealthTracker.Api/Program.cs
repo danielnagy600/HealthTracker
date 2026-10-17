@@ -18,9 +18,6 @@ builder.Services.AddWaterModule(connectionString);
 builder.Services.AddScheduleModule(connectionString);
 builder.Services.AddCaloriesModule(connectionString);
 
-// A Water/Schedule/Calories Controllerek a saját modulprojektjükben élnek
-// (nem a HealthTracker.Api-ban), ezért az ASP.NET Core alapértelmezett
-// Controller-felfedezését ki kell terjeszteni ezekre az assembly-kre.
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(WaterModule).Assembly)
     .AddApplicationPart(typeof(ScheduleModule).Assembly)

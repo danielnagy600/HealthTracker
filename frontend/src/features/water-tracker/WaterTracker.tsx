@@ -7,7 +7,7 @@ function statusClass(status: Reminder['status']): string {
   return status === 'Behind' ? 'bg-amber' : status === 'GoalReached' ? 'bg-green' : 'bg-blue';
 }
 
-export function Dashboard() {
+export function WaterTracker() {
   const [summary, setSummary] = useState<DailySummary | null>(null);
   const [reminder, setReminder] = useState<Reminder | null>(null);
   const [customAmount, setCustomAmount] = useState('250');

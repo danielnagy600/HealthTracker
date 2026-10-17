@@ -40,7 +40,7 @@
     @apply m-0 bg-page font-sans text-ink;
     /* Halvány csillagmező + két lila ködfolt – ugyanaz a hangulat, mint a
        jóváhagyott látványterven, csak visszafogottabb, hogy a sűrű
-       adatnézeteken (Dashboard, Schedule, Calories) is olvasható maradjon. */
+       adatnézeteken (WaterTracker, Schedule, Calories) is olvasható maradjon. */
     background-image:
       radial-gradient(1.3px 1.3px at 4% 6%, rgb(255 255 255 / 55%), transparent 100%),
       radial-gradient(1.1px 1.1px at 13% 14%, rgb(255 255 255 / 40%), transparent 100%),
