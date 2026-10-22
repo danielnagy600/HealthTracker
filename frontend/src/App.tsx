@@ -1,11 +1,11 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { RequireAuth } from './core/RequireAuth';
-import { Calories } from './features/calories/Calories';
-import { AppLayout } from './features/layout/AppLayout';
-import { Login } from './features/login/Login';
-import { Register } from './features/register/Register';
-import { Schedule } from './features/schedule/Schedule';
-import { WaterTracker } from './features/water-tracker/WaterTracker';
+import { RequireAuth } from './core/authorization/RequireAuth';
+import { Calories } from './pages/calories/Calories';
+import { AppLayout } from './pages/layout/AppLayout';
+import { Login } from './pages/login/Login';
+import { Register } from './pages/register/Register';
+import { Schedule } from './pages/schedule/Schedule';
+import { WaterTracker } from './pages/water-tracker/WaterTracker';
 
 export function App() {
   return (

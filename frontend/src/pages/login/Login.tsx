@@ -2,9 +2,9 @@ import { useState } from 'react';
 import type { SubmitEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MdOutlineHealthAndSafety } from 'react-icons/md';
-import { useAuth } from '../../core/use-auth';
+import { useAuth } from '../../core/authorization/use-auth';
 
-export function Register() {
+export function Login() {
   const auth = useAuth();
   const navigate = useNavigate();
 
@@ -19,18 +19,11 @@ export function Register() {
     setError(null);
 
     try {
-      await auth.register(email, password);
-    } catch {
-      setError('Registration failed. Check the email format and password rules.');
-      setLoading(false);
-      return;
-    }
-
-    try {
       await auth.login(email, password);
       navigate('/');
     } catch {
-      navigate('/login');
+      setError('Invalid email or password.');
+      setLoading(false);
     }
   }
 
@@ -40,7 +33,7 @@ export function Register() {
         <MdOutlineHealthAndSafety className="mr-[0.35rem] inline-block align-[-0.15em] text-blue" />
         HealthTracker
       </h1>
-      <h2 className="mb-5 font-serif text-[1.05rem] font-medium text-muted italic">Create account</h2>
+      <h2 className="mb-5 font-serif text-[1.05rem] font-medium text-muted italic">Sign in</h2>
 
       <form className="flex flex-col gap-[0.9rem]" onSubmit={submit}>
         <label className="flex flex-col gap-[0.35rem] text-[0.85rem] text-muted">
@@ -64,24 +57,19 @@ export function Register() {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
-            autoComplete="new-password"
+            autoComplete="current-password"
           />
         </label>
-
-        <p className="-mt-[0.3rem] text-[0.78rem] text-muted">
-          Min. 6 characters, with upper- &amp; lowercase, a digit and a symbol (e.g.{' '}
-          <code>Passw0rd!</code>).
-        </p>
 
         {error && <p className="m-0 text-[0.85rem] text-red">{error}</p>}
 
         <button className="btn" type="submit" disabled={loading}>
-          {loading ? 'Creating…' : 'Register'}
+          {loading ? 'Signing in…' : 'Sign in'}
         </button>
       </form>
 
       <p className="text-muted">
-        Already registered? <Link to="/login">Sign in</Link>
+        No account yet? <Link to="/register">Register</Link>
       </p>
     </div>
   );

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { SubmitEvent } from 'react';
-import { ApiError } from '../../core/api';
-import type { Activity, ActivityColor, SaveActivityRequest } from '../../core/schedule';
-import { ACTIVITY_COLOR_BG, ACTIVITY_COLORS, COLOR_LABELS, toHm } from '../../core/schedule';
+import { ApiError } from '../../core/common/api';
+import type { Activity, ActivityColor, SaveActivityRequest } from '../../core/modules/schedule';
+import { ACTIVITY_COLOR_BG, ACTIVITY_COLORS, COLOR_LABELS, toHm } from '../../core/modules/schedule';
 
 interface Props {
   editing: Activity | null;
@@ -59,11 +59,15 @@ export function ActivityForm({ editing, date, onSave, onDelete, onCancel }: Prop
         endTime: `${endTime}:00`,
         title: title.trim(),
         color,
-        note: note.trim() === '' ? null : note.trim()
+        note: note.trim() === '' ? null : note.trim(),
       });
     } catch (error) {
       console.error(error);
-      setError(error instanceof ApiError ? error.message : 'Saving failed. Check the values and try again.');
+      setError(
+        error instanceof ApiError
+          ? error.message
+          : 'Saving failed. Check the values and try again.',
+      );
     } finally {
       setSaving(false);
     }
@@ -166,7 +170,12 @@ export function ActivityForm({ editing, date, onSave, onDelete, onCancel }: Prop
           Cancel
         </button>
         {editing && (
-          <button className="btn btn-danger" type="button" onClick={() => void remove()} disabled={saving}>
+          <button
+            className="btn btn-danger"
+            type="button"
+            onClick={() => void remove()}
+            disabled={saving}
+          >
             Delete
           </button>
         )}

@@ -1,5 +1,5 @@
-import type { Activity } from '../../core/schedule';
-import { toMinutes } from '../../core/schedule';
+import type { Activity } from '../../core/modules/schedule';
+import { toMinutes } from '../../core/modules/schedule';
 
 export interface PlacedActivity {
   activity: Activity;

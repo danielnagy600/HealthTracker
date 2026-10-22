@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { Activity, DaySchedule, SaveActivityRequest } from '../../core/schedule';
-import { addDays, formatDuration, formatLongDate, schedule, toHm, todayIso } from '../../core/schedule';
+import type { Activity, DaySchedule, SaveActivityRequest } from '../../core/modules/schedule';
+import {
+  addDays,
+  formatDuration,
+  formatLongDate,
+  schedule,
+  toHm,
+  todayIso,
+} from '../../core/modules/schedule';
 import { ActivityForm } from './ActivityForm';
 import { DayTimeline } from './DayTimeline';
 
@@ -48,8 +55,9 @@ export function Schedule() {
   }
 
   const longestFreeSlot = day?.freeSlots.reduce<(typeof day.freeSlots)[number] | null>(
-    (longest, slot) => (longest === null || slot.durationMinutes > longest.durationMinutes ? slot : longest),
-    null
+    (longest, slot) =>
+      longest === null || slot.durationMinutes > longest.durationMinutes ? slot : longest,
+    null,
   );
 
   return (
@@ -99,7 +107,10 @@ export function Schedule() {
             <section className="flex flex-col gap-1 rounded-[14px] bg-amber p-[1rem_1.25rem] text-white">
               <strong>Conflict in your day</strong>
               {day.conflicts.map((conflict) => (
-                <span key={`${conflict.firstId}-${conflict.secondId}`} className="text-[0.85rem] opacity-90">
+                <span
+                  key={`${conflict.firstId}-${conflict.secondId}`}
+                  className="text-[0.85rem] opacity-90"
+                >
                   “{conflict.firstTitle}” and “{conflict.secondTitle}” overlap{' '}
                   {toHm(conflict.overlapStart)}–{toHm(conflict.overlapEnd)} (
                   {formatDuration(conflict.overlapMinutes)})
@@ -122,7 +133,9 @@ export function Schedule() {
             />
           ) : (
             <section className="surface flex flex-wrap items-center gap-[0.6rem] p-[1.1rem_1.25rem]">
-              <button className="btn" onClick={() => setFormOpen(true)}>+ New activity</button>
+              <button className="btn" onClick={() => setFormOpen(true)}>
+                + New activity
+              </button>
               <span className="text-muted">Click a block to edit it.</span>
             </section>
           )}

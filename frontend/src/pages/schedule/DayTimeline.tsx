@@ -1,5 +1,5 @@
-import type { Activity, DaySchedule } from '../../core/schedule';
-import { ACTIVITY_COLOR_BG, formatDuration, toHm, toMinutes } from '../../core/schedule';
+import type { Activity, DaySchedule } from '../../core/modules/schedule';
+import { ACTIVITY_COLOR_BG, formatDuration, toHm, toMinutes } from '../../core/modules/schedule';
 import { placeActivities } from './lanes';
 
 const HOUR_HEIGHT = 56;

@@ -1,7 +1,7 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import type { NavLinkRenderProps } from 'react-router-dom';
 import { MdOutlineHealthAndSafety } from 'react-icons/md';
-import { useAuth } from '../../core/use-auth';
+import { useAuth } from '../../core/authorization/use-auth';
 
 function navLinkClass({ isActive }: NavLinkRenderProps): string {
   const base = 'rounded-full px-3 py-[0.35rem] text-[0.9rem] font-semibold no-underline';
@@ -9,6 +9,9 @@ function navLinkClass({ isActive }: NavLinkRenderProps): string {
     ? `${base} bg-blue text-white`
     : `${base} text-muted hover:bg-white/10 hover:no-underline`;
 }
+
+const disabledTabClass =
+  'rounded-full px-3 py-[0.35rem] text-[0.9rem] font-semibold text-muted opacity-40 cursor-not-allowed select-none';
 
 export function AppLayout() {
   const auth = useAuth();
@@ -33,9 +36,9 @@ export function AppLayout() {
           <NavLink to="/schedule" className={navLinkClass}>
             Schedule
           </NavLink>
-          <NavLink to="/calories" className={navLinkClass}>
+          <span className={disabledTabClass} aria-disabled="true">
             Calories
-          </NavLink>
+          </span>
         </nav>
         <span className="flex-1"></span>
         <span className="text-muted">{auth.email}</span>

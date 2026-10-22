@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { DayCalories, FoodEntry, Meal, SaveFoodEntryRequest } from '../../core/calories';
-import { MEAL_ICONS, MEAL_LABELS, calories, statusClass } from '../../core/calories';
-import { addDays, formatLongDate, todayIso } from '../../core/schedule';
-import { formatTime } from '../../core/format';
+import type { DayCalories, FoodEntry, Meal, SaveFoodEntryRequest } from '../../core/modules/calories';
+import { MEAL_ICONS, MEAL_LABELS, calories, statusClass } from '../../core/modules/calories';
+import { addDays, formatLongDate, todayIso } from '../../core/modules/schedule';
+import { formatTime } from '../../core/common/format';
 import { FoodEntryForm } from './FoodEntryForm';
 import { GoalEditor } from './GoalEditor';
 

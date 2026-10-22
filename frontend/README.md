@@ -38,17 +38,20 @@ src/
 ├── styles.css                # globális stílusok
 ├── vite-env.d.ts             # az env-változók típusai
 ├── core/
-│   ├── api.ts                # API_BASE + apiFetch (bearer tokent tesz a kérésekre)
-│   ├── session.ts            # token/e-mail tárolása localStorage-ban
-│   ├── auth-context.ts       # a Context és a típusa
-│   ├── AuthProvider.tsx      # a bejelentkezési állapot szolgáltatója
-│   ├── use-auth.ts           # useAuth() hook
-│   ├── RequireAuth.tsx       # védett útvonal: bejelentkezés nélkül /login-ra irányít
-│   ├── water.ts              # a Water modul DTO-i és REST-hívásai
-│   ├── schedule.ts           # a Schedule modul DTO-i, REST-hívásai és idő-segédei
-│   ├── calories.ts           # a Calories modul DTO-i és REST-hívásai
-│   └── format.ts             # időformázás (HH:mm)
-└── features/
+│   ├── authorization/
+│   │   ├── session.ts        # token/e-mail tárolása localStorage-ban
+│   │   ├── auth-context.ts   # a Context és a típusa
+│   │   ├── AuthProvider.tsx  # a bejelentkezési állapot szolgáltatója
+│   │   ├── use-auth.ts       # useAuth() hook
+│   │   └── RequireAuth.tsx   # védett útvonal: bejelentkezés nélkül /login-ra irányít
+│   ├── modules/
+│   │   ├── water.ts          # a Water modul DTO-i és REST-hívásai
+│   │   ├── schedule.ts       # a Schedule modul DTO-i, REST-hívásai és idő-segédei
+│   │   └── calories.ts       # a Calories modul DTO-i és REST-hívásai
+│   └── common/
+│       ├── api.ts            # API_BASE + apiFetch (bearer tokent tesz a kérésekre)
+│       └── format.ts         # időformázás (HH:mm)
+└── pages/
     ├── layout/AppLayout.tsx  # közös fejléc + navigáció a védett oldalakhoz
     ├── water-tracker/WaterTracker.tsx
     ├── schedule/

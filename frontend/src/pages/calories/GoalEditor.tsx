@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { SubmitEvent } from 'react';
-import { ApiError } from '../../core/api';
+import { ApiError } from '../../core/common/api';
 
 interface Props {
   current: number;

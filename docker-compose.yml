@@ -35,6 +35,10 @@ services:
       Cors__AllowedOrigin: "http://localhost:4200"
     ports:
       - "8080:8080"
+    volumes:
+      # A Data Protection kulcstár perzisztálva - enelkul minden `up --build`
+      # ervenytelenitene a mar kiadott bejelentkezesi tokeneket.
+      - apikeys:/app/keys
     depends_on:
       db:
         condition: service_healthy
@@ -54,3 +58,4 @@ services:
 
 volumes:
   pgdata:
+  apikeys:

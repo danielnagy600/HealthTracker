@@ -30,3 +30,8 @@ Thumbs.db
 appsettings.*.local.json
 *.pfx
 .env
+
+# Data Protection kulcstár (lokális `dotnet run`-nál itt generálódik;
+# Docker-ben a named volume-ban él, oda sem kerül be a repóba) - ez nem
+# titok, de nem is forráskód, és konténerenként/gépenként más.
+src/HealthTracker.Api/keys/

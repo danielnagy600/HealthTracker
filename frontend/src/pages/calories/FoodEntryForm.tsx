@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { SubmitEvent } from 'react';
-import { ApiError } from '../../core/api';
-import type { FoodEntry, Meal, SaveFoodEntryRequest } from '../../core/calories';
-import { MEAL_ICONS, MEAL_LABELS, MEALS } from '../../core/calories';
+import { ApiError } from '../../core/common/api';
+import type { FoodEntry, Meal, SaveFoodEntryRequest } from '../../core/modules/calories';
+import { MEAL_ICONS, MEAL_LABELS, MEALS } from '../../core/modules/calories';
 
 interface Props {
   editing: FoodEntry | null;

@@ -4,6 +4,7 @@ using HealthTracker.Modules.Identity;
 using HealthTracker.Modules.Schedule;
 using HealthTracker.Modules.Water;
 using HealthTracker.SharedKernel.Abstractions;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +26,14 @@ builder.Services.AddControllers()
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, HttpContextCurrentUser>();
+
+// A Data Protection kulcstár alapból efemer konténerekben (nincs hova
+// perzisztálnia), ezért minden konténer-újraindítás érvénytelenít minden
+// kiadott bearer tokent (401-et kapnál mindenhol bejelentkezés után).
+// Perzisztens mappába irányítva a kulcsok túlélik az újraindítást.
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(
+        builder.Configuration["DataProtection:KeysPath"] ?? "keys"));
 
 var allowedOrigin = builder.Configuration["Cors:AllowedOrigin"] ?? "http://localhost:4200";
 const string DevCors = "dev-cors";

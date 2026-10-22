@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { formatTime } from '../../core/format';
-import { water } from '../../core/water';
-import type { DailySummary, Reminder } from '../../core/water';
+import { formatTime } from '../../core/common/format';
+import { water } from '../../core/modules/water';
+import type { DailySummary, Reminder } from '../../core/modules/water';
 
 function statusClass(status: Reminder['status']): string {
   return status === 'Behind' ? 'bg-amber' : status === 'GoalReached' ? 'bg-green' : 'bg-blue';

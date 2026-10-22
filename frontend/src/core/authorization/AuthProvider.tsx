@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import { apiFetch } from './api';
+import { apiFetch } from '../common/api';
 import { AuthContext } from './auth-context';
 import type { AuthContextValue } from './auth-context';
 import { session } from './session';
