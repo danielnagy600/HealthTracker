@@ -10,9 +10,6 @@ function navLinkClass({ isActive }: NavLinkRenderProps): string {
     : `${base} text-muted hover:bg-white/10 hover:no-underline`;
 }
 
-const disabledTabClass =
-  'rounded-full px-3 py-[0.35rem] text-[0.9rem] font-semibold text-muted opacity-40 cursor-not-allowed select-none';
-
 export function AppLayout() {
   const auth = useAuth();
   const navigate = useNavigate();
@@ -36,9 +33,9 @@ export function AppLayout() {
           <NavLink to="/schedule" className={navLinkClass}>
             Schedule
           </NavLink>
-          <span className={disabledTabClass} aria-disabled="true">
+          <NavLink to="/calories" className={navLinkClass}>
             Calories
-          </span>
+          </NavLink>
         </nav>
         <span className="flex-1"></span>
         <span className="text-muted">{auth.email}</span>
