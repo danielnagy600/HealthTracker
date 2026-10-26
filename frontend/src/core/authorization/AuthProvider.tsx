@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import { apiFetch } from '../common/api';
+import { apiFetch, setUnauthorizedHandler } from '../common/api';
 import { AuthContext } from './auth-context';
 import type { AuthContextValue } from './auth-context';
 import { session } from './session';
@@ -39,6 +39,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(null);
     setEmail(null);
   }, []);
+
+  // Ha bármelyik API-hívás 401-et kap, pedig küldtünk tokent (azaz a token
+  // lejárt/érvénytelenné vált), automatikusan kijelentkeztetjük a usert -
+  // ettől a RequireAuth a következő renderkor /login-ra irányít.
+  useEffect(() => {
+    setUnauthorizedHandler(logout);
+    return () => setUnauthorizedHandler(null);
+  }, [logout]);
 
   const value = useMemo<AuthContextValue>(
     () => ({ email, isLoggedIn: token !== null, register, login, logout }),

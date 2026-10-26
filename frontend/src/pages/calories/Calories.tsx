@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { DayCalories, FoodEntry, Meal, SaveFoodEntryRequest } from '../../core/modules/calories';
+import type {
+  DayCalories,
+  FoodEntry,
+  Meal,
+  SaveFoodEntryRequest,
+} from '../../core/modules/calories';
 import { MEAL_ICONS, MEAL_LABELS, calories, statusClass } from '../../core/modules/calories';
 import { addDays, formatLongDate, todayIso } from '../../core/modules/schedule';
 import { formatTime } from '../../core/common/format';
@@ -95,7 +100,9 @@ export function Calories() {
 
       {day ? (
         <>
-          <section className={`flex flex-col gap-1 rounded-[14px] p-[1rem_1.25rem] text-white ${statusClass(day.status)}`}>
+          <section
+            className={`flex flex-col gap-1 rounded-[14px] p-[1rem_1.25rem] text-white ${statusClass(day.status)}`}
+          >
             <strong>{day.message}</strong>
             {day.largestMeal && (
               <span className="text-[0.85rem] opacity-90">
@@ -124,14 +131,24 @@ export function Calories() {
             </div>
             <div className="flex items-baseline justify-between gap-2">
               <span className="text-muted">{day.percentOfTarget}% of daily target</span>
-              <button className="btn-link" onClick={() => { closeForm(); setGoalOpen(true); }}>
+              <button
+                className="btn-link"
+                onClick={() => {
+                  closeForm();
+                  setGoalOpen(true);
+                }}
+              >
                 Change target
               </button>
             </div>
           </section>
 
           {goalOpen && (
-            <GoalEditor current={day.targetKcal} onSave={saveGoal} onCancel={() => setGoalOpen(false)} />
+            <GoalEditor
+              current={day.targetKcal}
+              onSave={saveGoal}
+              onCancel={() => setGoalOpen(false)}
+            />
           )}
 
           {day.meals.map((group) => (
@@ -154,7 +171,9 @@ export function Calories() {
                         onClick={() => select(entry)}
                       >
                         <span className="flex-1">{entry.name}</span>
-                        <span className="text-[0.78rem] text-muted tabular-nums">{formatTime(entry.recordedAt)}</span>
+                        <span className="text-[0.78rem] text-muted tabular-nums">
+                          {formatTime(entry.recordedAt)}
+                        </span>
                         <span className="font-semibold tabular-nums">{entry.calories} kcal</span>
                       </button>
                     </li>
@@ -162,7 +181,10 @@ export function Calories() {
                 </ul>
               )}
 
-              <button className="btn-link mt-[0.4rem] pl-0 text-[0.85rem]" onClick={() => addTo(group.meal)}>
+              <button
+                className="btn-link mt-[0.4rem] pl-0 text-[0.85rem]"
+                onClick={() => addTo(group.meal)}
+              >
                 + Add
               </button>
             </section>
