@@ -19,14 +19,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const register = useCallback(async (email: string, password: string): Promise<void> => {
     await apiFetch<void>('/api/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password }),
     });
   }, []);
 
   const login = useCallback(async (email: string, password: string): Promise<void> => {
     const response = await apiFetch<LoginResponse>('/api/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password }),
     });
 
     session.save(response.accessToken, email);
@@ -40,9 +40,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setEmail(null);
   }, []);
 
-  // Ha bármelyik API-hívás 401-et kap, pedig küldtünk tokent (azaz a token
-  // lejárt/érvénytelenné vált), automatikusan kijelentkeztetjük a usert -
-  // ettől a RequireAuth a következő renderkor /login-ra irányít.
   useEffect(() => {
     setUnauthorizedHandler(logout);
     return () => setUnauthorizedHandler(null);
@@ -50,7 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<AuthContextValue>(
     () => ({ email, isLoggedIn: token !== null, register, login, logout }),
-    [email, token, register, login, logout]
+    [email, token, register, login, logout],
   );
 
   return <AuthContext value={value}>{children}</AuthContext>;
