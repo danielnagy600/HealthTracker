@@ -16,6 +16,10 @@ public sealed class ScheduleController(IScheduleService svc) : ControllerBase
     public async Task<IActionResult> GetDay(DateOnly? date, CancellationToken ct) =>
         Ok(await svc.GetDayAsync(date, ct));
 
+    [HttpGet("activities/{id:guid}")]
+    public async Task<IActionResult> GetActivity(Guid id, CancellationToken ct) =>
+        await svc.GetAsync(id, ct) is { } item ? Ok(item) : NotFound();
+
     [HttpPost("activities")]
     public async Task<IActionResult> AddActivity(SaveActivityRequest req, CancellationToken ct)
     {
@@ -23,7 +27,7 @@ public sealed class ScheduleController(IScheduleService svc) : ControllerBase
             return BadRequest(error);
 
         var item = await svc.AddAsync(req, ct);
-        return Created($"/api/schedule/activities/{item.Id}", item);
+        return CreatedAtAction(nameof(GetActivity), new { id = item.Id }, item);
     }
 
     [HttpPut("activities/{id:guid}")]

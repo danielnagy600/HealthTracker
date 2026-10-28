@@ -6,6 +6,8 @@ public interface ICalorieService
 {
     Task<DayCaloriesResponse> GetDayAsync(DateOnly? onDate = null, CancellationToken ct = default);
 
+    Task<FoodEntryItem?> GetAsync(Guid id, CancellationToken ct = default);
+
     Task<FoodEntryItem> AddAsync(SaveFoodEntryRequest request, CancellationToken ct = default);
 
     Task<FoodEntryItem?> UpdateAsync(Guid id, SaveFoodEntryRequest request, CancellationToken ct = default);

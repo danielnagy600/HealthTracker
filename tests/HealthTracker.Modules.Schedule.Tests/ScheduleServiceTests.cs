@@ -124,6 +124,36 @@ public class ScheduleServiceTests
     }
 
     [Fact]
+    public async Task Get_returns_an_existing_activity()
+    {
+        var existing = Act(9, 10, "Edzés");
+        _repository
+            .Setup(r => r.FindAsync(UserId, existing.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(existing);
+
+        var result = await _sut.GetAsync(existing.Id);
+
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(existing.Id);
+        result.Title.Should().Be("Edzés");
+        result.DurationMinutes.Should().Be(60);
+    }
+
+    [Fact]
+    public async Task Get_returns_null_for_someone_elses_activity()
+    {
+        var foreignId = Guid.NewGuid();
+
+        _repository
+            .Setup(r => r.FindAsync(UserId, foreignId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Activity?)null);
+
+        var result = await _sut.GetAsync(foreignId);
+
+        result.Should().BeNull();
+    }
+
+    [Fact]
     public async Task Update_changes_an_existing_activity()
     {
         var existing = Act(9, 10, "Régi cím");

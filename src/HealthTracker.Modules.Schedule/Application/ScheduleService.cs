@@ -49,6 +49,14 @@ public sealed class ScheduleService : IScheduleService
             items, freeSlots, conflicts);
     }
 
+    public async Task<ActivityItem?> GetAsync(Guid id, CancellationToken ct = default)
+    {
+        var userId = _currentUser.RequireUserId();
+
+        var activity = await _repository.FindAsync(userId, id, ct);
+        return activity is null ? null : ToItem(activity);
+    }
+
     public async Task<ActivityItem> AddAsync(SaveActivityRequest request, CancellationToken ct = default)
     {
         var userId = _currentUser.RequireUserId();

@@ -16,6 +16,10 @@ public sealed class CaloriesController(ICalorieService svc) : ControllerBase
     public async Task<IActionResult> GetDay(DateOnly? date, CancellationToken ct) =>
         Ok(await svc.GetDayAsync(date, ct));
 
+    [HttpGet("entries/{id:guid}")]
+    public async Task<IActionResult> GetEntry(Guid id, CancellationToken ct) =>
+        await svc.GetAsync(id, ct) is { } item ? Ok(item) : NotFound();
+
     [HttpPost("entries")]
     public async Task<IActionResult> AddEntry(SaveFoodEntryRequest req, CancellationToken ct)
     {
@@ -23,7 +27,7 @@ public sealed class CaloriesController(ICalorieService svc) : ControllerBase
             return BadRequest(error);
 
         var item = await svc.AddAsync(req, ct);
-        return Created($"/api/calories/entries/{item.Id}", item);
+        return CreatedAtAction(nameof(GetEntry), new { id = item.Id }, item);
     }
 
     [HttpPut("entries/{id:guid}")]

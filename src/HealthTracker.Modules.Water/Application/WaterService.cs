@@ -18,6 +18,14 @@ public sealed class WaterService : IWaterService
         _currentUser = currentUser;
     }
 
+    public async Task<IntakeItem?> GetIntakeAsync(Guid id, CancellationToken ct = default)
+    {
+        var userId = _currentUser.RequireUserId();
+
+        var intake = await _repository.FindIntakeAsync(userId, id, ct);
+        return intake is null ? null : new IntakeItem(intake.Id, intake.RecordedAt, intake.AmountMl);
+    }
+
     public async Task<IntakeItem> AddIntakeAsync(AddIntakeRequest request, CancellationToken ct = default)
     {
         var userId = _currentUser.RequireUserId();

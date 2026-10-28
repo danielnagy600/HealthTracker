@@ -53,6 +53,36 @@ public class WaterServiceTests
     }
 
     [Fact]
+    public async Task GetIntake_returns_an_existing_intake()
+    {
+        var existing = new WaterIntake(
+            Guid.NewGuid(), UserId, DateOnly.FromDateTime(Now.DateTime), Now, 300);
+        _repository
+            .Setup(r => r.FindIntakeAsync(UserId, existing.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(existing);
+
+        var result = await _sut.GetIntakeAsync(existing.Id);
+
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(existing.Id);
+        result.AmountMl.Should().Be(300);
+    }
+
+    [Fact]
+    public async Task GetIntake_returns_null_for_someone_elses_intake()
+    {
+        var foreignId = Guid.NewGuid();
+
+        _repository
+            .Setup(r => r.FindIntakeAsync(UserId, foreignId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((WaterIntake?)null);
+
+        var result = await _sut.GetIntakeAsync(foreignId);
+
+        result.Should().BeNull();
+    }
+
+    [Fact]
     public async Task TodaySummary_aggregates_todays_intakes()
     {
         var today = DateOnly.FromDateTime(Now.DateTime);

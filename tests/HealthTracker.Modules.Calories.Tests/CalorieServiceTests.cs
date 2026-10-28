@@ -133,6 +133,36 @@ public class CalorieServiceTests
     }
 
     [Fact]
+    public async Task Get_returns_an_existing_entry()
+    {
+        var existing = Entry(320, MealType.Breakfast, "Zabkása");
+        _repository
+            .Setup(r => r.FindAsync(UserId, existing.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(existing);
+
+        var result = await _sut.GetAsync(existing.Id);
+
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(existing.Id);
+        result.Name.Should().Be("Zabkása");
+        result.Meal.Should().Be("Breakfast");
+    }
+
+    [Fact]
+    public async Task Get_returns_null_for_someone_elses_entry()
+    {
+        var foreignId = Guid.NewGuid();
+
+        _repository
+            .Setup(r => r.FindAsync(UserId, foreignId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((FoodEntry?)null);
+
+        var result = await _sut.GetAsync(foreignId);
+
+        result.Should().BeNull();
+    }
+
+    [Fact]
     public async Task Update_changes_an_existing_entry()
     {
         var existing = Entry(320, MealType.Breakfast, "Zabkása");

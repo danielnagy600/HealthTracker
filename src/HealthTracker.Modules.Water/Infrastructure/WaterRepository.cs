@@ -10,6 +10,12 @@ public sealed class WaterRepository : IWaterRepository
 
     public WaterRepository(WaterDbContext db) => _db = db;
 
+    public async Task<WaterIntake?> FindIntakeAsync(Guid userId, Guid intakeId, CancellationToken ct = default)
+    {
+        return await _db.Intakes
+            .FirstOrDefaultAsync(i => i.Id == intakeId && i.UserId == userId, ct);
+    }
+
     public async Task AddIntakeAsync(WaterIntake intake, CancellationToken ct = default)
     {
         _db.Intakes.Add(intake);

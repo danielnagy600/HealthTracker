@@ -18,6 +18,10 @@ public sealed class WaterController(IWaterService svc) : ControllerBase
     public async Task<IActionResult> GetReminder(CancellationToken ct) =>
         Ok(await svc.GetReminderAsync(ct));
 
+    [HttpGet("intake/{id:guid}")]
+    public async Task<IActionResult> GetIntake(Guid id, CancellationToken ct) =>
+        await svc.GetIntakeAsync(id, ct) is { } item ? Ok(item) : NotFound();
+
     [HttpPost("intake")]
     public async Task<IActionResult> AddIntake(AddIntakeRequest req, CancellationToken ct)
     {
@@ -25,7 +29,7 @@ public sealed class WaterController(IWaterService svc) : ControllerBase
             return BadRequest("AmountMl must be positive.");
 
         var item = await svc.AddIntakeAsync(req, ct);
-        return Created($"/api/water/intake/{item.Id}", item);
+        return CreatedAtAction(nameof(GetIntake), new { id = item.Id }, item);
     }
 
     [HttpGet("settings")]

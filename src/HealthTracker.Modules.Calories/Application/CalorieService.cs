@@ -53,6 +53,14 @@ public sealed class CalorieService : ICalorieService
             groups);
     }
 
+    public async Task<FoodEntryItem?> GetAsync(Guid id, CancellationToken ct = default)
+    {
+        var userId = _currentUser.RequireUserId();
+
+        var entry = await _repository.FindAsync(userId, id, ct);
+        return entry is null ? null : ToItem(entry);
+    }
+
     public async Task<FoodEntryItem> AddAsync(SaveFoodEntryRequest request, CancellationToken ct = default)
     {
         var userId = _currentUser.RequireUserId();
