@@ -3,6 +3,7 @@ using HealthTracker.Modules.Calories.Application.Dtos;
 using HealthTracker.Modules.Calories.Domain;
 using HealthTracker.Modules.Calories.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthTracker.Modules.Calories;
@@ -24,7 +25,7 @@ public sealed class CaloriesController(ICalorieService svc) : ControllerBase
     public async Task<IActionResult> AddEntry(SaveFoodEntryRequest req, CancellationToken ct)
     {
         if (Validate(req) is { } error)
-            return BadRequest(error);
+            return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: error);
 
         var item = await svc.AddAsync(req, ct);
         return CreatedAtAction(nameof(GetEntry), new { id = item.Id }, item);
@@ -34,7 +35,7 @@ public sealed class CaloriesController(ICalorieService svc) : ControllerBase
     public async Task<IActionResult> UpdateEntry(Guid id, SaveFoodEntryRequest req, CancellationToken ct)
     {
         if (Validate(req) is { } error)
-            return BadRequest(error);
+            return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: error);
 
         var item = await svc.UpdateAsync(id, req, ct);
         return item is null ? NotFound() : Ok(item);
@@ -52,7 +53,7 @@ public sealed class CaloriesController(ICalorieService svc) : ControllerBase
     public async Task<IActionResult> UpdateGoal(UpdateGoalRequest req, CancellationToken ct)
     {
         if (CalorieGoal.Validate(req.DailyTargetKcal) is { } error)
-            return BadRequest(error);
+            return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: error);
 
         return Ok(await svc.UpdateGoalAsync(req, ct));
     }

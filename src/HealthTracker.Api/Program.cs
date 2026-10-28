@@ -27,6 +27,11 @@ builder.Services.AddControllers()
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, HttpContextCurrentUser>();
 
+// Minden hibaválasz (400, 404, 500, body nélküli státuszok) egységesen
+// ProblemDetails (RFC 9457) formátumú legyen.
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<DomainExceptionHandler>();
+
 // A Data Protection kulcstár alapból efemer konténerekben (nincs hova
 // perzisztálnia), ezért minden konténer-újraindítás érvénytelenít minden
 // kiadott bearer tokent (401-et kapnál mindenhol bejelentkezés után).
@@ -76,6 +81,8 @@ catch (Exception ex)
 }
 
 app.UseCors(DevCors);
+app.UseExceptionHandler();
+app.UseStatusCodePages();
 app.UseAuthentication();
 app.UseAuthorization();
 

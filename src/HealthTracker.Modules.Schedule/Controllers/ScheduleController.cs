@@ -3,6 +3,7 @@ using HealthTracker.Modules.Schedule.Application.Dtos;
 using HealthTracker.Modules.Schedule.Domain;
 using HealthTracker.Modules.Schedule.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthTracker.Modules.Schedule;
@@ -24,7 +25,7 @@ public sealed class ScheduleController(IScheduleService svc) : ControllerBase
     public async Task<IActionResult> AddActivity(SaveActivityRequest req, CancellationToken ct)
     {
         if (Validate(req) is { } error)
-            return BadRequest(error);
+            return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: error);
 
         var item = await svc.AddAsync(req, ct);
         return CreatedAtAction(nameof(GetActivity), new { id = item.Id }, item);
@@ -34,7 +35,7 @@ public sealed class ScheduleController(IScheduleService svc) : ControllerBase
     public async Task<IActionResult> UpdateActivity(Guid id, SaveActivityRequest req, CancellationToken ct)
     {
         if (Validate(req) is { } error)
-            return BadRequest(error);
+            return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: error);
 
         var item = await svc.UpdateAsync(id, req, ct);
         return item is null ? NotFound() : Ok(item);

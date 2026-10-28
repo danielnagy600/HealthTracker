@@ -1,6 +1,7 @@
 using HealthTracker.Modules.Water.Application;
 using HealthTracker.Modules.Water.Application.Dtos;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthTracker.Modules.Water.Controllers;
@@ -26,7 +27,7 @@ public sealed class WaterController(IWaterService svc) : ControllerBase
     public async Task<IActionResult> AddIntake(AddIntakeRequest req, CancellationToken ct)
     {
         if (req.AmountMl <= 0)
-            return BadRequest("AmountMl must be positive.");
+            return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: "AmountMl must be positive.");
 
         var item = await svc.AddIntakeAsync(req, ct);
         return CreatedAtAction(nameof(GetIntake), new { id = item.Id }, item);
