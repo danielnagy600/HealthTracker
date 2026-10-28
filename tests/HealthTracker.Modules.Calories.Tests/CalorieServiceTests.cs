@@ -1,5 +1,6 @@
 using FluentAssertions;
 using HealthTracker.Modules.Calories.Application;
+using HealthTracker.Modules.Calories.Application.Dtos;
 using HealthTracker.Modules.Calories.Domain;
 using HealthTracker.Modules.Calories.Domain.Entities;
 using HealthTracker.SharedKernel.Abstractions;

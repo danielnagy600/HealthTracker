@@ -1,4 +1,5 @@
 using HealthTracker.Modules.Water.Application;
+using HealthTracker.Modules.Water.Application.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

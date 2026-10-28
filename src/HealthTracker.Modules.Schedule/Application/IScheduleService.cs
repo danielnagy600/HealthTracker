@@ -1,3 +1,5 @@
+using HealthTracker.Modules.Schedule.Application.Dtos;
+
 namespace HealthTracker.Modules.Schedule.Application;
 
 public interface IScheduleService

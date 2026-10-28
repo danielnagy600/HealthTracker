@@ -1,3 +1,5 @@
+using HealthTracker.Modules.Calories.Application.Dtos;
+
 namespace HealthTracker.Modules.Calories.Application;
 
 public interface ICalorieService

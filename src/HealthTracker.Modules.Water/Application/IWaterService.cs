@@ -1,3 +1,5 @@
+using HealthTracker.Modules.Water.Application.Dtos;
+
 namespace HealthTracker.Modules.Water.Application;
 
 public interface IWaterService
