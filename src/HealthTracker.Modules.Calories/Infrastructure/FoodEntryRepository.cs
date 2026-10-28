@@ -1,5 +1,5 @@
 using HealthTracker.Modules.Calories.Application;
-using HealthTracker.Modules.Calories.Domain;
+using HealthTracker.Modules.Calories.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace HealthTracker.Modules.Calories.Infrastructure;

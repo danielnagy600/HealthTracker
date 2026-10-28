@@ -1,4 +1,4 @@
-using HealthTracker.Modules.Identity.Domain;
+using HealthTracker.Modules.Identity.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

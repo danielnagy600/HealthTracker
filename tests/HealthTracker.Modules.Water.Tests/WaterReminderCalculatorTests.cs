@@ -1,5 +1,6 @@
 using FluentAssertions;
 using HealthTracker.Modules.Water.Domain;
+using HealthTracker.Modules.Water.Domain.Entities;
 using Xunit;
 
 namespace HealthTracker.Modules.Water.Tests;

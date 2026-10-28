@@ -1,4 +1,5 @@
 using HealthTracker.Modules.Calories.Domain;
+using HealthTracker.Modules.Calories.Domain.Entities;
 using HealthTracker.SharedKernel.Abstractions;
 
 namespace HealthTracker.Modules.Calories.Application;

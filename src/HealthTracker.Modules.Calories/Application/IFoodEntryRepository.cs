@@ -1,4 +1,4 @@
-using HealthTracker.Modules.Calories.Domain;
+using HealthTracker.Modules.Calories.Domain.Entities;
 
 namespace HealthTracker.Modules.Calories.Application;
 

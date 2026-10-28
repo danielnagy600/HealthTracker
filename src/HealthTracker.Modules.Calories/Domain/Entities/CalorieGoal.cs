@@ -1,4 +1,4 @@
-namespace HealthTracker.Modules.Calories.Domain;
+namespace HealthTracker.Modules.Calories.Domain.Entities;
 
 public class CalorieGoal
 {

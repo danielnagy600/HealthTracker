@@ -1,3 +1,5 @@
+using HealthTracker.Modules.Water.Domain.Entities;
+
 namespace HealthTracker.Modules.Water.Domain;
 
 public static class WaterReminderCalculator

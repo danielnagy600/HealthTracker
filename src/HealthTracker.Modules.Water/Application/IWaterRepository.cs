@@ -1,4 +1,4 @@
-using HealthTracker.Modules.Water.Domain;
+using HealthTracker.Modules.Water.Domain.Entities;
 
 namespace HealthTracker.Modules.Water.Application;
 

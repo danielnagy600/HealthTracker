@@ -1,5 +1,6 @@
 using FluentAssertions;
 using HealthTracker.Modules.Calories.Domain;
+using HealthTracker.Modules.Calories.Domain.Entities;
 using Xunit;
 
 namespace HealthTracker.Modules.Calories.Tests;

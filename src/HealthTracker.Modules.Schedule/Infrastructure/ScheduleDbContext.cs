@@ -1,4 +1,4 @@
-using HealthTracker.Modules.Schedule.Domain;
+using HealthTracker.Modules.Schedule.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace HealthTracker.Modules.Schedule.Infrastructure;

@@ -23,7 +23,7 @@ namespace HealthTracker.Modules.Water.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("HealthTracker.Modules.Water.Domain.WaterIntake", b =>
+            modelBuilder.Entity("HealthTracker.Modules.Water.Domain.Entities.WaterIntake", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,7 +48,7 @@ namespace HealthTracker.Modules.Water.Infrastructure.Migrations
                     b.ToTable("intakes", "water");
                 });
 
-            modelBuilder.Entity("HealthTracker.Modules.Water.Domain.WaterSettings", b =>
+            modelBuilder.Entity("HealthTracker.Modules.Water.Domain.Entities.WaterSettings", b =>
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()

@@ -1,4 +1,4 @@
-namespace HealthTracker.Modules.Schedule.Domain;
+namespace HealthTracker.Modules.Schedule.Domain.Entities;
 
 public class Activity
 {

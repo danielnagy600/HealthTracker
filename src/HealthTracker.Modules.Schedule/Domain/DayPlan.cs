@@ -1,3 +1,5 @@
+using HealthTracker.Modules.Schedule.Domain.Entities;
+
 namespace HealthTracker.Modules.Schedule.Domain;
 
 public record TimeRange(TimeOnly Start, TimeOnly End)

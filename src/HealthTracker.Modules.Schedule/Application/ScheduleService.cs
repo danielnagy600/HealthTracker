@@ -1,4 +1,5 @@
 using HealthTracker.Modules.Schedule.Domain;
+using HealthTracker.Modules.Schedule.Domain.Entities;
 using HealthTracker.SharedKernel.Abstractions;
 
 namespace HealthTracker.Modules.Schedule.Application;

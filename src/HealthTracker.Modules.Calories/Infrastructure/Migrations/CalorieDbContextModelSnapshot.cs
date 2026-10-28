@@ -23,7 +23,7 @@ namespace HealthTracker.Modules.Calories.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("HealthTracker.Modules.Calories.Domain.CalorieGoal", b =>
+            modelBuilder.Entity("HealthTracker.Modules.Calories.Domain.Entities.CalorieGoal", b =>
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
@@ -37,7 +37,7 @@ namespace HealthTracker.Modules.Calories.Infrastructure.Migrations
                     b.ToTable("goals", "calories");
                 });
 
-            modelBuilder.Entity("HealthTracker.Modules.Calories.Domain.FoodEntry", b =>
+            modelBuilder.Entity("HealthTracker.Modules.Calories.Domain.Entities.FoodEntry", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

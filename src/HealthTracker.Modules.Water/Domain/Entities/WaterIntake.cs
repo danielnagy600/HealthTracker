@@ -1,4 +1,4 @@
-namespace HealthTracker.Modules.Water.Domain;
+namespace HealthTracker.Modules.Water.Domain.Entities;
 
 public class WaterIntake
 {

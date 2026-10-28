@@ -23,7 +23,7 @@ namespace HealthTracker.Modules.Schedule.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("HealthTracker.Modules.Schedule.Domain.Activity", b =>
+            modelBuilder.Entity("HealthTracker.Modules.Schedule.Domain.Entities.Activity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

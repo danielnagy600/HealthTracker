@@ -1,5 +1,5 @@
 using HealthTracker.Modules.Water.Application;
-using HealthTracker.Modules.Water.Domain;
+using HealthTracker.Modules.Water.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace HealthTracker.Modules.Water.Infrastructure;

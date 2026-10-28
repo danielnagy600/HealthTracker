@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using HealthTracker.Modules.Identity.Domain;
+using HealthTracker.Modules.Identity.Domain.Entities;
 using HealthTracker.Modules.Identity.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

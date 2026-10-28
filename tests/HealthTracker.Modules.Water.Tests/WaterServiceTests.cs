@@ -1,6 +1,7 @@
 using FluentAssertions;
 using HealthTracker.Modules.Water.Application;
 using HealthTracker.Modules.Water.Domain;
+using HealthTracker.Modules.Water.Domain.Entities;
 using HealthTracker.SharedKernel.Abstractions;
 using Moq;
 using Xunit;

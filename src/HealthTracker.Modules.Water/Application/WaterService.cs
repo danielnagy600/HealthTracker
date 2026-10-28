@@ -1,4 +1,5 @@
 using HealthTracker.Modules.Water.Domain;
+using HealthTracker.Modules.Water.Domain.Entities;
 using HealthTracker.SharedKernel.Abstractions;
 
 namespace HealthTracker.Modules.Water.Application;

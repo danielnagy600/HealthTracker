@@ -1,3 +1,5 @@
+using HealthTracker.Modules.Calories.Domain.Entities;
+
 namespace HealthTracker.Modules.Calories.Domain;
 
 public static class CalorieCalculator

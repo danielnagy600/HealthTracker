@@ -1,5 +1,6 @@
 using FluentAssertions;
 using HealthTracker.Modules.Schedule.Domain;
+using HealthTracker.Modules.Schedule.Domain.Entities;
 using Xunit;
 
 namespace HealthTracker.Modules.Schedule.Tests;
