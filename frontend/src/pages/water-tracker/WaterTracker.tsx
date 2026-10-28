@@ -13,7 +13,7 @@ export function WaterTracker() {
   const [customAmount, setCustomAmount] = useState('250');
 
   const refresh = useCallback((): void => {
-    water.getSummary().then(setSummary).catch(console.error);
+    water.getDay().then(setSummary).catch(console.error);
     water.getReminder().then(setReminder).catch(console.error);
   }, []);
 
@@ -27,6 +27,15 @@ export function WaterTracker() {
     }
     try {
       await water.addIntake(amountMl);
+      refresh();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function remove(id: string): Promise<void> {
+    try {
+      await water.removeIntake(id);
       refresh();
     } catch (error) {
       console.error(error);
@@ -86,9 +95,17 @@ export function WaterTracker() {
               ) : (
                 <ul className="m-0 list-none p-0">
                   {summary.intakes.map((intake) => (
-                    <li key={intake.id} className="flex justify-between border-b border-border py-2 last:border-b-0">
+                    <li key={intake.id} className="flex items-center gap-3 border-b border-border py-2 last:border-b-0">
                       <span>{formatTime(intake.recordedAt)}</span>
-                      <span>{intake.amountMl} ml</span>
+                      <span className="ml-auto">{intake.amountMl} ml</span>
+                      <button
+                        className="btn-link text-red"
+                        type="button"
+                        aria-label={`Delete ${intake.amountMl} ml logged at ${formatTime(intake.recordedAt)}`}
+                        onClick={() => void remove(intake.id)}
+                      >
+                        Delete
+                      </button>
                     </li>
                   ))}
                 </ul>

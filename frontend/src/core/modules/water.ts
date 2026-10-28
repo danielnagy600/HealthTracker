@@ -36,15 +36,19 @@ export interface Settings {
 const base = '/api/water';
 
 export const water = {
-  getSummary: (): Promise<DailySummary> => apiFetch<DailySummary>(`${base}/summary`),
+  getDay: (date?: string): Promise<DailySummary> =>
+    apiFetch<DailySummary>(date ? `${base}/day?date=${date}` : `${base}/day`),
 
   getReminder: (): Promise<Reminder> => apiFetch<Reminder>(`${base}/reminder`),
 
   addIntake: (amountMl: number): Promise<IntakeItem> =>
-    apiFetch<IntakeItem>(`${base}/intake`, {
+    apiFetch<IntakeItem>(`${base}/intakes`, {
       method: 'POST',
       body: JSON.stringify({ amountMl })
     }),
+
+  removeIntake: (id: string): Promise<void> =>
+    apiFetch<void>(`${base}/intakes/${id}`, { method: 'DELETE' }),
 
   getSettings: (): Promise<Settings> => apiFetch<Settings>(`${base}/settings`),
 

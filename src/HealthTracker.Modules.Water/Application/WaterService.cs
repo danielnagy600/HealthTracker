@@ -38,13 +38,25 @@ public sealed class WaterService : IWaterService
         return new IntakeItem(intake.Id, intake.RecordedAt, intake.AmountMl);
     }
 
-    public async Task<DailySummaryResponse> GetTodaySummaryAsync(CancellationToken ct = default)
+    public async Task<bool> DeleteIntakeAsync(Guid id, CancellationToken ct = default)
     {
         var userId = _currentUser.RequireUserId();
-        var today = DateOnly.FromDateTime(_clock.Now.DateTime);
+
+        var intake = await _repository.FindIntakeAsync(userId, id, ct);
+        if (intake is null)
+            return false;
+
+        await _repository.RemoveIntakeAsync(intake, ct);
+        return true;
+    }
+
+    public async Task<DailySummaryResponse> GetDayAsync(DateOnly? onDate = null, CancellationToken ct = default)
+    {
+        var userId = _currentUser.RequireUserId();
+        var day = onDate ?? DateOnly.FromDateTime(_clock.Now.DateTime);
 
         var settings = await _repository.GetOrCreateSettingsAsync(userId, ct);
-        var intakes = await _repository.GetIntakesForDateAsync(userId, today, ct);
+        var intakes = await _repository.GetIntakesForDateAsync(userId, day, ct);
 
         var consumed = intakes.Sum(i => i.AmountMl);
         var remaining = Math.Max(0, settings.DailyTargetMl - consumed);
@@ -57,7 +69,7 @@ public sealed class WaterService : IWaterService
             .Select(i => new IntakeItem(i.Id, i.RecordedAt, i.AmountMl))
             .ToList();
 
-        return new DailySummaryResponse(today, settings.DailyTargetMl, consumed, remaining, percent, items);
+        return new DailySummaryResponse(day, settings.DailyTargetMl, consumed, remaining, percent, items);
     }
 
     public async Task<ReminderResponse> GetReminderAsync(CancellationToken ct = default)

@@ -83,7 +83,7 @@ public class WaterServiceTests
     }
 
     [Fact]
-    public async Task TodaySummary_aggregates_todays_intakes()
+    public async Task GetDay_without_a_date_aggregates_todays_intakes()
     {
         var today = DateOnly.FromDateTime(Now.DateTime);
         _repository
@@ -94,13 +94,66 @@ public class WaterServiceTests
                 new(Guid.NewGuid(), UserId, today, Now.AddHours(-1), 300),
             });
 
-        var summary = await _sut.GetTodaySummaryAsync();
+        var summary = await _sut.GetDayAsync();
 
+        summary.Date.Should().Be(today);
         summary.ConsumedMl.Should().Be(800);
         summary.TargetMl.Should().Be(2000);
         summary.RemainingMl.Should().Be(1200);
         summary.PercentComplete.Should().Be(40);
         summary.Intakes.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task GetDay_with_a_date_reads_that_day()
+    {
+        var yesterday = DateOnly.FromDateTime(Now.DateTime).AddDays(-1);
+        _repository
+            .Setup(r => r.GetIntakesForDateAsync(UserId, yesterday, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<WaterIntake>
+            {
+                new(Guid.NewGuid(), UserId, yesterday, Now.AddDays(-1), 1500),
+            });
+
+        var summary = await _sut.GetDayAsync(yesterday);
+
+        summary.Date.Should().Be(yesterday);
+        summary.ConsumedMl.Should().Be(1500);
+        _repository.Verify(
+            r => r.GetIntakesForDateAsync(UserId, yesterday, It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteIntake_removes_an_existing_intake()
+    {
+        var existing = new WaterIntake(
+            Guid.NewGuid(), UserId, DateOnly.FromDateTime(Now.DateTime), Now, 250);
+        _repository
+            .Setup(r => r.FindIntakeAsync(UserId, existing.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(existing);
+
+        var deleted = await _sut.DeleteIntakeAsync(existing.Id);
+
+        deleted.Should().BeTrue();
+        _repository.Verify(r => r.RemoveIntakeAsync(existing, It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteIntake_returns_false_for_someone_elses_intake()
+    {
+        var foreignId = Guid.NewGuid();
+
+        _repository
+            .Setup(r => r.FindIntakeAsync(UserId, foreignId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((WaterIntake?)null);
+
+        var deleted = await _sut.DeleteIntakeAsync(foreignId);
+
+        deleted.Should().BeFalse();
+        _repository.Verify(
+            r => r.RemoveIntakeAsync(It.IsAny<WaterIntake>(), It.IsAny<CancellationToken>()),
+            Times.Never);
     }
 
     [Fact]
@@ -126,7 +179,7 @@ public class WaterServiceTests
     {
         _currentUser.Setup(c => c.RequireUserId()).Throws<InvalidOperationException>();
 
-        var act = async () => await _sut.GetTodaySummaryAsync();
+        var act = async () => await _sut.GetDayAsync();
 
         await act.Should().ThrowAsync<InvalidOperationException>();
     }

@@ -108,9 +108,11 @@ Induláskor automatikusan lefutnak az adatbázis-migrációk. Az API a
 - `POST /api/auth/register`    – regisztráció (`{ "email": "...", "password": "..." }`)
 - `POST /api/auth/login`       – bejelentkezés → bearer token
 - `GET  /api/auth/me`          – a bejelentkezett profil (token kell)
-- `GET  /api/water/summary`    – mai összesítés (token kell)
+- `GET  /api/water/day?date=`  – egy nap összesítése (a dátum elhagyható, token kell)
 - `GET  /api/water/reminder`   – emlékeztető: mikor mennyit igyál (token kell)
-- `POST /api/water/intake`     – vízbejegyzés (`{ "amountMl": 250 }`)
+- `POST /api/water/intakes`    – vízbejegyzés (`{ "amountMl": 250 }`)
+- `GET  /api/water/intakes/{id}` – egy vízbejegyzés
+- `DELETE /api/water/intakes/{id}` – vízbejegyzés törlése
 - `GET/PUT /api/water/settings`– napi cél és ébrenléti időablak
 - `GET  /api/schedule/day?date=` – egy nap elfoglaltságai + összesítés (a dátum elhagyható)
 - `POST /api/schedule/activities` – új elfoglaltság

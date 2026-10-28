@@ -85,7 +85,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/", () => "HealthTracker API fut. Auth: /api/auth/login, Water: /api/water/summary");
+app.MapGet("/", () => "HealthTracker API fut. Auth: /api/auth/login, Water: /api/water/day");
 
 // Az Identity modul marad minimal API (beépített AddIdentityApiEndpoints/MapIdentityApi,
 // a tokenkezelést kézi Controllerben újraírni biztonsági kockázat lenne).

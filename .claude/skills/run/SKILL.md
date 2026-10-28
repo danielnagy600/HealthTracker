@@ -100,7 +100,7 @@ const { chromium } = require('playwright');
 ## Known, non-blocking bug (don't mistake it for a regression)
 
 A brand-new user's **first** page load can trigger a real race condition:
-`WaterTracker`'s `getSummary()` and `getReminder()` fire concurrently and both
+`WaterTracker`'s `getDay()` and `getReminder()` fire concurrently and both
 try to `INSERT` the same `water.settings` row - one succeeds, one hits
 `23505 duplicate key`, surfacing as a `500` in the browser console. It's
 swallowed by the page's own `.catch(console.error)`, harmless to the UI, and

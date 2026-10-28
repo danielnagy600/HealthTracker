@@ -10,19 +10,19 @@ namespace HealthTracker.Modules.Water.Controllers;
 [Authorize]
 public sealed class WaterController(IWaterService svc) : ControllerBase
 {
-    [HttpGet("summary")]
-    public async Task<IActionResult> GetSummary(CancellationToken ct) =>
-        Ok(await svc.GetTodaySummaryAsync(ct));
+    [HttpGet("day")]
+    public async Task<IActionResult> GetDay(DateOnly? date, CancellationToken ct) =>
+        Ok(await svc.GetDayAsync(date, ct));
 
     [HttpGet("reminder")]
     public async Task<IActionResult> GetReminder(CancellationToken ct) =>
         Ok(await svc.GetReminderAsync(ct));
 
-    [HttpGet("intake/{id:guid}")]
+    [HttpGet("intakes/{id:guid}")]
     public async Task<IActionResult> GetIntake(Guid id, CancellationToken ct) =>
         await svc.GetIntakeAsync(id, ct) is { } item ? Ok(item) : NotFound();
 
-    [HttpPost("intake")]
+    [HttpPost("intakes")]
     public async Task<IActionResult> AddIntake(AddIntakeRequest req, CancellationToken ct)
     {
         if (req.AmountMl <= 0)
@@ -31,6 +31,10 @@ public sealed class WaterController(IWaterService svc) : ControllerBase
         var item = await svc.AddIntakeAsync(req, ct);
         return CreatedAtAction(nameof(GetIntake), new { id = item.Id }, item);
     }
+
+    [HttpDelete("intakes/{id:guid}")]
+    public async Task<IActionResult> DeleteIntake(Guid id, CancellationToken ct) =>
+        await svc.DeleteIntakeAsync(id, ct) ? NoContent() : NotFound();
 
     [HttpGet("settings")]
     public async Task<IActionResult> GetSettings(CancellationToken ct) =>

@@ -22,6 +22,12 @@ public sealed class WaterRepository : IWaterRepository
         await _db.SaveChangesAsync(ct);
     }
 
+    public async Task RemoveIntakeAsync(WaterIntake intake, CancellationToken ct = default)
+    {
+        _db.Intakes.Remove(intake);
+        await _db.SaveChangesAsync(ct);
+    }
+
     public async Task<IReadOnlyList<WaterIntake>> GetIntakesForDateAsync(
         Guid userId, DateOnly onDate, CancellationToken ct = default)
     {
