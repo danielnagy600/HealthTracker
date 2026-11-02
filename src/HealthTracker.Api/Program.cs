@@ -55,6 +55,7 @@ builder.Services.AddOpenApi(options =>
     });
     options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
     options.AddSchemaTransformer<StrictNumberSchemaTransformer>();
+    options.AddOperationTransformer<ResponseContentTypeTransformer>();
 });
 
 var app = builder.Build();

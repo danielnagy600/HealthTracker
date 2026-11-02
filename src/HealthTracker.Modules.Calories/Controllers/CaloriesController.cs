@@ -11,18 +11,25 @@ namespace HealthTracker.Modules.Calories;
 [ApiController]
 [Route("api/calories")]
 [Authorize]
+[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 public sealed class CaloriesController(ICalorieService svc) : ControllerBase
 {
     [HttpGet("day")]
-    public async Task<IActionResult> GetDay(DateOnly? date, CancellationToken ct) =>
-        Ok(await svc.GetDayAsync(date, ct));
+    [ProducesResponseType<DayCaloriesResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<DayCaloriesResponse>> GetDay(DateOnly? date, CancellationToken ct) =>
+        await svc.GetDayAsync(date, ct);
 
     [HttpGet("entries/{id:guid}")]
-    public async Task<IActionResult> GetEntry(Guid id, CancellationToken ct) =>
-        await svc.GetAsync(id, ct) is { } item ? Ok(item) : NotFound();
+    [ProducesResponseType<FoodEntryItem>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<FoodEntryItem>> GetEntry(Guid id, CancellationToken ct) =>
+        await svc.GetAsync(id, ct) is { } item ? item : NotFound();
 
     [HttpPost("entries")]
-    public async Task<IActionResult> AddEntry(SaveFoodEntryRequest req, CancellationToken ct)
+    [ProducesResponseType<FoodEntryItem>(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<FoodEntryItem>> AddEntry(SaveFoodEntryRequest req, CancellationToken ct)
     {
         if (Validate(req) is { } error)
             return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: error);
@@ -32,34 +39,43 @@ public sealed class CaloriesController(ICalorieService svc) : ControllerBase
     }
 
     [HttpPut("entries/{id:guid}")]
-    public async Task<IActionResult> UpdateEntry(Guid id, SaveFoodEntryRequest req, CancellationToken ct)
+    [ProducesResponseType<FoodEntryItem>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<FoodEntryItem>> UpdateEntry(Guid id, SaveFoodEntryRequest req, CancellationToken ct)
     {
         if (Validate(req) is { } error)
             return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: error);
 
         var item = await svc.UpdateAsync(id, req, ct);
-        return item is null ? NotFound() : Ok(item);
+        return item is null ? NotFound() : item;
     }
 
     [HttpDelete("entries/{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteEntry(Guid id, CancellationToken ct) =>
         await svc.DeleteAsync(id, ct) ? NoContent() : NotFound();
 
     [HttpGet("goal")]
-    public async Task<IActionResult> GetGoal(CancellationToken ct) =>
-        Ok(await svc.GetGoalAsync(ct));
+    [ProducesResponseType<GoalResponse>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<GoalResponse>> GetGoal(CancellationToken ct) =>
+        await svc.GetGoalAsync(ct);
 
     [HttpPut("goal")]
-    public async Task<IActionResult> UpdateGoal(UpdateGoalRequest req, CancellationToken ct)
+    [ProducesResponseType<GoalResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<GoalResponse>> UpdateGoal(UpdateGoalRequest req, CancellationToken ct)
     {
         if (CalorieGoal.Validate(req.DailyTargetKcal) is { } error)
             return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: error);
 
-        return Ok(await svc.UpdateGoalAsync(req, ct));
+        return await svc.UpdateGoalAsync(req, ct);
     }
 
     [HttpGet("meals")]
-    public IActionResult GetMeals() => Ok(Enum.GetNames<MealType>());
+    [ProducesResponseType<string[]>(StatusCodes.Status200OK)]
+    public ActionResult<string[]> GetMeals() => Ok(Enum.GetNames<MealType>());
 
     private static string? Validate(SaveFoodEntryRequest req)
     {

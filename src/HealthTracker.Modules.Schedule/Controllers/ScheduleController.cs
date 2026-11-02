@@ -11,18 +11,25 @@ namespace HealthTracker.Modules.Schedule;
 [ApiController]
 [Route("api/schedule")]
 [Authorize]
+[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 public sealed class ScheduleController(IScheduleService svc) : ControllerBase
 {
     [HttpGet("day")]
-    public async Task<IActionResult> GetDay(DateOnly? date, CancellationToken ct) =>
-        Ok(await svc.GetDayAsync(date, ct));
+    [ProducesResponseType<DayScheduleResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<DayScheduleResponse>> GetDay(DateOnly? date, CancellationToken ct) =>
+        await svc.GetDayAsync(date, ct);
 
     [HttpGet("activities/{id:guid}")]
-    public async Task<IActionResult> GetActivity(Guid id, CancellationToken ct) =>
-        await svc.GetAsync(id, ct) is { } item ? Ok(item) : NotFound();
+    [ProducesResponseType<ActivityItem>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ActivityItem>> GetActivity(Guid id, CancellationToken ct) =>
+        await svc.GetAsync(id, ct) is { } item ? item : NotFound();
 
     [HttpPost("activities")]
-    public async Task<IActionResult> AddActivity(SaveActivityRequest req, CancellationToken ct)
+    [ProducesResponseType<ActivityItem>(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<ActivityItem>> AddActivity(SaveActivityRequest req, CancellationToken ct)
     {
         if (Validate(req) is { } error)
             return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: error);
@@ -32,21 +39,27 @@ public sealed class ScheduleController(IScheduleService svc) : ControllerBase
     }
 
     [HttpPut("activities/{id:guid}")]
-    public async Task<IActionResult> UpdateActivity(Guid id, SaveActivityRequest req, CancellationToken ct)
+    [ProducesResponseType<ActivityItem>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ActivityItem>> UpdateActivity(Guid id, SaveActivityRequest req, CancellationToken ct)
     {
         if (Validate(req) is { } error)
             return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: error);
 
         var item = await svc.UpdateAsync(id, req, ct);
-        return item is null ? NotFound() : Ok(item);
+        return item is null ? NotFound() : item;
     }
 
     [HttpDelete("activities/{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteActivity(Guid id, CancellationToken ct) =>
         await svc.DeleteAsync(id, ct) ? NoContent() : NotFound();
 
     [HttpGet("colors")]
-    public IActionResult GetColors() => Ok(Enum.GetNames<ActivityColor>());
+    [ProducesResponseType<string[]>(StatusCodes.Status200OK)]
+    public ActionResult<string[]> GetColors() => Ok(Enum.GetNames<ActivityColor>());
 
     private static string? Validate(SaveActivityRequest req)
     {
