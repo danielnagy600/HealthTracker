@@ -50,7 +50,22 @@ builder.Services.AddOpenApi(options =>
 {
     options.AddDocumentTransformer((document, _, _) =>
     {
-        document.Info = new OpenApiInfo { Title = "HealthTracker API", Version = "v1" };
+        document.Info = new()
+        {
+            Title = "HealthTracker API",
+            Version = "v1",
+            Description = "HealthTracker REST API (Identity, Water, Schedule, Calories)",
+            Contact = new()
+            {
+                Name = "Daniel Nagy",
+                Email = "daniel.nagy@example.com"
+            },
+            License = new()
+            {
+                Name = "MIT",
+                Url = new Uri("https://opensource.org/licenses/MIT")
+            }
+        };
         return Task.CompletedTask;
     });
     options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
