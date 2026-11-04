@@ -2,6 +2,15 @@
   "openapi": "3.1.1",
   "info": {
     "title": "HealthTracker API",
+    "description": "HealthTracker REST API (Identity, Water, Schedule, Calories)",
+    "contact": {
+      "name": "Daniel Nagy",
+      "email": "daniel.nagy@example.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
     "version": "v1"
   },
   "paths": {
