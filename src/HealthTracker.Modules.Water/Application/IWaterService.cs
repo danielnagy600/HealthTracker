@@ -1,4 +1,4 @@
-using HealthTracker.Modules.Water.Application.Dtos;
+using HealthTracker.Modules.Water.Application.Models;
 
 namespace HealthTracker.Modules.Water.Application;
 

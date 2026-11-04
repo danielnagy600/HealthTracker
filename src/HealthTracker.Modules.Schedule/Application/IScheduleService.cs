@@ -1,4 +1,4 @@
-using HealthTracker.Modules.Schedule.Application.Dtos;
+using HealthTracker.Modules.Schedule.Application.Models;
 
 namespace HealthTracker.Modules.Schedule.Application;
 

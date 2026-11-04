@@ -1,6 +1,6 @@
 using FluentAssertions;
 using HealthTracker.Modules.Schedule.Application;
-using HealthTracker.Modules.Schedule.Application.Dtos;
+using HealthTracker.Modules.Schedule.Application.Models;
 using HealthTracker.Modules.Schedule.Domain;
 using HealthTracker.Modules.Schedule.Domain.Entities;
 using HealthTracker.SharedKernel.Abstractions;

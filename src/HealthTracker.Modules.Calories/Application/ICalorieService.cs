@@ -1,4 +1,4 @@
-using HealthTracker.Modules.Calories.Application.Dtos;
+using HealthTracker.Modules.Calories.Application.Models;
 
 namespace HealthTracker.Modules.Calories.Application;
 

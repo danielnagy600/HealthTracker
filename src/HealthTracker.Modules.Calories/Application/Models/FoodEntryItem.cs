@@ -1,4 +1,4 @@
-namespace HealthTracker.Modules.Calories.Application.Dtos;
+namespace HealthTracker.Modules.Calories.Application.Models;
 
 public record FoodEntryItem(
     Guid Id,

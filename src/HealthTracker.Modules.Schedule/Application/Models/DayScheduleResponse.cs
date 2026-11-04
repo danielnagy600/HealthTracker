@@ -1,4 +1,4 @@
-namespace HealthTracker.Modules.Schedule.Application.Dtos;
+namespace HealthTracker.Modules.Schedule.Application.Models;
 
 public record DayScheduleResponse(
     DateOnly Date,

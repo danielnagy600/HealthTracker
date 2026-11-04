@@ -1,4 +1,4 @@
-namespace HealthTracker.Modules.Water.Application.Dtos;
+namespace HealthTracker.Modules.Water.Application.Models;
 
 public record DailySummaryResponse(
     DateOnly Date,
