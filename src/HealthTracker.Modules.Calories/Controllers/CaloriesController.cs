@@ -5,6 +5,7 @@ using HealthTracker.Modules.Calories.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace HealthTracker.Modules.Calories;
 
@@ -12,7 +13,7 @@ namespace HealthTracker.Modules.Calories;
 [Route("api/calories")]
 [Authorize]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-public sealed class CaloriesController(ICalorieService svc) : ControllerBase
+public sealed class CaloriesController(ICalorieService svc, ILogger<CaloriesController> logger) : ControllerBase
 {
     [HttpGet("day")]
     [ProducesResponseType<DayCaloriesResponse>(StatusCodes.Status200OK)]
@@ -32,9 +33,10 @@ public sealed class CaloriesController(ICalorieService svc) : ControllerBase
     public async Task<ActionResult<FoodEntryItem>> AddEntry(SaveFoodEntryRequest req, CancellationToken ct)
     {
         if (Validate(req) is { } error)
-            return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: error);
+            return Rejected(nameof(AddEntry), error);
 
         var item = await svc.AddAsync(req, ct);
+        Log.FoodEntryCreated(logger, item.Id);
         return CreatedAtAction(nameof(GetEntry), new { id = item.Id }, item);
     }
 
@@ -45,17 +47,33 @@ public sealed class CaloriesController(ICalorieService svc) : ControllerBase
     public async Task<ActionResult<FoodEntryItem>> UpdateEntry(Guid id, SaveFoodEntryRequest req, CancellationToken ct)
     {
         if (Validate(req) is { } error)
-            return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: error);
+            return Rejected(nameof(UpdateEntry), error);
 
         var item = await svc.UpdateAsync(id, req, ct);
-        return item is null ? NotFound() : item;
+        if (item is null)
+        {
+            Log.FoodEntryNotFound(logger, nameof(UpdateEntry), id);
+            return NotFound();
+        }
+
+        Log.FoodEntryUpdated(logger, id);
+        return item;
     }
 
     [HttpDelete("entries/{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteEntry(Guid id, CancellationToken ct) =>
-        await svc.DeleteAsync(id, ct) ? NoContent() : NotFound();
+    public async Task<IActionResult> DeleteEntry(Guid id, CancellationToken ct)
+    {
+        if (!await svc.DeleteAsync(id, ct))
+        {
+            Log.FoodEntryNotFound(logger, nameof(DeleteEntry), id);
+            return NotFound();
+        }
+
+        Log.FoodEntryDeleted(logger, id);
+        return NoContent();
+    }
 
     [HttpGet("goal")]
     [ProducesResponseType<GoalResponse>(StatusCodes.Status200OK)]
@@ -68,14 +86,22 @@ public sealed class CaloriesController(ICalorieService svc) : ControllerBase
     public async Task<ActionResult<GoalResponse>> UpdateGoal(UpdateGoalRequest req, CancellationToken ct)
     {
         if (CalorieGoal.Validate(req.DailyTargetKcal) is { } error)
-            return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: error);
+            return Rejected(nameof(UpdateGoal), error);
 
-        return await svc.UpdateGoalAsync(req, ct);
+        var goal = await svc.UpdateGoalAsync(req, ct);
+        Log.GoalUpdated(logger);
+        return goal;
     }
 
     [HttpGet("meals")]
     [ProducesResponseType<string[]>(StatusCodes.Status200OK)]
     public ActionResult<string[]> GetMeals() => Ok(Enum.GetNames<MealType>());
+
+    private ObjectResult Rejected(string action, string reason)
+    {
+        Log.RequestRejected(logger, action, reason);
+        return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: reason);
+    }
 
     private static string? Validate(SaveFoodEntryRequest req)
     {

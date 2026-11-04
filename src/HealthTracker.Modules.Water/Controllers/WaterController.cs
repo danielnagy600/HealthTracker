@@ -3,6 +3,7 @@ using HealthTracker.Modules.Water.Application.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace HealthTracker.Modules.Water.Controllers;
 
@@ -10,7 +11,7 @@ namespace HealthTracker.Modules.Water.Controllers;
 [Route("api/water")]
 [Authorize]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-public sealed class WaterController(IWaterService svc) : ControllerBase
+public sealed class WaterController(IWaterService svc, ILogger<WaterController> logger) : ControllerBase
 {
     [HttpGet("day")]
     [ProducesResponseType<DailySummaryResponse>(StatusCodes.Status200OK)]
@@ -35,17 +36,27 @@ public sealed class WaterController(IWaterService svc) : ControllerBase
     public async Task<ActionResult<IntakeItem>> AddIntake(AddIntakeRequest req, CancellationToken ct)
     {
         if (req.AmountMl <= 0)
-            return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: "AmountMl must be positive.");
+            return Rejected(nameof(AddIntake), "AmountMl must be positive.");
 
         var item = await svc.AddIntakeAsync(req, ct);
+        Log.IntakeAdded(logger, item.Id);
         return CreatedAtAction(nameof(GetIntake), new { id = item.Id }, item);
     }
 
     [HttpDelete("intakes/{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteIntake(Guid id, CancellationToken ct) =>
-        await svc.DeleteIntakeAsync(id, ct) ? NoContent() : NotFound();
+    public async Task<IActionResult> DeleteIntake(Guid id, CancellationToken ct)
+    {
+        if (!await svc.DeleteIntakeAsync(id, ct))
+        {
+            Log.IntakeNotFound(logger, nameof(DeleteIntake), id);
+            return NotFound();
+        }
+
+        Log.IntakeDeleted(logger, id);
+        return NoContent();
+    }
 
     [HttpGet("settings")]
     [ProducesResponseType<SettingsResponse>(StatusCodes.Status200OK)]
@@ -55,6 +66,16 @@ public sealed class WaterController(IWaterService svc) : ControllerBase
     [HttpPut("settings")]
     [ProducesResponseType<SettingsResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<SettingsResponse>> UpdateSettings(UpdateSettingsRequest req, CancellationToken ct) =>
-        await svc.UpdateSettingsAsync(req, ct);
+    public async Task<ActionResult<SettingsResponse>> UpdateSettings(UpdateSettingsRequest req, CancellationToken ct)
+    {
+        var settings = await svc.UpdateSettingsAsync(req, ct);
+        Log.SettingsUpdated(logger);
+        return settings;
+    }
+
+    private ObjectResult Rejected(string action, string reason)
+    {
+        Log.RequestRejected(logger, action, reason);
+        return Problem(statusCode: StatusCodes.Status400BadRequest, title: "Invalid request", detail: reason);
+    }
 }
