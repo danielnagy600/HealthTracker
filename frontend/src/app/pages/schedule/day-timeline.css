@@ -1,0 +1,78 @@
+/* Component styles are scoped: these selectors only match inside <app-day-timeline>. */
+.timeline {
+  position: relative;
+  margin-left: 48px;
+}
+
+.hour {
+  position: absolute;
+  inset-inline: 0;
+  height: 1px;
+  background: var(--mat-sys-outline-variant);
+}
+
+.hour span {
+  position: absolute;
+  top: -0.55rem;
+  left: -48px;
+  font: var(--mat-sys-label-small);
+  color: var(--mat-sys-on-surface-variant);
+  font-variant-numeric: tabular-nums;
+}
+
+.empty {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.block {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+  padding: 4px 8px;
+  border: none;
+  border-radius: var(--mat-sys-corner-small);
+  color: #fff;
+  font: var(--mat-sys-label-medium);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    filter 150ms ease-in-out,
+    box-shadow 150ms ease-in-out;
+}
+
+.block:hover {
+  filter: brightness(1.07);
+}
+
+.block.selected {
+  box-shadow: 0 0 0 3px var(--mat-sys-on-surface);
+}
+
+.title {
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.time,
+.note {
+  font: var(--mat-sys-label-small);
+  opacity: 0.9;
+}
+
+.time {
+  font-variant-numeric: tabular-nums;
+}
+
+.note {
+  overflow: hidden;
+}

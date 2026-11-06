@@ -1,0 +1,17 @@
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.busy {
+  font: var(--mat-sys-title-large);
+  font-weight: 700;
+}
+
+.new-activity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

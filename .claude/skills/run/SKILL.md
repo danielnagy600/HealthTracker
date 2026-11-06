@@ -1,6 +1,6 @@
 ---
 name: run
-description: Launch and drive the HealthTracker app (Docker Compose - Postgres + ASP.NET Core API + React/nginx frontend) to see a change working, or to take a screenshot. Use whenever asked to run, start, or screenshot the app, or to confirm a change works for real.
+description: Launch and drive the HealthTracker app (Docker Compose - Postgres + ASP.NET Core API + Angular/nginx frontend) to see a change working, or to take a screenshot. Use whenever asked to run, start, or screenshot the app, or to confirm a change works for real.
 ---
 
 # Running HealthTracker
@@ -76,9 +76,9 @@ npm init -y && npm install playwright@1.64.1
 npx playwright install chromium
 ```
 
-Login, then navigate client-side (routes are React Router, not full page loads -
+Login, then navigate client-side (routes are Angular Router, not full page loads -
 after login, `click` the nav link rather than `page.goto`-ing a protected route
-directly, otherwise `RequireAuth` bounces you to `/login` before the SPA reads
+directly, otherwise `authGuard` bounces you to `/login` before the SPA reads
 the token from `localStorage`):
 
 ```js

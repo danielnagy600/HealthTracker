@@ -1,0 +1,131 @@
+// Global styles: the Material 3 theme + a few app-wide helpers.
+// Component-specific styles live next to each component (`*.css`, scoped by Angular).
+@use '@angular/material' as mat;
+
+html {
+  // Dark only. `light dark` would follow the OS setting instead.
+  color-scheme: dark;
+
+  // mat.theme() emits the --mat-sys-* CSS variables every Material component reads.
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$violet-palette,
+        tertiary: mat.$azure-palette,
+      ),
+      typography: (
+        plain-family: 'Inter, sans-serif',
+        brand-family: 'Newsreader, Georgia, serif',
+      ),
+      density: 0,
+    )
+  );
+
+  // Status / activity colors that Material has no role for.
+  --ht-green: #22c58a;
+  --ht-amber: #a8630f;
+  --ht-act-blue: #5b8dff;
+  --ht-act-green: #22c58a;
+  --ht-act-amber: #f0a020;
+  --ht-act-red: #ef5757;
+  --ht-act-purple: #8b5cf6;
+  --ht-act-teal: #22b8c4;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-large);
+  // Starry sky, carried over from the original design.
+  background-image:
+    radial-gradient(1.3px 1.3px at 4% 6%, rgb(255 255 255 / 55%), transparent 100%),
+    radial-gradient(1.1px 1.1px at 13% 14%, rgb(255 255 255 / 40%), transparent 100%),
+    radial-gradient(1.4px 1.4px at 24% 4%, rgb(255 255 255 / 60%), transparent 100%),
+    radial-gradient(1.1px 1.1px at 35% 22%, rgb(255 255 255 / 35%), transparent 100%),
+    radial-gradient(1.3px 1.3px at 46% 8%, rgb(255 255 255 / 50%), transparent 100%),
+    radial-gradient(1.1px 1.1px at 58% 16%, rgb(255 255 255 / 40%), transparent 100%),
+    radial-gradient(1.4px 1.4px at 69% 5%, rgb(255 255 255 / 60%), transparent 100%),
+    radial-gradient(1.1px 1.1px at 80% 20%, rgb(255 255 255 / 40%), transparent 100%),
+    radial-gradient(1.3px 1.3px at 91% 10%, rgb(255 255 255 / 50%), transparent 100%),
+    radial-gradient(ellipse 900px 500px at 15% -8%, rgb(139 92 246 / 12%), transparent 60%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+a {
+  color: var(--mat-sys-primary);
+}
+
+// ---- App-wide helpers ------------------------------------------------------
+
+/** The centered column every page uses. */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 640px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+.muted {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.error-text {
+  margin: 0;
+  color: var(--mat-sys-error);
+  font: var(--mat-sys-body-medium);
+}
+
+/** Colored status message (reminder, calorie status, conflicts). */
+.banner {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 20px;
+  border-radius: var(--mat-sys-corner-large);
+  color: #fff;
+  background: var(--mat-sys-primary-container);
+
+  &.green {
+    background: var(--ht-green);
+  }
+  &.amber {
+    background: var(--ht-amber);
+  }
+  small {
+    font: var(--mat-sys-body-small);
+    opacity: 0.9;
+  }
+}
+
+/** A red filled button (Delete). Material 3 buttons are recolored through their CSS tokens. */
+.danger-button {
+  --mat-button-filled-container-color: var(--mat-sys-error);
+  --mat-button-filled-label-text-color: var(--mat-sys-on-error);
+}
+
+/** A row of form buttons. */
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .danger-button {
+    margin-left: auto;
+  }
+}
+
+/** Form fields stacked vertically. */
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  mat-form-field {
+    width: 100%;
+  }
+}

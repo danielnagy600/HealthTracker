@@ -1,0 +1,36 @@
+<div class="timeline" [style.height.px]="height()">
+  @for (mark of hourMarks(); track mark.label) {
+    <div class="hour" [style.top.px]="mark.top">
+      <span>{{ mark.label }}</span>
+    </div>
+  }
+
+  @if (day().activities.length === 0) {
+    <p class="empty muted">This day is empty. Add your first activity! 🗓️</p>
+  }
+
+  @for (block of blocks(); track block.activity.id) {
+    @let activity = block.activity;
+    <button
+      type="button"
+      class="block"
+      [class.selected]="block.selected"
+      [style.background]="block.color"
+      [style.top.px]="block.top"
+      [style.height.px]="block.height"
+      [style.left]="block.left"
+      [style.width]="block.width"
+      [title]="block.tooltip"
+      (click)="selected.emit(activity)"
+    >
+      <span class="title">{{ activity.title }}</span>
+      <span class="time">
+        {{ activity.startTime | hm }}–{{ activity.endTime | hm }} ·
+        {{ activity.durationMinutes | duration }}
+      </span>
+      @if (block.showNote) {
+        <span class="note">{{ activity.note }}</span>
+      }
+    </button>
+  }
+</div>

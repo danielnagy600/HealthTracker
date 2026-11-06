@@ -1,0 +1,30 @@
+mat-toolbar {
+  gap: 16px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface-container);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: var(--mat-sys-title-large);
+  font-weight: 600;
+}
+
+.brand mat-icon {
+  color: var(--mat-sys-primary);
+}
+
+nav mat-icon {
+  margin-right: 6px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.email {
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+}

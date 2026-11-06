@@ -1,0 +1,91 @@
+<main class="page">
+  <app-date-nav [(date)]="date" />
+
+  @if (day.hasValue()) {
+    @let today = day.value();
+    <section class="banner" [class]="statusClass(today.status)">
+      <strong>{{ today.message }}</strong>
+      @if (today.largestMeal) {
+        <small>Biggest meal: {{ today.largestMeal }}</small>
+      }
+    </section>
+
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="total">
+          <span class="amount">{{ today.consumedKcal }} kcal</span>
+          <span class="muted">
+            / {{ today.targetKcal }} kcal ·
+            {{
+              today.overKcal > 0
+                ? today.overKcal + ' kcal over'
+                : today.remainingKcal + ' kcal left'
+            }}
+          </span>
+        </div>
+        <mat-progress-bar
+          mode="determinate"
+          [value]="progress()"
+          [class.over]="today.overKcal > 0"
+        />
+        <div class="target-row">
+          <span class="muted">{{ today.percentOfTarget }}% of daily target</span>
+          <button mat-button (click)="openGoal()"><mat-icon>edit</mat-icon> Change target</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    @if (panel().kind === 'goal') {
+      <app-goal-editor [current]="today.targetKcal" (saved)="onSaved()" (cancelled)="close()" />
+    }
+
+    @for (group of today.meals; track group.meal) {
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <h3 class="meal-title">
+            <span
+              ><span aria-hidden="true">{{ mealIcons[group.meal] }}</span> {{ group.meal }}</span
+            >
+            <span class="kcal">{{ group.kcal }} kcal</span>
+          </h3>
+          @if (group.entries.length === 0) {
+            <p class="muted">No entries yet.</p>
+          } @else {
+            <!-- mat-action-list: every item is a button. -->
+            <mat-action-list>
+              @for (entry of group.entries; track entry.id) {
+                <button mat-list-item (click)="openEntry(entry.meal, entry)">
+                  <span matListItemTitle>{{ entry.name }}</span>
+                  <span matListItemLine>{{ entry.recordedAt | date: 'HH:mm' }}</span>
+                  <span matListItemMeta class="kcal">{{ entry.calories }} kcal</span>
+                </button>
+              }
+            </mat-action-list>
+          }
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button (click)="openEntry(group.meal)"><mat-icon>add</mat-icon> Add</button>
+        </mat-card-actions>
+      </mat-card>
+    }
+
+    @if (panel(); as panel) {
+      @if (panel.kind === 'entry') {
+        <app-food-entry-form
+          [editing]="panel.editing"
+          [defaultMeal]="panel.meal"
+          [date]="date()"
+          (saved)="onSaved()"
+          (cancelled)="close()"
+        />
+      }
+    }
+  } @else if (day.error()) {
+    <p class="muted">
+      Could not load the data.
+      <button mat-button (click)="day.reload()">Retry</button>
+    </p>
+  } @else {
+    <mat-progress-bar mode="indeterminate" />
+  }
+</main>

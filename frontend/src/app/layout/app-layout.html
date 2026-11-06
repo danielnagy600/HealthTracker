@@ -1,0 +1,31 @@
+<mat-toolbar>
+  <span class="brand"><mat-icon>health_and_safety</mat-icon> HealthTracker</span>
+
+  <!-- A tab bar that drives the router: each tab is a link, routerLinkActive marks the current one. -->
+  <nav mat-tab-nav-bar [tabPanel]="tabPanel" mat-stretch-tabs="false">
+    @for (link of links; track link.path) {
+      <a
+        mat-tab-link
+        [routerLink]="link.path"
+        routerLinkActive
+        #rla="routerLinkActive"
+        [routerLinkActiveOptions]="{ exact: link.exact }"
+        [active]="rla.isActive"
+      >
+        <mat-icon>{{ link.icon }}</mat-icon>
+        {{ link.label }}
+      </a>
+    }
+  </nav>
+
+  <span class="spacer"></span>
+  <span class="email">{{ auth.email() }}</span>
+  <button mat-button (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    Log out
+  </button>
+</mat-toolbar>
+
+<mat-tab-nav-panel #tabPanel>
+  <router-outlet />
+</mat-tab-nav-panel>

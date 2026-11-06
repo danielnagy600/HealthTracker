@@ -1,0 +1,77 @@
+<main class="page">
+  @if (reminder.hasValue()) {
+    @let status = reminder.value();
+    <section class="banner" [class]="statusClass(status.status)">
+      <strong>{{ status.message }}</strong>
+      @if (status.nextReminderAt) {
+        <small>
+          Next: {{ status.nextReminderAt | date: 'HH:mm' }} · ~{{ status.nextDoseMl }} ml
+        </small>
+      }
+    </section>
+  }
+
+  @if (summary.hasValue()) {
+    @let today = summary.value();
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="total">
+          <span class="amount">{{ today.consumedMl }} ml</span>
+          <span class="muted">/ {{ today.targetMl }} ml · {{ today.remainingMl }} ml left</span>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="progress()" />
+        <p class="muted">{{ today.percentComplete }}% of daily goal</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-content class="quick-add">
+        <button mat-flat-button (click)="add(250)"><mat-icon>local_drink</mat-icon> 250 ml</button>
+        <button mat-flat-button (click)="add(500)"><mat-icon>water_full</mat-icon> 500 ml</button>
+        <span class="spacer"></span>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="amount-field">
+          <mat-label>Custom</mat-label>
+          <input matInput type="number" [formField]="customAmount" />
+          <span matTextSuffix>ml</span>
+        </mat-form-field>
+        <button mat-stroked-button (click)="add(customAmount().value())">Add</button>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Today</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        @if (today.intakes.length === 0) {
+          <p class="muted">No water logged yet. Add your first glass! 🥛</p>
+        } @else {
+          <mat-list>
+            @for (intake of today.intakes; track intake.id) {
+              <mat-list-item>
+                <mat-icon matListItemIcon>water_drop</mat-icon>
+                <span matListItemTitle>{{ intake.amountMl }} ml</span>
+                <span matListItemLine>{{ intake.recordedAt | date: 'HH:mm' }}</span>
+                <button
+                  matListItemMeta
+                  mat-icon-button
+                  [attr.aria-label]="'Delete ' + intake.amountMl + ' ml'"
+                  (click)="remove(intake.id)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </mat-list-item>
+            }
+          </mat-list>
+        }
+      </mat-card-content>
+    </mat-card>
+  } @else if (summary.error()) {
+    <p class="muted">
+      Could not load the data.
+      <button mat-button (click)="summary.reload()">Retry</button>
+    </p>
+  } @else {
+    <mat-progress-bar mode="indeterminate" />
+  }
+</main>

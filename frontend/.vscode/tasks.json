@@ -12,10 +12,10 @@
         "background": {
           "activeOnStart": true,
           "beginsPattern": {
-            "regexp": "(hmr update|page reload|vite v)"
+            "regexp": "Changes detected"
           },
           "endsPattern": {
-            "regexp": "(ready in|Local:)"
+            "regexp": "bundle generation (complete|failed)"
           }
         }
       }
@@ -23,7 +23,20 @@
     {
       "type": "npm",
       "script": "test",
-      "problemMatcher": ["$tsc"]
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "Changes detected"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation (complete|failed)"
+          }
+        }
+      }
     }
   ]
 }

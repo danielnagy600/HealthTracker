@@ -1,0 +1,41 @@
+.total {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.amount {
+  font: var(--mat-sys-headline-medium);
+  font-weight: 700;
+}
+
+/* Recoloring a Material component = overriding its CSS token. */
+mat-progress-bar.over {
+  --mat-progress-bar-active-indicator-color: var(--mat-sys-error);
+}
+
+.target-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.meal-title {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 4px;
+  font: var(--mat-sys-title-medium);
+}
+
+.kcal {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+[matListItemMeta].kcal {
+  font: var(--mat-sys-body-large);
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+}

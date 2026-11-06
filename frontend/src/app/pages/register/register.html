@@ -1,0 +1,33 @@
+<app-auth-card subtitle="Create account">
+  <form class="form-stack" [formRoot]="registerForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" [formField]="registerForm.email" autocomplete="username" />
+      <mat-error>{{ registerForm.email().errors()[0]?.message }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        type="password"
+        [formField]="registerForm.password"
+        autocomplete="new-password"
+      />
+      <mat-hint>
+        Min. 6 characters, with upper- &amp; lowercase, a digit and a symbol (e.g. Passw0rd!).
+      </mat-hint>
+      <mat-error>{{ registerForm.password().errors()[0]?.message }}</mat-error>
+    </mat-form-field>
+
+    @if (error(); as message) {
+      <p class="error-text" role="alert">{{ message }}</p>
+    }
+
+    <button mat-flat-button type="submit" [disabled]="registerForm().submitting()">
+      {{ registerForm().submitting() ? 'Creating…' : 'Register' }}
+    </button>
+  </form>
+
+  <p footer>Already registered? <a routerLink="/login">Sign in</a></p>
+</app-auth-card>

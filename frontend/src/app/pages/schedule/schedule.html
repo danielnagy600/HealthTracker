@@ -1,0 +1,67 @@
+<main class="page">
+  <app-date-nav [(date)]="date" />
+
+  @if (day.hasValue()) {
+    @let today = day.value();
+    <mat-card appearance="outlined">
+      <mat-card-content class="summary">
+        <span
+          ><strong class="busy">{{ today.busyMinutes | duration }}</strong> busy</span
+        >
+        <span class="muted">
+          {{ today.freeMinutes | duration }} free · {{ today.activities.length }} activities
+        </span>
+        @if (longestFreeSlot(); as slot) {
+          @if (slot.durationMinutes > 0) {
+            <span class="muted">Longest free slot: {{ slot.start | hm }}–{{ slot.end | hm }}</span>
+          }
+        }
+      </mat-card-content>
+    </mat-card>
+
+    @if (today.conflicts.length > 0) {
+      <section class="banner amber">
+        <strong>Conflict in your day</strong>
+        @for (conflict of today.conflicts; track conflict.firstId + '-' + conflict.secondId) {
+          <small>
+            “{{ conflict.firstTitle }}” and “{{ conflict.secondTitle }}” overlap
+            {{ conflict.overlapStart | hm }}–{{ conflict.overlapEnd | hm }} ({{
+              conflict.overlapMinutes | duration
+            }})
+          </small>
+        }
+      </section>
+    }
+
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <app-day-timeline
+          [day]="today"
+          [selectedId]="editing()?.id ?? null"
+          (selected)="open($event)"
+        />
+      </mat-card-content>
+    </mat-card>
+
+    @if (formOpen()) {
+      <app-activity-form
+        [editing]="editing()"
+        [date]="date()"
+        (saved)="onSaved()"
+        (cancelled)="close()"
+      />
+    } @else {
+      <div class="new-activity">
+        <button mat-flat-button (click)="open(null)"><mat-icon>add</mat-icon> New activity</button>
+        <span class="muted">Click a block to edit it.</span>
+      </div>
+    }
+  } @else if (day.error()) {
+    <p class="muted">
+      Could not load the data.
+      <button mat-button (click)="day.reload()">Retry</button>
+    </p>
+  } @else {
+    <mat-progress-bar mode="indeterminate" />
+  }
+</main>

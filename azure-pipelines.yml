@@ -1,7 +1,7 @@
 # HealthTracker - Azure DevOps CI/CD pipeline
 #
 # Szakaszok (stage-ek):
-#   1. Build   - .NET build+teszt es a React lint+build. PR-on es main-en is fut.
+#   1. Build   - .NET build+teszt es az Angular lint+build. PR-on es main-en is fut.
 #   2. Package - Docker image-ek epitese es feltoltese a GitHub Container Registry-be
 #                (ghcr.io). Csak main-en fut (PR-nal nincs ertelme image-et pusholni).
 #   3. Deploy  - a frissen pusholt image-ek kiteritese Azure Container Apps-ra.
@@ -86,7 +86,7 @@ stages:
               dockerfile: 'src/HealthTracker.Api/Dockerfile'
               buildContext: '$(Build.SourcesDirectory)'
 
-          # A frontend image build-ideju valtozot var (VITE_API_BASE), mert a Vite
+          # A frontend image build-ideju valtozot var (API_BASE), mert az Angular
           # build-korben egeti be az API cimet - ezert kell ide a produkcios URL.
           - template: .azuredevops/templates/docker-build-push.yml
             parameters:
@@ -94,7 +94,7 @@ stages:
               repository: '$(frontendImageRepository)'
               dockerfile: 'frontend/Dockerfile'
               buildContext: '$(Build.SourcesDirectory)/frontend'
-              buildArgs: '--build-arg VITE_API_BASE=$(apiBaseUrl)'
+              buildArgs: '--build-arg API_BASE=$(apiBaseUrl)'
 
   # ---------------------------------------------------------------------------
   # 3. Deploy Azure Container Apps-ra

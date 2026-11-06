@@ -1,0 +1,65 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>{{ editing() ? 'Edit entry' : 'New entry' }}</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form class="form-stack" [formRoot]="entryForm">
+      <mat-form-field appearance="outline">
+        <mat-label>What did you eat?</mat-label>
+        <input
+          matInput
+          [formField]="entryForm.name"
+          placeholder="e.g. Porridge with raspberries"
+          appAutofocus
+        />
+        <mat-error>{{ entryForm.name().errors()[0]?.message }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Calories</mat-label>
+        <input matInput type="number" [formField]="entryForm.calories" placeholder="320" />
+        <span matTextSuffix>kcal</span>
+        <mat-error>{{ entryForm.calories().errors()[0]?.message }}</mat-error>
+      </mat-form-field>
+
+      <!-- mat-button-toggle-group is a ControlValueAccessor; [formField] works with it too. -->
+      <mat-button-toggle-group
+        [formField]="entryForm.meal"
+        aria-label="Meal"
+        hideSingleSelectionIndicator
+      >
+        @for (option of meals; track option) {
+          <mat-button-toggle [value]="option">
+            <span aria-hidden="true">{{ mealIcons[option] }}</span> {{ option }}
+          </mat-button-toggle>
+        }
+      </mat-button-toggle-group>
+
+      <app-field-error [field]="entryForm" />
+      @if (deleteError(); as message) {
+        <p class="error-text" role="alert">{{ message }}</p>
+      }
+
+      <div class="form-actions">
+        <button mat-flat-button type="submit" [disabled]="busy()">
+          {{ entryForm().submitting() ? 'Saving…' : editing() ? 'Save' : 'Add' }}
+        </button>
+        <button mat-button type="button" (click)="cancelled.emit()" [disabled]="busy()">
+          Cancel
+        </button>
+        @if (editing()) {
+          <button
+            mat-flat-button
+            class="danger-button"
+            type="button"
+            (click)="remove()"
+            [disabled]="busy()"
+          >
+            Delete
+          </button>
+        }
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

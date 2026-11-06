@@ -1,0 +1,31 @@
+<app-auth-card subtitle="Sign in">
+  <form class="form-stack" [formRoot]="loginForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" [formField]="loginForm.email" autocomplete="username" />
+      <!-- mat-error is only shown while the field is touched and invalid. -->
+      <mat-error>{{ loginForm.email().errors()[0]?.message }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        type="password"
+        [formField]="loginForm.password"
+        autocomplete="current-password"
+      />
+      <mat-error>{{ loginForm.password().errors()[0]?.message }}</mat-error>
+    </mat-form-field>
+
+    @if (error(); as message) {
+      <p class="error-text" role="alert">{{ message }}</p>
+    }
+
+    <button mat-flat-button type="submit" [disabled]="loginForm().submitting()">
+      {{ loginForm().submitting() ? 'Signing in…' : 'Sign in' }}
+    </button>
+  </form>
+
+  <p footer>No account yet? <a routerLink="/register">Register</a></p>
+</app-auth-card>

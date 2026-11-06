@@ -3,7 +3,7 @@ dotnet run --project src\HealthTracker.Api
 http://localhost:8080
 Kestrel
 
-2.Frontend (React + Vite)
+2.Frontend (Angular)
 npm start
 http://localhost:4200
 

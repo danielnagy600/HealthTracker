@@ -1,7 +1,7 @@
-# Frontend (React / Vite) lint + tipusellenorzes + build job.
+# Frontend (Angular) lint + tipusellenorzes + build job.
 #
 # A GitHub Actions-os valtozattal egyezik (npm ci -> lint -> build), kiegeszitve a
-# vitest futtatasaval es a dist/ artifactkent valo publikalasaval.
+# Vitest (ng test) futtatasaval es a dist/ artifactkent valo publikalasaval.
 
 parameters:
   - name: nodeVersion
@@ -13,7 +13,7 @@ parameters:
 
 jobs:
   - job: Frontend
-    displayName: 'Frontend (React)'
+    displayName: 'Frontend (Angular)'
     pool:
       vmImage: 'ubuntu-latest'
     steps:

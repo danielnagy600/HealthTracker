@@ -1,0 +1,84 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>{{ editing() ? 'Edit activity' : 'New activity' }}</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form class="form-stack" [formRoot]="activityForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Title</mat-label>
+        <input
+          matInput
+          [formField]="activityForm.title"
+          placeholder="e.g. Team meeting"
+          appAutofocus
+        />
+        <mat-error>{{ activityForm.title().errors()[0]?.message }}</mat-error>
+      </mat-form-field>
+
+      <div class="times">
+        <mat-form-field appearance="outline">
+          <mat-label>Start</mat-label>
+          <input matInput type="time" [formField]="activityForm.startTime" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>End</mat-label>
+          <input matInput type="time" [formField]="activityForm.endTime" />
+          <mat-error>{{ activityForm.endTime().errors()[0]?.message }}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Material has no color picker: plain radio inputs, styled as swatches. -->
+      <fieldset class="colors">
+        <legend>Color</legend>
+        @for (option of colors; track option) {
+          <label
+            class="swatch"
+            [class.selected]="activityForm.color().value() === option"
+            [style.background]="colorCss[option]"
+          >
+            <input type="radio" [formField]="activityForm.color" [value]="option" />
+            <span class="visually-hidden">{{ option }}</span>
+          </label>
+        }
+      </fieldset>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Note</mat-label>
+        <textarea
+          matInput
+          cdkTextareaAutosize
+          cdkAutosizeMinRows="2"
+          [formField]="activityForm.note"
+          placeholder="Any detail that helps you remember…"
+        ></textarea>
+        <mat-error>{{ activityForm.note().errors()[0]?.message }}</mat-error>
+      </mat-form-field>
+
+      <app-field-error [field]="activityForm" />
+      @if (deleteError(); as message) {
+        <p class="error-text" role="alert">{{ message }}</p>
+      }
+
+      <div class="form-actions">
+        <button mat-flat-button type="submit" [disabled]="busy()">
+          {{ activityForm().submitting() ? 'Saving…' : editing() ? 'Save' : 'Add' }}
+        </button>
+        <button mat-button type="button" (click)="cancelled.emit()" [disabled]="busy()">
+          Cancel
+        </button>
+        @if (editing()) {
+          <button
+            mat-flat-button
+            class="danger-button"
+            type="button"
+            (click)="remove()"
+            [disabled]="busy()"
+          >
+            Delete
+          </button>
+        }
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

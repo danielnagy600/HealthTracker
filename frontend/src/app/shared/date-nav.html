@@ -1,0 +1,30 @@
+<mat-card appearance="outlined">
+  <button mat-icon-button (click)="shift(-1)" aria-label="Previous day" matTooltip="Previous day">
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+
+  <div class="center">
+    <!-- The datepicker needs an input to attach to; this one is invisible, the button opens it. -->
+    <input
+      class="picker-anchor"
+      tabindex="-1"
+      aria-hidden="true"
+      [matDatepicker]="picker"
+      [value]="asDate()"
+      (dateChange)="pick($event.value)"
+    />
+    <mat-datepicker #picker />
+
+    <button mat-button class="current" (click)="picker.open()">
+      <mat-icon>calendar_today</mat-icon>
+      {{ date() | date: 'EEEE d MMMM y' }}
+    </button>
+    @if (date() !== today()) {
+      <button mat-button class="today" (click)="date.set(today())">Jump to today</button>
+    }
+  </div>
+
+  <button mat-icon-button (click)="shift(1)" aria-label="Next day" matTooltip="Next day">
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+</mat-card>

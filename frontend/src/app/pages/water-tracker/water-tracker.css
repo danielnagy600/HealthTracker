@@ -1,0 +1,30 @@
+.total {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.amount {
+  font: var(--mat-sys-headline-medium);
+  font-weight: 700;
+}
+
+.quick-add {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.amount-field {
+  width: 120px;
+}
+
+mat-list-item mat-icon[matListItemIcon] {
+  color: var(--mat-sys-primary);
+}

@@ -29,7 +29,7 @@ létrehozni.
 
 ```
 Build ──────────────► Package ──────────► Deploy
-(.NET + React)        (docker build       (AzureContainerApps@1:
+(.NET + Angular)        (docker build       (AzureContainerApps@1:
  PR-on is fut          + push GHCR-be)     api, majd frontend)
 ```
 
@@ -120,7 +120,7 @@ pipeline-futás lecseréli a saját image-edre.
 | `containerAppsResourceGroup` | `healthtracker-rg` | a 4. pontban létrehozott resource group |
 | `apiContainerAppName` | `healthtracker-api` | a 4. pontban létrehozott Container App neve |
 | `frontendContainerAppName` | `healthtracker-web` | a 4. pontban létrehozott Container App neve |
-| `apiBaseUrl` | `https://healthtracker-api.<random>.westeurope.azurecontainerapps.io` | **build-időben** égetjük a frontendbe (`VITE_API_BASE`); a pontos URL-t a `az containerapp show --name healthtracker-api --resource-group healthtracker-rg --query properties.configuration.ingress.fqdn` adja meg |
+| `apiBaseUrl` | `https://healthtracker-api.<random>.westeurope.azurecontainerapps.io` | **build-időben** égetjük a frontendbe (`API_BASE`); a pontos URL-t a `az containerapp show --name healthtracker-api --resource-group healthtracker-rg --query properties.configuration.ingress.fqdn` adja meg |
 
 A variable groupnál a **Pipeline permissions** alatt engedélyezni kell a pipeline
 hozzáférését, különben a futás „variable group not found" hibával áll le.

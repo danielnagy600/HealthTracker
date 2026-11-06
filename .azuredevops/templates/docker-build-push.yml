@@ -2,7 +2,7 @@
 #
 # Szandekosan ket lepes (build + push) a kenyelmesebb "buildAndPush" helyett: a
 # Docker@2 task az "arguments" mezot csak a sima "build" parancsnal veszi
-# figyelembe, a frontend image-hez viszont kell a --build-arg VITE_API_BASE.
+# figyelembe, a frontend image-hez viszont kell a --build-arg API_BASE.
 #
 # Minden image ket taget kap:
 #   - $(Build.BuildId): pontosan visszakovetheto, melyik futasbol szarmazik,
