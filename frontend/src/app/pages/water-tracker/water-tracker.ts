@@ -10,7 +10,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { errorMessage } from '../../core/http/error-message';
-import { ReminderStatus, WaterApi } from '../../core/modules/water';
+import { ReminderStatus } from '../../core/modules/water/models/reminder-status';
+import { WaterApi } from '../../core/modules/water/water-api';
 
 @Component({
   selector: 'app-water-tracker',

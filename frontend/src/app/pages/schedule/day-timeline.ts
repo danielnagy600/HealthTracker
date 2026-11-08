@@ -1,28 +1,14 @@
 import { Component, computed, input, output } from '@angular/core';
-import {
-  ACTIVITY_COLOR_CSS,
-  Activity,
-  DaySchedule,
-  toHm,
-  toMinutes,
-} from '../../core/modules/schedule';
+import { ACTIVITY_COLOR_CSS } from '../../core/modules/schedule/models/activity-color';
+import { Activity } from '../../core/modules/schedule/models/activity';
+import { DaySchedule } from '../../core/modules/schedule/models/day-schedule';
+import { toHm, toMinutes } from '../../core/common/times';
 import { DurationPipe } from '../../shared/duration-pipe';
 import { HmPipe } from '../../shared/hm-pipe';
 import { placeActivities } from './lanes';
+import { TimelineBlock } from './models/timeline-block';
 
 const HOUR_HEIGHT = 56;
-
-interface Block {
-  activity: Activity;
-  top: number;
-  height: number;
-  left: string;
-  width: string;
-  showNote: boolean;
-  color: string;
-  selected: boolean;
-  tooltip: string;
-}
 
 /** The vertical day view. Pure presentation: data comes in, clicks go out. */
 @Component({
@@ -58,7 +44,7 @@ export class DayTimeline {
     return marks;
   });
 
-  protected readonly blocks = computed<Block[]>(() =>
+  protected readonly blocks = computed<TimelineBlock[]>(() =>
     placeActivities(this.day().activities).map(({ activity, lane, laneCount }) => {
       const height = (activity.durationMinutes / 60) * HOUR_HEIGHT;
       const width = 100 / laneCount;

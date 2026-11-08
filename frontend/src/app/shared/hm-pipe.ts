@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { toHm } from '../core/modules/schedule';
+import { toHm } from '../core/common/times';
 
 /** `{{ '09:30:00' | hm }}` → `09:30` */
 @Pipe({ name: 'hm' })

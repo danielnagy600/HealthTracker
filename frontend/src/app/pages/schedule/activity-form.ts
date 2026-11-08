@@ -10,21 +10,13 @@ import { errorMessage } from '../../core/http/error-message';
 import {
   ACTIVITY_COLOR_CSS,
   ACTIVITY_COLORS,
-  Activity,
-  ActivityColor,
-  ScheduleApi,
-  toHm,
-} from '../../core/modules/schedule';
+} from '../../core/modules/schedule/models/activity-color';
+import { Activity } from '../../core/modules/schedule/models/activity';
+import { ScheduleApi } from '../../core/modules/schedule/schedule-api';
+import { toHm } from '../../core/common/times';
+import { ActivityFormModel } from './models/activity-form-model';
 import { Autofocus } from '../../shared/autofocus';
 import { FieldError } from '../../shared/field-error';
-
-interface ActivityModel {
-  title: string;
-  startTime: string;
-  endTime: string;
-  color: ActivityColor;
-  note: string;
-}
 
 /** Add / edit / delete one activity. Talks to the API itself and reports back via outputs. */
 @Component({
@@ -56,7 +48,7 @@ export class ActivityForm {
   protected readonly colorCss = ACTIVITY_COLOR_CSS;
 
   // linkedSignal: a writable signal that resets itself whenever `editing` changes.
-  private readonly model = linkedSignal<ActivityModel>(() => {
+  private readonly model = linkedSignal<ActivityFormModel>(() => {
     const activity = this.editing();
     return activity
       ? {

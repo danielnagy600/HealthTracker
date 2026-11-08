@@ -1,40 +1,9 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-
-export interface IntakeItem {
-  id: string;
-  recordedAt: string;
-  amountMl: number;
-}
-
-export interface DailySummary {
-  date: string;
-  targetMl: number;
-  consumedMl: number;
-  remainingMl: number;
-  percentComplete: number;
-  intakes: IntakeItem[];
-}
-
-export type ReminderStatus = 'GoalReached' | 'OnTrack' | 'Behind';
-
-export interface Reminder {
-  consumedMl: number;
-  targetMl: number;
-  remainingMl: number;
-  expectedByNowMl: number;
-  deficitMl: number;
-  status: ReminderStatus;
-  nextDoseMl: number;
-  nextReminderAt: string | null;
-  message: string;
-}
-
-export interface Settings {
-  dailyTargetMl: number;
-  wakeTime: string;
-  sleepTime: string;
-}
+import { DailySummary } from './models/daily-summary';
+import { IntakeItem } from './models/intake-item';
+import { Reminder } from './models/reminder';
+import { Settings } from './models/settings';
 
 const base = '/api/water';
 

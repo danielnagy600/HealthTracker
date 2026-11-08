@@ -16,15 +16,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { firstValueFrom } from 'rxjs';
 import { errorMessage } from '../../core/http/error-message';
-import { CaloriesApi, FoodEntry, MEAL_ICONS, MEALS, Meal } from '../../core/modules/calories';
+import { CaloriesApi } from '../../core/modules/calories/calories-api';
+import { FoodEntry } from '../../core/modules/calories/models/food-entry';
+import { MEAL_ICONS, MEALS, Meal } from '../../core/modules/calories/models/meal';
+import { FoodEntryFormModel } from './models/food-entry-form-model';
 import { Autofocus } from '../../shared/autofocus';
 import { FieldError } from '../../shared/field-error';
-
-interface FoodEntryModel {
-  name: string;
-  calories: number | null;
-  meal: Meal;
-}
 
 const CALORIES_MESSAGE = 'Calories must be a positive number.';
 
@@ -59,7 +56,7 @@ export class FoodEntryForm {
   protected readonly mealIcons = MEAL_ICONS;
 
   // Resets whenever `editing` or `defaultMeal` changes.
-  private readonly model = linkedSignal<FoodEntryModel>(() => {
+  private readonly model = linkedSignal<FoodEntryFormModel>(() => {
     const entry = this.editing();
     return entry
       ? { name: entry.name, calories: entry.calories, meal: entry.meal }

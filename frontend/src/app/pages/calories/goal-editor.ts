@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { firstValueFrom } from 'rxjs';
 import { errorMessage } from '../../core/http/error-message';
-import { CaloriesApi } from '../../core/modules/calories';
+import { CaloriesApi } from '../../core/modules/calories/calories-api';
 import { Autofocus } from '../../shared/autofocus';
 import { FieldError } from '../../shared/field-error';
 

@@ -1,4 +1,4 @@
-import { Activity } from '../../core/modules/schedule';
+import { Activity } from '../../core/modules/schedule/models/activity';
 import { placeActivities } from './lanes';
 
 function activity(id: string, startTime: string, endTime: string): Activity {

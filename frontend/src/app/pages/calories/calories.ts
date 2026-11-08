@@ -6,14 +6,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { todayIso } from '../../core/common/dates';
-import { CaloriesApi, FoodEntry, MEAL_ICONS, Meal, statusClass } from '../../core/modules/calories';
+import { CaloriesApi } from '../../core/modules/calories/calories-api';
+import { FoodEntry } from '../../core/modules/calories/models/food-entry';
+import { MEAL_ICONS, Meal } from '../../core/modules/calories/models/meal';
+import { statusClass } from '../../core/modules/calories/models/calorie-status';
 import { DateNav } from '../../shared/date-nav';
 import { FoodEntryForm } from './food-entry-form';
 import { GoalEditor } from './goal-editor';
-
-/** Which panel is open below the meals. Only one at a time, so one signal instead of three. */
-type Panel =
-  { kind: 'none' } | { kind: 'goal' } | { kind: 'entry'; editing: FoodEntry | null; meal: Meal };
+import { Panel } from './models/panel';
 
 @Component({
   selector: 'app-calories',

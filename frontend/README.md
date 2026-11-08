@@ -65,22 +65,31 @@ src/
     │   │   ├── session.ts        # token/e-mail tárolása localStorage-ban
     │   │   ├── auth.ts           # Auth service: signalok + login/register/logout
     │   │   ├── auth-guard.ts     # védett útvonal: bejelentkezés nélkül /login-ra irányít
-    │   │   └── auth-interceptor.ts # API-cím + bearer token minden kérésre, 401 → kiléptetés
+    │   │   ├── auth-interceptor.ts # API-cím + bearer token minden kérésre, 401 → kiléptetés
+    │   │   └── models/login-response.ts
     │   ├── http/
     │   │   ├── api-base.ts       # API_BASE_URL injection token
     │   │   └── error-message.ts  # ProblemDetails → olvasható hibaüzenet
-    │   ├── common/dates.ts       # yyyy-MM-dd dátum-segédek
-    │   └── modules/
-    │       ├── water.ts          # a Water modul típusai + WaterApi service
-    │       ├── schedule.ts       # a Schedule modul típusai + ScheduleApi service
-    │       └── calories.ts       # a Calories modul típusai + CaloriesApi service
+    │   ├── common/
+    │   │   ├── dates.ts          # yyyy-MM-dd dátum-segédek
+    │   │   └── times.ts          # HH:mm:ss idő-segédek (toMinutes, toHm)
+    │   └── modules/              # a backend moduljai, egy mappa / modul
+    │       ├── water/
+    │       │   ├── water-api.ts  # WaterApi service (REST-hívások)
+    │       │   └── models/       # DTO-k, fájlonként egy típus (daily-summary.ts, reminder.ts…)
+    │       ├── schedule/
+    │       │   ├── schedule-api.ts
+    │       │   └── models/       # activity.ts, activity-color.ts, day-schedule.ts…
+    │       └── calories/
+    │           ├── calories-api.ts
+    │           └── models/       # food-entry.ts, meal.ts, day-calories.ts…
     ├── shared/
     │   ├── date-nav.*            # nap váltó + mat-datepicker ([(date)] kétirányú kötés)
     │   ├── auth-card.ts          # a login/regisztráció kártyája (ng-content tartalomvetítés)
     │   ├── field-error.ts        # űrlapszintű (pl. szerver-) hiba; mezőn belül <mat-error>
     │   ├── autofocus.ts          # appAutofocus direktíva
     │   ├── duration-pipe.ts      # {{ 95 | duration }} → 1h 35m
-    │   ├── hm-pipe.ts            # {{ '09:30:00' | hm }} → 09:30
+    │   └── hm-pipe.ts            # {{ '09:30:00' | hm }} → 09:30
     ├── layout/app-layout.*       # közös fejléc + navigáció a védett oldalakhoz
     └── pages/
         ├── login/  register/
@@ -89,12 +98,19 @@ src/
         │   ├── schedule.*        # a Napirend oldal: dátumváltó, összesítés, űrlap
         │   ├── day-timeline.*    # a vizuális idővonal (csak megjelenítés: input → output)
         │   ├── activity-form.*   # felvitel/szerkesztés/törlés
-        │   └── lanes.ts          # az átfedő elemek oszlopokba rendezése (+ lanes.spec.ts)
+        │   ├── lanes.ts          # az átfedő elemek oszlopokba rendezése (+ lanes.spec.ts)
+        │   └── models/           # az oldal saját típusai (form modell, timeline blokk…)
         └── calories/
             ├── calories.*        # a Kalória oldal: napi keret, étkezés-szekciók
             ├── food-entry-form.* # bejegyzés felvitele/szerkesztése/törlése
-            └── goal-editor.ts    # a napi kalóriakeret (inline sablonnal)
+            ├── goal-editor.ts    # a napi kalóriakeret (inline sablonnal)
+            └── models/           # food-entry-form-model.ts, panel.ts
 ```
+
+**Típusok:** fájlonként egy típus, a `models/` mappákban (mint .NET-ben egy osztály / fájl).
+Ezek `interface`-ek, nem `class`-ok: az `HttpClient` a JSON-ból sima objektumot ad, nem
+példányosít osztályt — az interface csak az adat alakját írja le (mint egy `record` DTO), és
+futásidőben nem létezik, tehát nem kerül a bundle-be.
 
 Az oldalkomponensek `export default`-tal exportálnak, így az útvonalban elég a
 `loadComponent: () => import('./pages/login/login')`.

@@ -1,11 +1,6 @@
-import type { Activity } from '../../core/modules/schedule';
-import { toMinutes } from '../../core/modules/schedule';
-
-export interface PlacedActivity {
-  activity: Activity;
-  lane: number;
-  laneCount: number;
-}
+import { Activity } from '../../core/modules/schedule/models/activity';
+import { toMinutes } from '../../core/common/times';
+import { PlacedActivity } from './models/placed-activity';
 
 export function placeActivities(activities: Activity[]): PlacedActivity[] {
   const sorted = [...activities].sort(

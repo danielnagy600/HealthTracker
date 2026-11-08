@@ -1,14 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { LoginResponse } from './models/login-response';
 import { session } from './session';
-
-interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: number;
-  tokenType: string;
-}
 
 /** The signed-in state of the app. One instance for the whole app (`providedIn: 'root'`). */
 @Injectable({ providedIn: 'root' })
