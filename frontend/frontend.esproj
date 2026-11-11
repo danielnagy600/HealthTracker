@@ -1,0 +1,17 @@
+<!--
+  Visual Studio JavaScript projekt az Angular frontendhez.
+  Csak a VS-nek szóló leíró: a buildet továbbra is az Angular CLI végzi
+  (npm start / ng build), a Docker build és a pipeline ettől független.
+-->
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.7204101">
+  <PropertyGroup>
+    <!-- F5 / Start esetén ezt futtatja a VS (ng serve, http://localhost:4200). -->
+    <StartupCommand>npm start</StartupCommand>
+
+    <!-- A `dotnet build HealthTracker.slnx` (VS-ben és a CI-ban is) ne futtasson
+         npm install-t és ng build-et: a backend build így nem igényel Node-ot,
+         és nem lassul le. A frontendet az npm parancsok és a Dockerfile buildelik. -->
+    <ShouldRunNpmInstall>false</ShouldRunNpmInstall>
+    <ShouldRunBuildScript>false</ShouldRunBuildScript>
+  </PropertyGroup>
+</Project>
