@@ -1,11 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
-    <ProjectReference Include="..\HealthTracker.Modules.Water\HealthTracker.Modules.Water.csproj" />
-    <ProjectReference Include="..\HealthTracker.SharedKernel\HealthTracker.SharedKernel.csproj" />
-    <ProjectReference Include="..\HealthTracker.Modules.Identity\HealthTracker.Modules.Identity.csproj" />
-    <ProjectReference Include="..\HealthTracker.Modules.Schedule\HealthTracker.Modules.Schedule.csproj" />
-    <ProjectReference Include="..\HealthTracker.Modules.Calories\HealthTracker.Modules.Calories.csproj" />
+    <ProjectReference Include="..\HealthTracker.Application\HealthTracker.Application.csproj" />
+    <ProjectReference Include="..\HealthTracker.Persistence\HealthTracker.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>

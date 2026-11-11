@@ -14,7 +14,9 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      # Host oldalon 5433: az 5432-t a gépen natívan telepített PostgreSQL foglalja.
+      # A konténerek egymás között továbbra is db:5432-n érik el (lásd api service).
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -45,7 +47,7 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: ./src/HealthTracker.UI
       args:
         # A böngészőből, a hostról hívjuk az API-t, ezért a host oldali (nem a
         # compose-belső) API-cím kell ide - ez egyezik az api service publikált portjával.

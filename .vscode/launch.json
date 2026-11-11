@@ -19,18 +19,18 @@
       }
     },
     {
-      "name": "Frontend (React)",
+      "name": "Frontend (Angular)",
       "type": "chrome",
       "request": "launch",
       "preLaunchTask": "frontend-serve",
       "url": "http://localhost:4200",
-      "webRoot": "${workspaceFolder}/frontend"
+      "webRoot": "${workspaceFolder}/src/HealthTracker.UI"
     }
   ],
   "compounds": [
     {
       "name": "Full stack (API + Frontend)",
-      "configurations": ["API (.NET)", "Frontend (React)"],
+      "configurations": ["API (.NET)", "Frontend (Angular)"],
       "stopAll": true
     }
   ]

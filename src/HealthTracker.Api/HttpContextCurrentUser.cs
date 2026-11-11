@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using HealthTracker.SharedKernel.Abstractions;
+using HealthTracker.Application.Contracts;
 
 namespace HealthTracker.Api;
 

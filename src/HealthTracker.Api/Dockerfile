@@ -3,12 +3,10 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Először csak a projektfájlokat másoljuk a réteg-gyorsítótár kihasználásához.
-COPY src/HealthTracker.SharedKernel/*.csproj        src/HealthTracker.SharedKernel/
-COPY src/HealthTracker.Modules.Water/*.csproj       src/HealthTracker.Modules.Water/
-COPY src/HealthTracker.Modules.Identity/*.csproj    src/HealthTracker.Modules.Identity/
-COPY src/HealthTracker.Modules.Schedule/*.csproj    src/HealthTracker.Modules.Schedule/
-COPY src/HealthTracker.Modules.Calories/*.csproj    src/HealthTracker.Modules.Calories/
-COPY src/HealthTracker.Api/*.csproj                 src/HealthTracker.Api/
+COPY src/HealthTracker.Domain/*.csproj         src/HealthTracker.Domain/
+COPY src/HealthTracker.Application/*.csproj    src/HealthTracker.Application/
+COPY src/HealthTracker.Persistence/*.csproj    src/HealthTracker.Persistence/
+COPY src/HealthTracker.Api/*.csproj            src/HealthTracker.Api/
 RUN dotnet restore src/HealthTracker.Api/HealthTracker.Api.csproj
 
 # Most jöhet a teljes forrás és a publikálás.

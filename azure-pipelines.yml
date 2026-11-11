@@ -61,7 +61,7 @@ stages:
       - template: .azuredevops/templates/frontend-job.yml
         parameters:
           nodeVersion: $(nodeVersion)
-          workingDirectory: 'frontend'
+          workingDirectory: 'src/HealthTracker.UI'
 
   # ---------------------------------------------------------------------------
   # 2. Docker image-ek epitese es push a GHCR-be
@@ -92,8 +92,8 @@ stages:
             parameters:
               displayName: 'Frontend image'
               repository: '$(frontendImageRepository)'
-              dockerfile: 'frontend/Dockerfile'
-              buildContext: '$(Build.SourcesDirectory)/frontend'
+              dockerfile: 'src/HealthTracker.UI/Dockerfile'
+              buildContext: '$(Build.SourcesDirectory)/src/HealthTracker.UI'
               buildArgs: '--build-arg API_BASE=$(apiBaseUrl)'
 
   # ---------------------------------------------------------------------------

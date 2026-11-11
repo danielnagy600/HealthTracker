@@ -1,0 +1,11 @@
+{
+  // A VS Code ezeket ajánlja telepítésre, amikor megnyitod a repót.
+  "recommendations": [
+    // Angular Language Service: sablon-kiegészítés és -hibák a .html fájlokban.
+    "angular.ng-template",
+    // ESLint: a frontend lint-hibái szerkesztés közben (src/HealthTracker.UI/eslint.config.js).
+    "dbaeumer.vscode-eslint",
+    // C#: a launch.json "API (.NET)" indítója (coreclr debugger) ezt igényli.
+    "ms-dotnettools.csharp"
+  ]
+}

@@ -12,9 +12,9 @@ artifacts/
 # EF Core (a migrációkat NEM zárjuk ki – azok a forrás részei!)
 
 # ---------- Node / React (Vite) ----------
-frontend/node_modules/
-frontend/dist/
-frontend/.vite/
+src/HealthTracker.UI/node_modules/
+src/HealthTracker.UI/dist/
+src/HealthTracker.UI/.vite/
 npm-debug.log*
 yarn-error.log*
 

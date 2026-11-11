@@ -9,7 +9,7 @@ parameters:
     default: '24.x'
   - name: workingDirectory
     type: string
-    default: 'frontend'
+    default: 'src/HealthTracker.UI'
 
 jobs:
   - job: Frontend

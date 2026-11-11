@@ -3,9 +3,9 @@
 **/obj/
 
 # Frontend függőségek és build
-frontend/node_modules/
-frontend/dist/
-frontend/.vite/
+src/HealthTracker.UI/node_modules/
+src/HealthTracker.UI/dist/
+src/HealthTracker.UI/.vite/
 
 # Egyéb
 **/.vs/

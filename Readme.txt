@@ -9,7 +9,7 @@ http://localhost:4200
 
 dotnet test
 dotnet build 
-cd frontend; npm run build build (dist\ mappába)
+cd srcHealthTracker.UI; npm run build build (dist\ mappába)
 A Vite dev szervere futtatja
 
 Éles környezetbe Kestrelmind a kettőt

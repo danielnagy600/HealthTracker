@@ -26,7 +26,7 @@ in Development), Postgres `5432`.
 ## CRITICAL gotcha: the frontend does NOT hot-reload
 
 The `frontend` container is a **static nginx build**, not a dev server - it does
-not watch the source tree. Editing anything under `frontend/src/` has **zero
+not watch the source tree. Editing anything under `src/HealthTracker.UI/src/` has **zero
 effect** on the running container until the image is rebuilt. Worse, a plain
 `docker compose up --build` can silently reuse a stale cached layer and produce
 a container that *looks* rebuilt but still serves old code (observed in practice).
@@ -47,8 +47,8 @@ docker ps --format "table {{.Names}}\t{{.CreatedAt}}\t{{.Status}}"
 `healthtracker-frontend`'s `CREATED AT` must be newer than your last edit. If it's
 unchanged, the rebuild didn't really take - don't trust the test that follows.
 
-The same applies to backend changes (`src/HealthTracker.Api`,
-`src/HealthTracker.Modules.*`) and the `api` service.
+The same applies to backend changes (`src/HealthTracker.Api`, `.Application`,
+`.Domain`, `.Persistence`) and the `api` service.
 
 ## Auth - there is no seeded user
 
@@ -68,7 +68,7 @@ reuse across sessions - it's a disposable local/test account, not a real user.
 
 No `chromium-cli` / browser MCP tool is available in this environment - drive it
 with Playwright directly. Install once into the scratchpad directory, **never**
-into the project's own `node_modules` (don't pollute `frontend/package.json`):
+into the project's own `node_modules` (don't pollute `src/HealthTracker.UI/package.json`):
 
 ```bash
 cd <scratchpad dir>

@@ -1,9 +1,8 @@
 using HealthTracker.Api;
-using HealthTracker.Modules.Calories;
-using HealthTracker.Modules.Identity;
-using HealthTracker.Modules.Schedule;
-using HealthTracker.Modules.Water;
-using HealthTracker.SharedKernel.Abstractions;
+using HealthTracker.Application;
+using HealthTracker.Application.Contracts;
+using HealthTracker.Persistence;
+using HealthTracker.Persistence.Identity;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
@@ -15,22 +14,27 @@ var connectionString = builder.Configuration.GetConnectionString("Postgres")
         "Missing 'ConnectionStrings:Postgres'. Set it in appsettings.json, appsettings.Development.json, " +
         "or the ConnectionStrings__Postgres environment variable (see docker-compose.yml).");
 
-builder.Services.AddIdentityModule(connectionString);
-builder.Services.AddWaterModule(connectionString);
-builder.Services.AddScheduleModule(connectionString);
-builder.Services.AddCaloriesModule(connectionString);
+// Rétegek: Application (MediatR handlerek + AutoMapper), Persistence (DbContext + repository-k).
+builder.Services.AddApplicationServices(builder.Configuration["LuckyPenny:LicenseKey"]);
+builder.Services.AddPersistenceServices(connectionString);
 
-builder.Services.AddControllers()
-    .AddApplicationPart(typeof(WaterModule).Assembly)
-    .AddApplicationPart(typeof(ScheduleModule).Assembly)
-    .AddApplicationPart(typeof(CaloriesModule).Assembly);
+// Identity: bejelentkezés/regisztráció bearer tokennel, a felhasználók a közös DbContextben.
+builder.Services.AddAuthorization();
+builder.Services
+    .AddIdentityApiEndpoints<AppUser>()
+    .AddEntityFrameworkStores<HealthTrackerDbContext>();
 
+builder.Services.AddControllers();
+
+// Az Application rétegben deklarált absztrakciók itteni (webes) megvalósításai.
+builder.Services.AddSingleton<IClock, SystemClock>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, HttpContextCurrentUser>();
 
 // Minden hibaválasz (400, 404, 500, body nélküli státuszok) egységesen
 // ProblemDetails (RFC 9457) formátumú legyen.
 builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddExceptionHandler<DomainExceptionHandler>();
 
 // A Data Protection kulcstár alapból efemer konténerekben (nincs hova
@@ -77,10 +81,7 @@ var app = builder.Build();
 
 try
 {
-    await app.Services.MigrateIdentityModuleAsync();
-    await app.Services.MigrateWaterModuleAsync();
-    await app.Services.MigrateScheduleModuleAsync();
-    await app.Services.MigrateCaloriesModuleAsync();
+    await app.Services.MigrateDatabaseAsync();
 }
 catch (Exception ex)
 {
@@ -102,11 +103,9 @@ if (app.Environment.IsDevelopment())
 
 app.MapGet("/", () => "HealthTracker API fut. Auth: /api/auth/login, Water: /api/water/day");
 
-// Az Identity modul marad minimal API (beépített AddIdentityApiEndpoints/MapIdentityApi,
-// a tokenkezelést kézi Controllerben újraírni biztonsági kockázat lenne).
-app.MapIdentityModule();
+app.MapIdentityEndpoints();
 
-// Water/Schedule/Calories Controller-alapú végpontjai.
+// Water/Schedule/Calories Controller-alapú végpontjai (Controllers/).
 app.MapControllers();
 
 app.Run();

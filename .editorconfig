@@ -36,6 +36,9 @@ dotnet_style_qualification_for_method = false:suggestion
 [**/Migrations/**.cs]
 dotnet_diagnostic.IDE0161.severity = none
 dotnet_diagnostic.IDE0040.severity = none
+# CA1861: a generált kód tömb-literálokat ad át (pl. összetett index oszlopai).
+# A migráció egyszer fut le, a "static readonly" optimalizálásnak itt nincs értelme.
+dotnet_diagnostic.CA1861.severity = none
 
 [*.{json,yml,yaml}]
 indent_style = space
