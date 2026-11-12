@@ -5,10 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HealthTracker.Persistence;
 
-// Az egyetlen DbContext: az Identity táblák (felhasználók, szerepkörök) és az összes
-// funkció entitásai. A táblák továbbra is funkciónként külön PostgreSQL sémában
-// vannak (identity / water / calories / schedule) - ezt a Configuration/ mappában
-// lévő IEntityTypeConfiguration osztályok állítják be.
 public sealed class HealthTrackerDbContext : IdentityDbContext<AppUser>
 {
     public const string MigrationsHistorySchema = "public";
@@ -25,11 +21,7 @@ public sealed class HealthTrackerDbContext : IdentityDbContext<AppUser>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
-        // Ami nem kap saját sémát, az ide kerül - ezek az Identity táblái (AspNetUsers ...).
         builder.HasDefaultSchema(Schemas.Identity);
-
-        // Beolvassa az összes IEntityTypeConfiguration<T> osztályt ebből a projektből.
         builder.ApplyConfigurationsFromAssembly(typeof(HealthTrackerDbContext).Assembly);
     }
 }

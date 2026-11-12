@@ -1,6 +1,4 @@
 namespace HealthTracker.Persistence;
-
-// PostgreSQL sémák funkciónként - így az adatbázisban is látszik, melyik tábla mihez tartozik.
 public static class Schemas
 {
     public const string Identity = "identity";
