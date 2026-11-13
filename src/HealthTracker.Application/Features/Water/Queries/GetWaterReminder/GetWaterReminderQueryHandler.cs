@@ -1,7 +1,7 @@
 using HealthTracker.Application.Contracts;
 using HealthTracker.Application.Contracts.Persistence;
 using HealthTracker.Application.Features.Water.Models;
-using HealthTracker.Domain.Calculators;
+using HealthTracker.Domain.DomainServices;
 using MediatR;
 
 namespace HealthTracker.Application.Features.Water.Queries.GetWaterReminder;

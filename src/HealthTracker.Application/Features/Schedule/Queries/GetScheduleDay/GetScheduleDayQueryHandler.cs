@@ -2,7 +2,7 @@ using AutoMapper;
 using HealthTracker.Application.Contracts;
 using HealthTracker.Application.Contracts.Persistence;
 using HealthTracker.Application.Features.Schedule.Models;
-using HealthTracker.Domain.Calculators;
+using HealthTracker.Domain.DomainServices;
 using MediatR;
 
 namespace HealthTracker.Application.Features.Schedule.Queries.GetScheduleDay;

@@ -34,7 +34,7 @@ HealthTracker/
 │   ├── HealthTracker.Domain               # Core: üzleti fogalmak, semmitől nem függ
 │   │   ├── Entities/        # WaterIntake, FoodEntry, Activity, AppUser ...
 │   │   ├── Enums/           # MealType, ActivityColor ...
-│   │   ├── Calculators/     # tiszta üzleti logika (emlékeztető, napi egyenleg, nap-terv)
+│   │   ├── DomainServices/  # tiszta üzleti logika (emlékeztető, napi egyenleg, nap-terv)
 │   │   └── ValueObjects/    # a kalkulátorok eredményei (DayPlan, DailyCalories ...)
 │   ├── HealthTracker.Application          # Core: use case-ek (mit tud az alkalmazás)
 │   │   ├── Contracts/       # interfészek: IClock, ICurrentUser, Persistence/I*Repository
@@ -187,7 +187,7 @@ következő bővítés — a `docker-compose.yml` már fel van készítve rá.)
 
 ## Hogyan adj hozzá egy új funkciót? (pl. Alvás)
 
-1. **Domain**: `Entities/SleepEntry.cs` (és ha kell, egy kalkulátor a `Calculators/` alá).
+1. **Domain**: `Entities/SleepEntry.cs` (és ha kell, egy kalkulátor a `DomainServices/` alá).
 2. **Application**:
    - `Contracts/Persistence/ISleepRepository.cs`
    - `Features/Sleep/Models/` – a kérés/válasz DTO-k

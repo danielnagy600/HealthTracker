@@ -2,7 +2,7 @@ using AutoMapper;
 using HealthTracker.Application.Contracts;
 using HealthTracker.Application.Contracts.Persistence;
 using HealthTracker.Application.Features.Calories.Models;
-using HealthTracker.Domain.Calculators;
+using HealthTracker.Domain.DomainServices;
 using MediatR;
 
 namespace HealthTracker.Application.Features.Calories.Queries.GetCaloriesDay;

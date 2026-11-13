@@ -2,7 +2,7 @@ using HealthTracker.Domain.Entities;
 using HealthTracker.Domain.Enums;
 using HealthTracker.Domain.ValueObjects;
 
-namespace HealthTracker.Domain.Calculators;
+namespace HealthTracker.Domain.DomainServices;
 
 public static class WaterReminderCalculator
 {

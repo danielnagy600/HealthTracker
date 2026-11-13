@@ -1,5 +1,5 @@
 using FluentAssertions;
-using HealthTracker.Domain.Calculators;
+using HealthTracker.Domain.DomainServices;
 using HealthTracker.Domain.Entities;
 using HealthTracker.Domain.Enums;
 using HealthTracker.Domain.ValueObjects;
